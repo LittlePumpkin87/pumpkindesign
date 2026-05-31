@@ -1,0 +1,105 @@
+{
+  "collectionName": "components_molecules_ctas",
+  "info": {
+    "displayName": "cta"
+  },
+  "options": {},
+  "attributes": {
+    "linktype": {
+      "type": "enumeration",
+      "default": "internal",
+      "enum": [
+        "external",
+        "internal",
+        "phone",
+        "email",
+        "icon"
+      ]
+    },
+    "link_style": {
+      "type": "enumeration",
+      "enum": [
+        "button",
+        "textlink",
+        "icon_right",
+        "icon_left"
+      ]
+    },
+    "internal": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "linktype"
+            },
+            "internal"
+          ]
+        }
+      },
+      "component": "technical.internal-link",
+      "repeatable": false
+    },
+    "external": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "linktype"
+            },
+            "external"
+          ]
+        }
+      },
+      "component": "technical.external-link",
+      "repeatable": true
+    },
+    "phone": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "linktype"
+            },
+            "phone"
+          ]
+        }
+      },
+      "component": "technical.phone-link",
+      "repeatable": false
+    },
+    "email": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "linktype"
+            },
+            "email"
+          ]
+        }
+      },
+      "component": "technical.email-link",
+      "repeatable": false
+    },
+    "icon": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "linktype"
+            },
+            "icon"
+          ]
+        }
+      },
+      "component": "technical.icon-link",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

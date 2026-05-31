@@ -1,0 +1,76 @@
+@use "variables" as *;
+
+@mixin flex($direction: row, $justify: center, $align: center, $wrap: wrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+@mixin grid(
+  $columns: 1fr,
+  $rows: auto,
+  $gap: 0,
+  $justify-items: stretch,
+  $align-items: stretch
+) {
+  display: grid;
+  grid-template-columns: $columns;
+  grid-template-rows: $rows;
+  gap: $gap;
+  justify-items: $justify-items;
+  align-items: $align-items;
+}
+
+@mixin image-background(
+  $size: contain,
+  $repeat: no-repeat,
+  $position: center,
+  $url: url(/images/own_logo/Logo_colored.png)
+) {
+  background-size: $size;
+  background-repeat: $repeat;
+  background-position: $position;
+  background-image: $url;
+}
+
+@mixin transition(
+  $properties: all,
+  $duration: 600ms,
+  $timing-function: ease-in-out,
+  $delay: 0s
+) {
+  transition-property: $properties;
+  transition-duration: $duration;
+  transition-timing-function: $timing-function;
+  transition-delay: $delay;
+}
+
+@mixin border-open-drop($color) {
+  border-top: $color 0.3rem solid;
+  border-left: $color 0.3rem solid;
+  border-radius: 0rem 1rem 1rem 1rem;
+}
+
+@mixin border-open-drop-right($color) {
+  border-top: $color 0.3rem solid;
+  border-right: $color 0.3rem solid;
+  border-radius: 1rem  0rem 1rem 1rem;
+}
+
+@mixin border-open($color) {
+  border-radius: 2rem 0.5rem 2rem 2rem;
+  border-top: solid 0.2rem $color;
+  border-right: solid 0.2rem $color;
+}
+
+@mixin border-elipse($color) {
+  border: $color 0.3rem solid;
+  border-radius: 0.5rem 2rem 0.5rem 2rem;
+}
+
+@mixin border-elipse-flip($color) {
+  border: $color 0.3rem solid;
+  border-radius: 2rem 0.5rem 2rem 0.5rem;
+}

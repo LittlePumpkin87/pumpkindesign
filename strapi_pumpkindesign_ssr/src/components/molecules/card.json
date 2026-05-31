@@ -1,0 +1,66 @@
+{
+  "collectionName": "components_molecules_cards",
+  "info": {
+    "displayName": "card"
+  },
+  "options": {},
+  "attributes": {
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "icon",
+        "image"
+      ]
+    },
+    "image": {
+      "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "variant"
+            },
+            "image"
+          ]
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "icon": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "variant"
+            },
+            "icon"
+          ]
+        }
+      },
+      "component": "technical.icon",
+      "repeatable": false
+    },
+    "headline": {
+      "type": "string"
+    },
+    "date": {
+      "type": "date"
+    },
+    "text": {
+      "type": "blocks"
+    },
+    "cta": {
+      "type": "component",
+      "component": "molecules.cta",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

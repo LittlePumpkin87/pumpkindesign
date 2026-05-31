@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_technical_internal_links",
+  "info": {
+    "displayName": "internal  link"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "page": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_atoms_textblocks",
+  "info": {
+    "displayName": "textblock"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string"
+    },
+    "text": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}

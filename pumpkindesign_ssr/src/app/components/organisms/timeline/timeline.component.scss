@@ -1,0 +1,98 @@
+@use '../../../shared/' as *;
+
+.timeline {
+  @include flex(column, center);
+  text-align: center;
+  position: relative;
+  &::after {
+    z-index: -1;
+    content: "";
+    @include border-open($accent-blue);
+    position: absolute;
+    width: 0.5rem;
+    background-color: $accent-orange;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -0.2rem;
+  }
+  h2 {
+    margin: 0;
+  }
+  h1 {
+    position: relative;
+  }
+}
+
+.box {
+  -webkit-animation: slide-in 400ms both;
+  animation: slide-in 400ms both;
+  -webkit-filter: $shadow-subtle;
+  filter: $shadow-subtle;
+  width: 30%;
+  @include flex(row, center, flex-start);
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    right: -1rem;
+    z-index: 2;
+    background-color: $accent-green;
+    height: 2rem;
+    width: 3rem;
+  }
+  &.left {
+    left: -17%;
+    &::after {
+      right: -3rem;
+
+      @include border-open-drop($accent-orange);
+    }
+  }
+  &.right {
+    left: 17%;
+    &::after {
+      left: -3rem;
+      @include border-open-drop-right($accent-orange);
+    }
+  }
+}
+
+.content {
+  cursor: pointer;
+  -webkit-animation: pop-up-down 400ms both;
+  animation: pop-up-down 400ms both;
+  &:hover {
+    -webkit-animation: pop-up-top 400ms both;
+    animation: pop-up-top 400ms both;
+  }
+  &.right {
+    background-color: $accent-green;
+    padding: 0.3rem;
+    width: 100%;
+    @include border-elipse($accent-orange);
+  }
+  &.left {
+    background-color: $accent-green;
+    padding: 0.3rem;
+    @include border-elipse-flip($accent-orange);
+    width: 100%;
+  }
+}
+
+.details {
+  &.right {
+    padding: 1rem;
+    background-color: $accent-green;
+    border-radius: 1rem;
+    -webkit-animation: Grow 1000ms both;
+    animation: Grow 1000ms both;
+  }
+  &.left {
+    padding: 1rem;
+    background-color: $accent-green;
+    border-radius: 1rem;
+    -webkit-animation: GrowLeft 1000ms both;
+    animation: GrowLeft 1000ms both;
+  }
+}

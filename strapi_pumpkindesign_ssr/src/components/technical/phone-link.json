@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_technical_phone_links",
+  "info": {
+    "displayName": "phone link"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "phone_number": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

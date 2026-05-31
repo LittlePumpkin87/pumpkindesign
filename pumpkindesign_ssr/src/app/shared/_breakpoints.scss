@@ -1,0 +1,49 @@
+@use "variables" as *;
+
+@mixin small-screens {
+  @media screen and (min-width: 0) and (max-width: #{($tablet - 1px)}) {
+    @content;
+  }
+}
+
+@mixin large-screens {
+  @media screen and (min-width: $small-desktop) {
+    @content;
+  }
+}
+
+@mixin mobile-small {
+  @media screen and (max-width:#{($mobile-small -1)}) {
+    @content;
+  }
+}
+
+@mixin mobile-medium {
+  @media screen and (min-width: $mobile-small) and (max-width: #{($mobile-medium -1)}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media screen and (min-width: $mobile-medium) and (max-width: #{($small-desktop -1)}) {
+    @content;
+  }
+}
+
+@mixin small-desktop {
+  @media screen and (min-width: $small-desktop) and (max-width: #{($medium-desktop -1)}) {
+    @content;
+  }
+}
+
+@mixin large-desktop {
+  @media screen and (min-width: $medium-desktop) and (max-width: #{($large-desktop -1)}) {
+    @content;
+  }
+}
+
+@mixin large-desktop {
+  @media (min-width: $large-desktop) {
+    @content;
+  }
+}

@@ -1,0 +1,88 @@
+services:
+  # --- ANGULAR FRONTEND (SSR DEV) ---
+  angular_frontend:
+    container_name: angular_frontend
+    build:
+      context: ./pumpkindesign_ssr
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./pumpkindesign_ssr:/app
+      - /app/node_modules
+    command: npm run start
+    environment:
+      - WATCHPACK_POLLING=true
+    networks:
+      - strapi
+    depends_on:
+      - strapi
+
+  # --- STRAPI BACKEND ---
+  strapi:
+    container_name: strapi
+    build: ./strapi_pumpkindesign_ssr
+    image: strapi:latest
+    restart: unless-stopped
+    env_file: ./strapi_pumpkindesign_ssr/.env
+    volumes:
+      - ./strapi_pumpkindesign_ssr/config:/opt/app/config
+      - ./strapi_pumpkindesign_ssr/src:/opt/app/src
+      - ./strapi_pumpkindesign_ssr/package.json:/opt/package.json
+      - ./strapi_pumpkindesign_ssr/package-lock.json:/opt/package-lock.json
+      - ./strapi_pumpkindesign_ssr/.env:/opt/app/.env
+      - ./strapi_pumpkindesign_ssr/public/uploads:/opt/app/public/uploads
+    ports:
+      - "1337:1337"
+    networks:
+      - strapi
+    depends_on:
+      strapiDB:
+        condition: service_healthy
+
+  # --- POSTGRES DATENBANK ---
+  strapiDB:
+    container_name: strapiDB
+    restart: unless-stopped
+    image: postgres:16-alpine
+    env_file: ./strapi_pumpkindesign_ssr/.env
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - strapi-data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - strapi
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${DATABASE_USERNAME} -d $${DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- PGADMIN ---
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    env_file: ./strapi_pumpkindesign_ssr/.env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USERNAME}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+    ports:
+      - "8080:80"
+    networks:
+      - strapi
+    depends_on:
+      - strapiDB
+
+volumes:
+  strapi-data:
+
+networks:
+  strapi:
+    name: strapi
+    driver: bridge

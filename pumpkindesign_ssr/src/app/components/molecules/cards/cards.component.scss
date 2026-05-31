@@ -1,0 +1,95 @@
+@use '../../../shared/' as *;
+
+.card {
+  @include flex(row, stretch, stretch);
+  height: 100%;
+  &__content {
+    @include flex(column, flex-start);
+    @include border-open($accent-blue);
+    @include transition;
+    cursor: pointer;
+    text-align: justify;
+    padding: 0 $spacing-05 $spacing-05;
+    background-color: $accent-green;
+    animation: pop-up-down 500ms both;
+    &:hover {
+      background-color: $accent-blue;
+      animation: pop-up-top 500ms both;
+      filter: $shadow-header;
+      color: $text-black;
+    }
+  }
+  app-image {
+    @include flex(row, center, center);
+    padding: $spacing-02 0;
+  }
+  &__headline {
+    padding: $spacing-05 0;
+    @include grid(1fr);
+    &__content {
+      width: 80%;
+      justify-self: center;
+      @include flex(column, flex-start, flex-start);
+      gap: $spacing-02;
+      app-icon {
+        margin-left: $spacing-05;
+      }
+    }
+  }
+  &__reference {
+    height: 100%;
+    &__content {
+      @include flex(column, flex-start);
+      @include border-elipse($accent-blue);
+      padding: $spacing-05;
+      height: 100%;
+      background-color: $background-blue;
+      text-align: center;
+      app-image {
+        max-width: 300px;
+        overflow: hidden;
+        ::ng-deep img {
+          border-radius: $spacing-02;
+          width: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+      }
+    }
+  }
+  &__contact {
+    height: 100%;
+    &__content {
+      @include flex(column, space-between);
+      @include border-elipse($accent-blue);
+      padding: $spacing-05;
+      height: 100%;
+      background-color: $accent-green;
+      text-align: center;
+    }
+    app-link {
+      ::ng-deep a {
+        @include flex(column);
+        gap: $spacing-05;
+      }
+    }
+  }
+
+  &__error {
+    position: absolute;
+    top: 20%;
+    &__content {
+      @include border-elipse($accent-green);
+      background-color: $background-grey-transparent;
+      padding: $spacing-05;
+      p {
+        margin-bottom: $spacing-05;
+      }
+      ::ng-deep a {
+        justify-content: flex-start;
+        gap: $spacing-03;
+        margin: 0;
+      }
+    }
+  }
+}

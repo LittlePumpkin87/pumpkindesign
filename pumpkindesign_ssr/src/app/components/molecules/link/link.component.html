@@ -1,0 +1,23 @@
+@if (!item()?.routerLink) {
+  <a
+    class="link"
+    href="item()?.href"
+    target="_blank"
+  >
+    {{ item()?.label }}
+  </a>
+} @else {
+  <a
+    class="link"
+    [routerLink]="item()?.routerLink"
+    [fragment]="item()?.fragment"
+    target="_self"
+  >
+    {{ item()?.label }}
+    @if (item()?.icon) {
+      <lpd-icon
+        [icon]="item()?.icon"
+      ></lpd-icon>
+    }
+  </a>
+}

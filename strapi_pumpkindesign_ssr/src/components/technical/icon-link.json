@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_technical_icon_links",
+  "info": {
+    "displayName": "icon  link"
+  },
+  "options": {},
+  "attributes": {
+    "icon_name": {
+      "type": "string"
+    },
+    "icon_prefix": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

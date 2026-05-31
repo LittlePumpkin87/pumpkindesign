@@ -1,0 +1,62 @@
+@use "variables" as *;
+@use "mixins" as *;
+@use "breakpoints" as *;
+
+@mixin typography-xxs {
+  font-size: $fontsize-xxs;
+  line-height: $lineheight-xxs;
+}
+
+@mixin typography-xs {
+  font-size: $fontsize-xs;
+  line-height: $lineheight-xs;
+  @include small-screens {
+    font-size: $fontsize-xxs;
+    line-height: $lineheight-xxs;
+  }
+}
+
+@mixin typography-s {
+  font-size: $fontsize-s;
+  line-height: $lineheight-s;
+  @include small-screens {
+    font-size: $fontsize-xs;
+    line-height: $lineheight-xs;
+  }
+}
+
+@mixin typography-m {
+  font-size: $fontsize-m;
+  line-height: $lineheight-m;
+  @include small-screens {
+    font-size: $fontsize-s;
+    line-height: $lineheight-s;
+  }
+}
+
+@mixin typography-l {
+  font-size: $fontsize-l;
+  line-height: $lineheight-l;
+  @include small-screens {
+    font-size: $fontsize-m;
+    line-height: $lineheight-m;
+  }
+}
+
+@mixin typography-xl {
+  font-size: $fontsize-xl;
+  line-height: $lineheight-xl;
+  @include small-screens {
+    font-size: $fontsize-l;
+    line-height: $lineheight-l;
+  }
+}
+
+@mixin typography-xxl {
+  font-size: $fontsize-xxl;
+  line-height: $lineheight-xxl;
+  @include small-screens {
+    font-size: $fontsize-xl;
+    line-height: $lineheight-xl;
+  }
+}

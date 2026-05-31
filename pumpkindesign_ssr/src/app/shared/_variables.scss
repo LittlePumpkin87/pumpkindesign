@@ -1,0 +1,66 @@
+// Colors, Shadows, Borders
+
+$background-grey: #293233;
+$background-grey-transparent: #293233ef;
+$background-brown: #524034;
+$background-blue: #3b777c;
+$accent-green: #567333;
+$accent-orange: #d1681d;
+$accent-blue: #5cbcc4;
+$text-white: #fff;
+$text-black: #000;
+$font-text: "Signika Negative";
+$font-header: "Berkshire Swash";
+$shadow-header: drop-shadow($text-black -2px -2px 1px)
+  drop-shadow($background-blue -0.1rem -0.1rem 5rem)
+  drop-shadow($background-blue 0.1rem 0.1rem 5rem);
+$shadow: drop-shadow(#1c110a 0 0.2rem 0.2rem)
+  drop-shadow(#1c110a 0 -0.2rem 0.2rem);
+$shadow-subtle: drop-shadow(#1c110a 0 0.2rem 0.2rem);
+$shadow-green: drop-shadow($accent-green 0 0.2rem 0.2rem)
+  drop-shadow($accent-green 0 -0.2rem 0.2rem);
+$shadow-orange: drop-shadow($accent-orange 0 0.2rem 0.2rem)
+  drop-shadow($accent-orange 0 -0.2rem 0.2rem);
+$shadow-blue: drop-shadow($accent-blue 0 0.2rem 0.2rem)
+  drop-shadow($accent-blue 0 -0.2rem 0.2rem);
+$border-bottom: 0.5rem 0.5rem 2rem 2rem;
+$border-top: 2rem 2rem 0.5rem 0.5rem;
+
+// Fontsize and Lineheight
+
+$fontsize-xxs: 0.8rem;
+$fontsize-xs: 1rem;
+$fontsize-s: 1.3rem;
+$fontsize-m: 1.5rem;
+$fontsize-l: 2rem;
+$fontsize-xl: 2.5rem;
+$fontsize-xxl: 4rem;
+
+$lineheight-xxs: 1.3rem;
+$lineheight-xs: 1.5rem;
+$lineheight-s: 1.8rem;
+$lineheight-m: 2rem;
+$lineheight-l: 2.5rem;
+$lineheight-xl: 3rem;
+$lineheight-xxl: 4.5rem;
+
+// Breakpoints
+
+$mobile-small: 560px;
+$mobile-medium: 760px;
+$tablet: 990px;
+$small-desktop: 1200px;
+$medium-desktop: 1500px;
+$large-desktop: 1920px;
+
+// Layout
+
+$spacing-01: 0.3rem;
+$spacing-02: 0.5rem;
+$spacing-03: 0.8rem;
+$spacing-04: 1rem;
+$spacing-05: 2rem;
+
+$layout-01: 3rem;
+$layout-02: 5rem;
+$layout-03: 10rem;

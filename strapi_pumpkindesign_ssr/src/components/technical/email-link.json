@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_technical_email_links",
+  "info": {
+    "displayName": "email  link"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

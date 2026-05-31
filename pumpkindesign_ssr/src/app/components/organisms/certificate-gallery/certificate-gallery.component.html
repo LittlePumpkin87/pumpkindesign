@@ -1,0 +1,19 @@
+<section>
+  <div class="cert_grid">
+    @for (cert of certificate(); track cert) {
+      <div class="cert">
+        <div class="cert_list">
+          <img [src]="cert.image" [alt]="cert.alt" />
+          <h4>{{ cert.name }}</h4>
+          @if (cert.link) {}
+          <lpd-link
+            text="View Certificate"
+            color="primary"
+            size="medium"
+          ></lpd-link>
+        
+        </div>
+      </div>
+    }
+  </div>
+</section>

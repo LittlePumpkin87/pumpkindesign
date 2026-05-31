@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_organisms_heroes",
+  "info": {
+    "displayName": "hero"
+  },
+  "options": {},
+  "attributes": {
+    "background": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "headline": {
+      "type": "string"
+    },
+    "cta": {
+      "type": "component",
+      "component": "molecules.cta",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}
