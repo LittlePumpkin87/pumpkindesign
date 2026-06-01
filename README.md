@@ -16,6 +16,16 @@ The project is split into two main parts, orchestrated to run together flawlessl
 
 ---
 
+## 🚀 Deployment & Hosting Strategy
+
+Unlike standard static hosting platforms, the entire stack (both frontend SSR and backend CMS) is architected for self-hosting:
+
+* **Target Infrastructure:** Hosted on a local **NAS** server environment.
+* **Orchestration:** Multi-container deployment managed via **Docker Compose**.
+* **Routing & Security:** Served via an **Nginx Reverse Proxy** with automated SSL/TLS termination.
+
+---
+
 ## 📁 Project Structure (Frontend Focus)
 
 The Angular frontend follows a highly scalable architecture inspired by **Atomic Design principles**, separating UI components by complexity and responsibility:
