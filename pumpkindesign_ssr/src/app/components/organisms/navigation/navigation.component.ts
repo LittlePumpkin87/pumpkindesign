@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
-  items = input.required<[NavigationItem]>();
+  items = input<[NavigationItem]>();
   private readonly router = inject(Router);
 
   constructor() {

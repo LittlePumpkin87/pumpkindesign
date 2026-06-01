@@ -11,7 +11,7 @@ import { environment } from './environments/environment';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-const allowedHosts = environment.ALLOWED_HOSTS || [];
+const allowedHosts = environment.ALLOWED_HOSTS;
 const angularApp = new AngularNodeAppEngine(
   {
     allowedHosts: allowedHosts,
