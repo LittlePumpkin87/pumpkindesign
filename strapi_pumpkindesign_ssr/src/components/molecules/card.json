@@ -8,50 +8,32 @@
     "variant": {
       "type": "enumeration",
       "enum": [
-        "icon",
-        "image"
+        "full",
+        "simple",
+        "contact",
+        "reference"
       ]
     },
     "image": {
       "type": "media",
-      "conditions": {
-        "visible": {
-          "==": [
-            {
-              "var": "variant"
-            },
-            "image"
-          ]
-        }
-      },
       "multiple": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "images"
       ]
     },
     "icon": {
       "type": "component",
-      "conditions": {
-        "visible": {
-          "==": [
-            {
-              "var": "variant"
-            },
-            "icon"
-          ]
-        }
-      },
       "component": "technical.icon",
       "repeatable": false
     },
-    "headline": {
-      "type": "string"
-    },
     "date": {
       "type": "date"
+    },
+    "subline": {
+      "type": "string"
+    },
+    "headline": {
+      "type": "string"
     },
     "text": {
       "type": "blocks"

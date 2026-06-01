@@ -20,13 +20,13 @@
   </button>
   <div class="HamburgerLink" [ngClass]="{ active: isActive }">
     @for (link of items(); track link) {
-      @if (link.routerLink) {
+      @if (link) {
         <lpd-link
           (click)="toggleMenu()"
           onkeydown="toggleMenu()"
           onkeypress="toggleMenu()"
           [routerLink]="link.routerLink"
-          [fragment]="link.fragment"
+          [attr.href]="link.href"
         ></lpd-link>
       }
     }

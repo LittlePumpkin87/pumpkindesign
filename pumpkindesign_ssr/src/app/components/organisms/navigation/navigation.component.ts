@@ -1,9 +1,10 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { LinkComponent } from "../../molecules/link/link.component";
-import { CTA } from '../../../interfaces/atom.interface';
-
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { LinkComponent } from '../../molecules/link/link.component';
+import { NavigationItem } from '../../../interfaces/atom.interface';
+import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lpd-navigation',
@@ -12,8 +13,15 @@ import { CTA } from '../../../interfaces/atom.interface';
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
+  items = input.required<[NavigationItem]>();
+  private readonly router = inject(Router);
 
-  items = input<CTA[]>();
+  constructor() {
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      takeUntilDestroyed(),
+    );
+  }
 
   isActive: boolean = false;
   toggleMenu(): void {

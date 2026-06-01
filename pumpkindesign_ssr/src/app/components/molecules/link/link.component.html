@@ -1,7 +1,7 @@
 @if (!item()?.routerLink) {
   <a
     class="link"
-    href="item()?.href"
+    [href]="item()?.href"
     target="_blank"
   >
     {{ item()?.label }}
@@ -10,7 +10,6 @@
   <a
     class="link"
     [routerLink]="item()?.routerLink"
-    [fragment]="item()?.fragment"
     target="_self"
   >
     {{ item()?.label }}

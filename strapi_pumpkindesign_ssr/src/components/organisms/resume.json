@@ -4,6 +4,16 @@
     "displayName": "timeline"
   },
   "options": {},
-  "attributes": {},
+  "attributes": {
+    "headline": {
+      "type": "string"
+    },
+    "short_description": {
+      "type": "string"
+    },
+    "long_text": {
+      "type": "blocks"
+    }
+  },
   "config": {}
 }

@@ -4,6 +4,18 @@
     "displayName": "certificates"
   },
   "options": {},
-  "attributes": {},
+  "attributes": {
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "files",
+        "images"
+      ]
+    },
+    "label": {
+      "type": "string"
+    }
+  },
   "config": {}
 }
