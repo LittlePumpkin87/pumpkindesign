@@ -16,6 +16,38 @@ The project is split into two main parts, orchestrated to run together flawlessl
 
 ---
 
+## 📁 Project Structure (Frontend Focus)
+
+The Angular frontend follows a highly scalable architecture inspired by **Atomic Design principles**, separating UI components by complexity and responsibility:
+
+```text
+pumpkindesign_ssr/
+├── public/                 # Static assets
+└── src/
+    ├── app/
+    │   ├── components/     # Atomic Design Architecture
+    │   │   ├── atoms/      # Smallest building blocks (buttons, inputs, icons)
+    │   │   ├── molecules/  # Groups of atoms functioning together
+    │   │   └── organisms/  # Complex UI components composed of molecules
+    │   ├── interfaces/     # TypeScript interfaces and type definitions
+    │   ├── mapper/         # Data mappers (e.g., API response payload to frontend model)
+    │   ├── services/       # Core business logic and API communication
+    │   ├── shared/         # Shared modules and global components
+    │   ├── utils/          # Helper functions and utilities
+    │   ├── app.config.server.ts
+    │   ├── app.config.ts
+    │   ├── app.html
+    │   ├── app.routes.server.ts
+    │   ├── app.routes.ts
+    │   ├── app.scss
+    │   └── app.ts
+    ├── environments/       # Environment-specific configurations
+    ├── index.html
+    ├── main.server.ts      # SSR entry point
+    ├── main.ts             # Client entry point
+    └── server.ts           # SSR Node server setup
+```
+
 ## 👩‍💻 About the Developer
 
 I am a professional **Web Developer** currently working in the agency environment, specialized in modern frontend architectures and headless content management workflows. 
