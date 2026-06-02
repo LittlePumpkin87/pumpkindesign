@@ -5,6 +5,7 @@ This repository contains the full source code for my personal portfolio and free
 To start all at once locally use the command `docker compose --env-file ./strapi_pumpkindesign_ssr/.env -f docker-compose.dev.yml up -d --build --force-recreate` as shell command
 
 Replace `docker-compose.dev.yml` with `docker-compose.yml` for production environment
+
 ---
 
 ## 🏗️ Project Status & Architecture Road Map
