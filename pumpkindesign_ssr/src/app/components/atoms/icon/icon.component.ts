@@ -5,11 +5,11 @@ import {
   IconPrefix,
   IconProp,
 } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeModule, SizeProp } from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FontAwesomeService } from '../../../services/fontawesome.service';
 
 @Component({
-  selector: 'hp-icon',
+  selector: 'lpd-icon',
   imports: [CommonModule, FontAwesomeModule],
   standalone: true,
   templateUrl: './icon.component.html',
@@ -18,7 +18,6 @@ import { FontAwesomeService } from '../../../services/fontawesome.service';
 export class IconComponent {
   public iconPrefix = input<string>();
   public iconName = input<string>();
-  public size = input<SizeProp>();
   public color = input<string>();
 
   private readonly fontAwesomeService = inject(FontAwesomeService);
