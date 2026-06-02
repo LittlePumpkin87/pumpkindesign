@@ -4,7 +4,8 @@ export interface CTA {
   routerLink?: string;
   target: '_self' | '_blank';
   fragment?: string;
-  icon?: Icon;
+  iconName?: string;
+  iconPrefix?: string;
 }
 
 export interface NavigationItem {

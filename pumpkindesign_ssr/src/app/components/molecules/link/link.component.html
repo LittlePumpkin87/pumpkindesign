@@ -1,21 +1,14 @@
 @if (!item()?.routerLink) {
-  <a
-    class="link"
-    [href]="item()?.href"
-    target="_blank"
-  >
+  <a class="link" [href]="item()?.href" target="_blank">
     {{ item()?.label }}
   </a>
 } @else {
-  <a
-    class="link"
-    [routerLink]="item()?.routerLink"
-    target="_self"
-  >
+  <a class="link" [routerLink]="item()?.routerLink" target="_self">
     {{ item()?.label }}
-    @if (item()?.icon) {
+    @if (item()?.iconName) {
       <lpd-icon
-        [icon]="item()?.icon"
+        [iconPrefix]="item()?.iconPrefix"
+        [iconName]="item()?.iconName"
       ></lpd-icon>
     }
   </a>
