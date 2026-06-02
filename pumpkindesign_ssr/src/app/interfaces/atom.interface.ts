@@ -6,6 +6,8 @@ export interface CTA {
   fragment?: string;
   iconName?: string;
   iconPrefix?: string;
+  isExternal?: boolean;
+  isInternal?: boolean;
 }
 
 export interface NavigationItem {

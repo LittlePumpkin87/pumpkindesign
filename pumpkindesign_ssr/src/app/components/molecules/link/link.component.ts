@@ -5,11 +5,11 @@ import { RouterModule } from '@angular/router';
 import { CTA } from '../../../interfaces/atom.interface';
 
 @Component({
-    selector: 'lpd-link',
-    imports: [CommonModule, IconComponent, RouterModule],
-    templateUrl: './link.component.html',
-    styleUrls: ['./link.component.scss']
+  selector: 'lpd-link',
+  imports: [CommonModule, IconComponent, RouterModule],
+  templateUrl: './link.component.html',
+  styleUrls: ['./link.component.scss'],
 })
 export class LinkComponent {
- item = input<CTA>();
+  item = input<CTA>();
 }

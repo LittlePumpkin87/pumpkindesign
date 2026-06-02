@@ -1,4 +1,4 @@
-@if (!item()?.routerLink) {
+@if (item()?.isExternal) {
   <a class="link" [href]="item()?.href" target="_blank">
     {{ item()?.label }}
   </a>
