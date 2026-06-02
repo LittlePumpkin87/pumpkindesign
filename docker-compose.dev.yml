@@ -1,33 +1,38 @@
 services:
-  # --- ANGULAR FRONTEND (PROD / BFF) ---
+  # --- ANGULAR FRONTEND (DEV) ---
   angular_frontend:
-    container_name: angular_prod
+    container_name: angular_dev
     build:
       context: ./pumpkindesign_ssr
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "4200:4000"
+      - "4200:4200"
+    volumes:
+      - ./pumpkindesign_ssr:/app
+      - /app/node_modules
+    command: npm run start
     environment:
-        - NODE_ENV=production
-        - PORT=4000
-        - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
+      - WATCHPACK_POLLING=true
+    env_file: ./strapi_pumpkindesign_ssr/.env
     networks:
       - strapi_net
     depends_on:
       - strapi
 
-  # --- STRAPI BACKEND (PROD) ---
+  # --- STRAPI BACKEND (DEV) ---
   strapi:
-    container_name: strapi_prod
-    build: 
-      context: ./strapi_pumpkindesign_ssr
-      dockerfile: Dockerfile.prod 
+    container_name: strapi_dev
+    build: ./strapi_pumpkindesign_ssr
+    image: strapi:latest
     restart: unless-stopped
     env_file: ./strapi_pumpkindesign_ssr/.env
-    environment:
-      - NODE_ENV=production
     volumes:
+      - ./strapi_pumpkindesign_ssr/config:/opt/app/config
+      - ./strapi_pumpkindesign_ssr/src:/opt/app/src
+      - ./strapi_pumpkindesign_ssr/package.json:/opt/package.json
+      - ./strapi_pumpkindesign_ssr/package-lock.json:/opt/package-lock.json
+      - ./strapi_pumpkindesign_ssr/.env:/opt/app/.env
       - ./strapi_pumpkindesign_ssr/public/uploads:/opt/app/public/uploads
     ports:
       - "1337:1337"
@@ -37,9 +42,9 @@ services:
       strapiDB:
         condition: service_healthy
 
-  # --- POSTGRES DATENBANK (PROD) ---
+  # --- POSTGRES DATENBANK ---
   strapiDB:
-    container_name: strapiDB_prod
+    container_name: strapiDB
     restart: unless-stopped
     image: postgres:16-alpine
     env_file: ./strapi_pumpkindesign_ssr/.env
@@ -53,10 +58,10 @@ services:
       timeout: 5s
       retries: 5
 
-  # --- PGADMIN (PROD) ---
+  # --- PGADMIN ---
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin_prod
+    container_name: pgadmin
     restart: unless-stopped
     env_file: ./strapi_pumpkindesign_ssr/.env
     environment:

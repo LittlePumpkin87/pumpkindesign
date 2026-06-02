@@ -1,0 +1,10 @@
+FROM node:24.16.0-alpine
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev
+WORKDIR /opt/app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+ENV NODE_ENV=production
+RUN npm run build
+EXPOSE 1337
+CMD ["npm", "run", "start"]

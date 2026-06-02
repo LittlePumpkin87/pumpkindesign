@@ -9,12 +9,17 @@
       "type": "media",
       "multiple": false,
       "allowedTypes": [
-        "images",
-        "files"
+        "images"
       ]
+    },
+    "subline": {
+      "type": "string"
     },
     "headline": {
       "type": "string"
+    },
+    "text": {
+      "type": "blocks"
     },
     "cta": {
       "type": "component",

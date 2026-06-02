@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_molecules_card_lists",
+  "info": {
+    "displayName": "card_list"
+  },
+  "options": {},
+  "attributes": {
+    "card_item": {
+      "type": "component",
+      "component": "molecules.card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
