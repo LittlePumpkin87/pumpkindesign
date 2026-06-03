@@ -1,43 +1,31 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  IconName,
-  IconPrefix,
-  IconProp,
-} from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FontAwesomeService } from '../../../services/fontawesome.service';
 
 @Component({
   selector: 'lpd-icon',
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule],
   standalone: true,
   templateUrl: './icon.component.html',
   styleUrls: ['./icon.component.scss'],
 })
 export class IconComponent {
-  public iconPrefix = input<string>();
+  public iconPrefix = input<string>('fas');
   public iconName = input<string>();
   public color = input<string>();
 
-  private readonly fontAwesomeService = inject(FontAwesomeService);
-  private readonly effectivePrefix = computed(
-    () => (this.iconPrefix() ?? 'far') as IconPrefix,
-  );
-
-  public isIconAvailable = computed(() => {
+  public computedClasses = computed(() => {
     const name = this.iconName();
-    const prefix = this.effectivePrefix();
+    const prefix = this.iconPrefix();
 
-    if (!name) return false;
-
-    return this.fontAwesomeService.checkIconAvailable(prefix, name);
-  });
-
-  public icon = computed<IconProp>(() => {
-    if (this.isIconAvailable()) {
-      return [this.effectivePrefix(), this.iconName() as IconName];
+    if (!name) {
+      return ['fa-solid', 'fa-triangle-exclamation', 'default-fallback'];
     }
-    return ['fas', 'exclamation-triangle'];
+
+    let fontClass = 'fa-regular';
+    if (prefix === 'fas' || prefix === 'fa-solid') fontClass = 'fa-solid';
+    if (prefix === 'far' || prefix === 'fa-regular') fontClass = 'fa-regular';
+    if (prefix === 'fab' || prefix === 'fa-brands') fontClass = 'fa-brands';
+
+    return [fontClass, `fa-${name}`];
   });
 }
