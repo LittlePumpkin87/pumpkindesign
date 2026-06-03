@@ -1,1 +1,10 @@
-<p>content-renderer works!</p>
+<p>
+  content-renderer works!<br />
+  {{ renderableBlocks | json }}
+</p>
+
+@for (block of renderableBlocks; track $index) {
+  <ng-container *ngComponentOutlet="block.component; inputs: { item: block.item }" />
+} @empty {
+  <p>No content found.</p>
+}
