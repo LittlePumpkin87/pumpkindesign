@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { TextBlock } from '../../../interfaces/atom.interface';
 
 @Component({
   selector: 'lpd-textblock',
@@ -6,4 +7,8 @@ import { Component } from '@angular/core';
   templateUrl: './textblock.html',
   styleUrl: './textblock.scss',
 })
-export class Textblock {}
+export class Textblock {
+
+  content = input<TextBlock>();
+
+}

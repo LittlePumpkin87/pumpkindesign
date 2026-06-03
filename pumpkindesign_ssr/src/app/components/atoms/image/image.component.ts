@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-
+import { Component, input } from '@angular/core';
+import { Image } from '../../../interfaces/atom.interface';
 @Component({
     selector: 'lpd-image',
     imports: [],
@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
     styleUrl: './image.component.scss'
 })
 export class ImageComponent {
-
+    image = input<Image>();
 }

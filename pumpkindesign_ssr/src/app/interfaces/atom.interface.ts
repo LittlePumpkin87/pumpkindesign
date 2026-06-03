@@ -25,6 +25,12 @@ export interface Icon {
 }
 
 export interface TextBlock {
+  subline: string;
   richtext: string;
   headline: string;
+}
+
+export interface Image {
+  src: string;
+  alt: string;
 }

@@ -1,1 +1,20 @@
-<p>textblock works!</p>
+<div class="textblock">
+  @if (content()?.subline) {
+    <span class="subline">{{ content()?.subline }}</span>
+  }
+  @switch (content()?.headline) {
+    @case ('H1') {
+      <h2>{{ content()?.headline }}</h2>
+    }
+    @case ('H2') {
+      <h2>{{ content()?.headline }}</h2>
+    }
+    @case ('H3') {
+      <h3>{{ content()?.headline }}</h3>
+    }
+    @default {
+      <h2>{{ content()?.headline }}</h2>
+    }
+  }
+  <span [innerHTML]="content()?.richtext"></span>
+</div>

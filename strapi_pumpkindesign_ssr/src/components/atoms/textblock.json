@@ -13,6 +13,9 @@
     },
     "text": {
       "type": "blocks"
+    },
+    "text_centered": {
+      "type": "boolean"
     }
   },
   "config": {}
