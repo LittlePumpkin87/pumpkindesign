@@ -2,8 +2,11 @@
 
 .link {
   @include flex(row, space-between, center);
-  text-align: center;
   @include typography-s;
-  margin: $spacing-01 $spacing-03;
+  gap: 0.5rem;
   text-decoration: none;
+  &:hover {
+    color: $accent-green;
+  }
 }
+

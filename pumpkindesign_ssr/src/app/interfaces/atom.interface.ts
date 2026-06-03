@@ -2,10 +2,10 @@ export interface CTA {
   label: string;
   href?: string;
   routerLink?: string;
-  target: '_self' | '_blank';
+  target?: '_self' | '_blank';
   fragment?: string;
-  iconName: string;
-  iconPrefix: string;
+  iconName?: string;
+  iconPrefix?: string;
   isExternal?: boolean;
   isInternal?: boolean;
 }

@@ -108,7 +108,7 @@ export default {
           path: {
             $eq: searchPath,
           },
-        },
+        } as any,
         populate: getAutoPopulate(pageUid),
       });
 

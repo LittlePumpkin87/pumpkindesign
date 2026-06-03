@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { shareReplay, catchError, map, filter } from 'rxjs/operators';
+import { shareReplay, catchError, map, filter, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router, Scroll } from '@angular/router';
 
 import { environment } from '../../environments/environment';
 import { NavigationItem } from '../interfaces/atom.interface';
 import { mapStrapiNavigation } from '../mapper/navigation.mapper';
+
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -32,10 +33,13 @@ export class NavigationService {
     });
   }
 
-  // --- MAIN NAVIGATION ---
-
   public readonly navigationRequest$ = this.http.get<any[]>(this.NAV_ENDPOINT).pipe(
+    tap((rawData) => console.log('1. [NavigationService] RAW DATA FROM STRAPI:', rawData)),
+
     map((rawData) => mapStrapiNavigation(rawData)),
+
+    tap((mappedData) => console.log('2. [NavigationService] MAPPED FRONTEND DATA:', mappedData)),
+
     shareReplay(1),
     catchError((err) => {
       console.error('[NavigationService] Main navigation error:', err);

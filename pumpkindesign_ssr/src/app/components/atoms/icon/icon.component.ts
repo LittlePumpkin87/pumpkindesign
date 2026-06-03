@@ -18,6 +18,7 @@ export class IconComponent {
     const prefix = this.iconPrefix();
 
     if (!name) {
+      console.warn('Icon name' + name + 'is not valid. Please provide a valid icon name.');
       return ['fa-solid', 'fa-triangle-exclamation', 'default-fallback'];
     }
 

@@ -19,16 +19,8 @@
     </svg>
   </button>
   <div class="HamburgerLink" [ngClass]="{ active: isActive }">
-    @for (link of items(); track link) {
-      @if (link) {
-        <lpd-link
-          (click)="toggleMenu()"
-          onkeydown="toggleMenu()"
-          onkeypress="toggleMenu()"
-          [routerLink]="link.href"
-          [attr.href]="link.href"
-        ></lpd-link>
-      }
+    @for (link of items(); track $index) {
+      <lpd-link [item]="link"></lpd-link>
     }
   </div>
 </div>

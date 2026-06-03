@@ -108,4 +108,5 @@
 #MobileNav {
   position: sticky;
   @include flex(row, flex-end, center);
+  background-color: $accent-orange;
 }

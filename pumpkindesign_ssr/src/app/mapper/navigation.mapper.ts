@@ -5,6 +5,7 @@ export function mapStrapiNavigation(rawData: any[]): NavigationItem[] {
 
   return rawData.map((rawItem) => {
     const item: NavigationItem = {
+      iconName: rawItem.additionalFields.iconName,
       label: rawItem.title,
       href: rawItem.path,
       type: rawItem.type,

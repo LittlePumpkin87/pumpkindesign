@@ -1,15 +1,11 @@
-@if (item()?.isExternal) {
-  <a class="link" [href]="item()?.href" target="_blank">
+@if (item()?.isInternal) {
+  <a class="link" [routerLink]="item()?.href" [fragment]="item()?.fragment" [target]="'_self'">
     {{ item()?.label }}
+    <lpd-icon [iconName]="item()?.iconName" [iconPrefix]="item()?.iconPrefix || 'fas'"></lpd-icon>
   </a>
 } @else {
-  <a class="link" [routerLink]="item()?.routerLink" target="_self">
+  <a class="link" [attr.href]="item()?.href" [target]="'_blank'">
     {{ item()?.label }}
-    @if (item()?.iconName) {
-      <lpd-icon
-        [iconPrefix]="item()?.iconPrefix || 'fas'"
-        [iconName]="item()?.iconName"
-      ></lpd-icon>
-    }
+    <lpd-icon [iconName]="item()?.iconName" [iconPrefix]="item()?.iconPrefix || 'fas'"></lpd-icon>
   </a>
 }
