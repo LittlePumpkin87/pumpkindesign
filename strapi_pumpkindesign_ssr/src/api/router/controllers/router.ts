@@ -56,9 +56,10 @@ function getAutoPopulate(uid: string, maxDepth = 8, currentDepth = 1): any {
 }
 
 export default {
-  async findBySlug(ctx: any) {
+  async page(ctx: any) {
     try {
-      const slug = ctx.query.slug || "/";
+      const searchPath = ctx.query.path || "/";
+
       const cleanData = (data: any, isRoot = true): any => {
         if (Array.isArray(data)) {
           return data.map((item) => cleanData(item, false));
@@ -73,9 +74,9 @@ export default {
               size: data.size,
             };
           }
-          if (!isRoot && data.slug && data.documentId && data.seo_title !== undefined) {
+          if (!isRoot && data.path && data.documentId && data.seo_title !== undefined) {
             return {
-              path: `/${data.slug}`,
+              path: `/${data.path}`,
             };
           }
           delete data.createdBy;
@@ -90,7 +91,7 @@ export default {
         return data;
       };
 
-      if (slug === "/" || slug === "/home") {
+      if (searchPath === "/") {
         const startpageUid = "api::startpage.startpage";
         const startpage = await strapi.documents(startpageUid).findFirst({
           populate: getAutoPopulate(startpageUid),
@@ -101,42 +102,24 @@ export default {
       }
 
       const pageUid = "api::page.page";
+
       const pages = await strapi.documents(pageUid).findMany({
-        filters: { slug: { $eq: slug } as any },
+        filters: {
+          path: {
+            $eq: searchPath,
+          },
+        },
         populate: getAutoPopulate(pageUid),
       });
 
       if (!pages || pages.length === 0) {
-        return ctx.notFound("Page not found");
+        return ctx.notFound(`Page with path '${searchPath}' not found`);
       }
 
       return ctx.send({ data: cleanData(pages[0]), type: "page" });
     } catch (err) {
       console.error("Router Error:", err);
       ctx.internalServerError("An error occurred in the router API", err);
-    }
-  },
-  async getNavigation(ctx: any) {
-    try {
-      const navService = strapi.plugin("navigation").service("navigation");
-      const rawData = await navService.render({ idOrCode: "main", type: "RFR" });
-      if (!rawData.nav || !rawData.pages) {
-        return ctx.send([]);
-      }
-      const buildTree = (navNodes: any[]) => {
-        return navNodes.map((node: any) => {
-          const pageData = rawData.pages[node.page] || {};
-
-          return {
-            label: node.label,
-            path: pageData.path || "#",
-            children: node.items ? buildTree(node.items) : [],
-          };
-        });
-      };
-    } catch (err) {
-      console.error("Navigation Error:", err);
-      ctx.internalServerError("Failed to fetch navigation");
     }
   },
 };

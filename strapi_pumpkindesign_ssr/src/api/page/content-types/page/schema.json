@@ -23,6 +23,14 @@
         }
       }
     },
+    "path": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
     "seo_title": {
       "type": "string",
       "pluginOptions": {
@@ -73,10 +81,10 @@
         }
       },
       "components": [
+        "atoms.textblock",
+        "molecules.card-list",
         "organisms.resume",
-        "molecules.card",
-        "organisms.certificates",
-        "atoms.textblock"
+        "organisms.certificates"
       ]
     }
   }

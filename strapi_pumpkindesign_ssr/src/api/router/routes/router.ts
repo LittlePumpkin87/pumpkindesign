@@ -2,17 +2,11 @@ module.exports = {
   routes: [
     {
       method: "GET",
-      path: "/router",
-      handler: "router.findBySlug",
+      path: "/page-by-path",
+      handler: "router.page",
       config: {
         auth: false,
       },
-    },
-    {
-      method: 'GET',
-      path: '/navigation',
-      handler: 'router.getNavigation',
-      config: { auth: false },
-    },
+    }
   ],
 };

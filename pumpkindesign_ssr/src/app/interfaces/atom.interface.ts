@@ -12,9 +12,12 @@ export interface CTA {
 
 export interface NavigationItem {
   showInMenu: boolean;
+  type: 'INTERNAL' | 'EXTERNAL' | 'WRAPPER';
   label: string;
   href?: string;
-  routerLink?: string;
+  documentId?: string | null;
+  locale?: string;
+  items?: NavigationItem[];
 }
 
 export interface Icon {
