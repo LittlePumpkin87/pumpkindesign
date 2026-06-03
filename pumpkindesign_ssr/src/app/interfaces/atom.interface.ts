@@ -8,6 +8,7 @@ export interface CTA {
   iconPrefix?: string;
   isExternal?: boolean;
   isInternal?: boolean;
+  isWrapper?: boolean;
 }
 
 export interface NavigationItem {
