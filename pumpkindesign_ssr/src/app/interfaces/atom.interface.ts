@@ -4,8 +4,8 @@ export interface CTA {
   routerLink?: string;
   target: '_self' | '_blank';
   fragment?: string;
-  iconName?: string;
-  iconPrefix?: string;
+  iconName: string;
+  iconPrefix: string;
   isExternal?: boolean;
   isInternal?: boolean;
 }

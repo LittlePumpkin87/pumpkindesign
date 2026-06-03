@@ -7,7 +7,7 @@
     {{ item()?.label }}
     @if (item()?.iconName) {
       <lpd-icon
-        [iconPrefix]="item()?.iconPrefix"
+        [iconPrefix]="item()?.iconPrefix || 'fas'"
         [iconName]="item()?.iconName"
       ></lpd-icon>
     }
