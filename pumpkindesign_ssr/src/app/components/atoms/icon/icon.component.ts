@@ -22,7 +22,7 @@ export class IconComponent {
 
   private readonly fontAwesomeService = inject(FontAwesomeService);
   private readonly effectivePrefix = computed(
-    () => (this.iconPrefix() ?? 'fal') as IconPrefix,
+    () => (this.iconPrefix() ?? 'far') as IconPrefix,
   );
 
   public isIconAvailable = computed(() => {

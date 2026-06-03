@@ -1,15 +1,37 @@
 @font-face {
   font-display: swap;
-  font-family: "Signika Negative";
+  font-family: 'Signika Negative';
   font-style: normal;
   font-weight: 400;
-  src: url("/fonts/signika-negative-v21-latin-regular.woff2") format("woff2");
+  src: url('/fonts/signikanegative-regular.woff') format('woff');
 }
 
 @font-face {
   font-display: swap;
-  font-family: "Berkshire Swash";
+  font-family: 'Berkshire Swash';
   font-style: normal;
   font-weight: 400;
-  src: url("/fonts/berkshire-swash-v20-latin-regular.woff2") format("woff2");
+  src: url('/fonts/berkshireswash-regular.woff') format('woff');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Font Awesome 7 Brands';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/fa-brands-400.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Font Awesome 7 Regular';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/fa-regular-400.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Font Awesome 7 Solid';
+  font-style: normal;
+  font-weight: 900;
+  src: url('/fonts/fa-solid-900.woff2') format('woff2');
 }
