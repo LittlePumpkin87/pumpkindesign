@@ -1,4 +1,5 @@
 import { environment } from '../../environments/environment';
+import { Icon } from '../interfaces/atom.interface';
 
 // --- Helper functions for mapper ---
 
@@ -12,9 +13,24 @@ export const getImageUrl = (imageData: any): string | undefined => {
   }
   const isAbsolute = url.startsWith('http');
   if (!isAbsolute) {
-    url = `${environment.API_URL}/files/image?path=${url}`;
+    url = `${environment.API_IMAGE_URL}${url}`;
   }
   return url;
+};
+
+export const getIconData = (iconData: any): Icon | undefined => {
+  if (!iconData) {
+    return undefined;
+  }
+  let name = iconData.name;
+  let prefix = iconData.prefix;
+  let color = iconData.color;
+
+  return {
+    name,
+    color,
+    prefix,
+  };
 };
 
 export const getFileData = (fileData: any) => {
@@ -165,22 +181,24 @@ export const serializeRichText = (nodes: any[] | object): string => {
 
 // helper for Link mapping
 
-const resolveLinkTarget = (linkType: string, rawLink: any) => {
-  switch (linkType) {
+const resolveLinkTarget = (linktype: string, rawLink: any) => {
+  let result = null;
+  switch (linktype) {
     case 'internal':
-      if (rawLink._path) {
-        return {
-          href: `${rawLink._path}`,
+      if (rawLink?.path) {
+        result = {
+          href: `${rawLink.path}`,
           isInternal: true,
           isExternal: false,
         };
       } else {
-        return {
+        result = {
           href: undefined,
           label: 'Invalid link target',
-          linkType: 'disabled',
+          linktype: 'disabled',
         };
       }
+      break;
 
     case 'external':
       if (typeof rawLink === 'string' && rawLink.trim() !== '') {
@@ -189,88 +207,116 @@ const resolveLinkTarget = (linkType: string, rawLink: any) => {
 
         if (isSameHost) {
           const { pathname, search, hash } = new URL(rawLink);
-          console.log('hash:', hash);
           const fragment = hash.startsWith('#') ? hash.substring(1) : undefined;
-          console.log('fragment:', fragment);
 
-          return {
+          result = {
             href: `${pathname}${search}`,
             fragment,
             isInternal: true,
             isExternal: false,
           };
+        } else {
+          result = {
+            href: rawLink,
+            isInternal: false,
+            isExternal: true,
+          };
         }
-
-        return {
-          href: rawLink,
-          isInternal: false,
-          isExternal: true,
-        };
       }
-      return null;
+      break;
 
     case 'phone':
-      return {
+      result = {
         href: `tel:${rawLink.replaceAll(/\s/g, '')}`,
         isInternal: false,
         isExternal: false,
       };
+      break;
 
     case 'email':
-      return {
+      result = {
         href: `mailto:${rawLink}`,
         isInternal: false,
         isExternal: false,
       };
-
-    default:
-      return null;
+      break;
   }
+  return result;
 };
 
 // --- LINK MAPPING ---
 
 const mapSingleLink = (item: any) => {
-  if (!item) return undefined;
+  if (!item) {
+    return undefined;
+  }
 
-  const linkType = item.type || item.linkType;
-  if (!linkType) return undefined;
+  const linkType = item.type || item.linkType || item.linktype;
+
+  if (!linkType) {
+    return undefined;
+  }
 
   let activeDataNode = null;
   if (['internal', 'external', 'phone', 'email'].includes(linkType)) {
     activeDataNode = item[linkType];
   }
 
-  if (!activeDataNode?.link) return undefined;
-
-  const targetData = resolveLinkTarget(linkType, activeDataNode.link);
-
-  if (!targetData) return undefined;
-
-  if (!targetData.href && targetData.linkType !== 'disabled') {
+  if (!activeDataNode || (Array.isArray(activeDataNode) && activeDataNode.length === 0)) {
     return undefined;
   }
 
-  return {
-    label: targetData.label || activeDataNode.linkText,
+  const rawLink =
+    activeDataNode.link || activeDataNode.url || activeDataNode.page || activeDataNode;
+
+  if (!rawLink) {
+    return undefined;
+  }
+
+  const targetData = resolveLinkTarget(linkType, rawLink);
+
+  if (!targetData) {
+    return undefined;
+  }
+
+  if (!targetData.href && targetData.linktype !== 'disabled') {
+    return undefined;
+  }
+
+  const finalMappedLink = {
+    label: targetData.label || activeDataNode.label || activeDataNode.linkText,
     href: targetData.href,
     isExternal: targetData.isExternal,
     isInternal: targetData.isInternal,
-    buttonStyle: item.buttonStyle,
-    linkDesign: item.linkDesign,
-    linkType: targetData.linkType || linkType,
+    link_style: item.link_style,
     fragment: targetData.fragment,
+    linktype: targetData.linktype,
   };
+
+  return finalMappedLink;
 };
 
 export const getLinkData = (item: any) => {
-  if (!item) return undefined;
+  if (!item) {
+    return undefined;
+  }
 
-  if (Array.isArray(item.link || item.links)) {
-    const validLinks = item.link
-      .map((link: any) => mapSingleLink(link))
-      .filter((l: any) => l !== undefined);
+  const linkArraySource = item.link || item.links;
+
+  if (Array.isArray(linkArraySource)) {
+    const validLinks = linkArraySource
+      .map((link: any, index: number) => {
+        return mapSingleLink(link);
+      })
+      .filter((l: any) => {
+        const isValid = l !== undefined;
+        return isValid;
+      });
+
     return validLinks.length > 0 ? validLinks : undefined;
   }
-  return mapSingleLink(item);
+
+  const singleLinkResult = mapSingleLink(item);
+
+  return singleLinkResult;
 };

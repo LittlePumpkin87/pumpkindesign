@@ -129,6 +129,3 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
-strapi_pumpkindesign_ssr/.env
-strapi_pumpkindesign_ssr/public/uploads/*
-!strapi_pumpkindesign_ssr/public/uploads/.gitkeep

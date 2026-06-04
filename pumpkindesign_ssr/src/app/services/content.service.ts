@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Item } from '../interfaces/page.interface';
 
 export interface SectionConfiguration {
-  id: string | null;
+  section_id: string | null;
   forcedPrimary: boolean;
 }
 
@@ -32,7 +32,6 @@ export class ContentService {
     };
   }
 
-  /* searches for disruptor element or seperator to create sections groups and sets section configuration */
 
   private groupSections(rawSections: Item[]): SectionGroup[] {
     const groupedSections: SectionGroup[] = [];
@@ -43,11 +42,9 @@ export class ContentService {
       if (!cmsItem) return;
 
       const cmsItemRecord = cmsItem as Record<string, unknown>;
-      const isDisrupterElement =
-        cmsItem.__component === 'sections.text-media' && cmsItemRecord['stoerer'] === true;
-      const isSeparatorElement = cmsItem.__component === 'sections.separator';
+      const isSeparatorElement = cmsItem.__component === 'technical.separator';
 
-      if (isSeparatorElement || isDisrupterElement) {
+      if (isSeparatorElement) {
         if (currentItemGroup.length > 0) {
           groupedSections.push({
             items: currentItemGroup,
@@ -58,18 +55,10 @@ export class ContentService {
         }
 
         const sectionConfiguration: SectionConfiguration = {
-          id: (cmsItemRecord['sectionId'] as string) || null,
-          forcedPrimary: cmsItemRecord['nextSectionIsPrimary'] === true,
+          section_id: (cmsItemRecord['section_id'] as string) || null,
+          forcedPrimary: cmsItemRecord['forcedPrimary'] === true,
         };
-
-        if (isDisrupterElement) {
-          groupedSections.push({
-            items: [cmsItem],
-            configuration: sectionConfiguration,
-          });
-        } else if (isSeparatorElement) {
-          pendingSectionConfiguration = sectionConfiguration;
-        }
+        pendingSectionConfiguration = sectionConfiguration;
       } else {
         currentItemGroup.push(cmsItem);
       }
@@ -85,12 +74,6 @@ export class ContentService {
     return groupedSections;
   }
 
-  /*  calculating Background Colors for Sections based on the following rules:
-
-   1. if a section contains a "disrupter element" (stoerer)
-   the background color of this section and the next and previous one should be white, and restarts the alternating pattern 
-   2. if a section has the "forcedWhite" flag, the background color should be white, and restarts the alternating pattern
-   3. if none of the above the alternating backgrounds start with white, starting at the first section after the Hero Component */
 
   private calculateBackgroundColors(groupedSections: SectionGroup[]): string[] {
     const backgroundColors: string[] = new Array(groupedSections.length).fill(null);

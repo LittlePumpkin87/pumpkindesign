@@ -16,7 +16,7 @@ export class IconComponent {
     const name = this.iconName();
     const prefix = this.iconPrefix();
 
-    if (!name) {
+    if (!name && name !== null) {
       console.warn('Icon name' + name + 'is not valid. Please provide a valid icon name.');
       return ['fa-solid', 'fa-triangle-exclamation', 'default-fallback'];
     }

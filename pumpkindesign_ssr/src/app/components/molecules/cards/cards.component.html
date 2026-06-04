@@ -1,0 +1,28 @@
+<div class="card-wrapper">
+  @for (card of items(); track $index) {
+    @if (card.variant === 'simple') {
+      <a class="simple" [href]="card.cta?.href">
+        <img class="simple__image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+        <lpd-icon
+          [iconName]="card.icon?.name"
+          [color]="card.icon?.color"
+          [iconPrefix]="card.icon?.prefix || 'far'"
+        ></lpd-icon>
+        <h4 class="headline">{{ card.headline }}</h4>
+        <div [innerHTML]="card.text"></div>
+      </a>
+    }
+    @if (card.variant === 'full') {
+      <div class="card">
+        <img [src]="card.imgSrc" [alt]="card.imgAlt" />
+        <lpd-icon
+          [iconName]="card.icon?.name"
+          [color]="card.icon?.color"
+          [iconPrefix]="card.icon?.prefix || 'far'"
+        ></lpd-icon>
+        <h4 class="headline">{{ card.headline }}</h4>
+        <div [innerHTML]="card.text"></div>
+      </div>
+    }
+  }
+</div>

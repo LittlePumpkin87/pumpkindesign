@@ -11,7 +11,68 @@ html {
 
 main {
   margin: 10rem 0 0 0;
+  section {
+    padding: 6rem 0;
+    .container {
+      display: flex;
+      gap: 3rem;
+      flex-direction: column;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 90vw;
+      @include large-screens {
+        max-width: 70vw;
+      }
+    }
+  }
 }
+
+// Color Gradiant with logic to use color from previous and next section to create a better flow
+
+.section {
+  background: linear-gradient(
+    180deg,
+    var(--color-top, rgba($background-grey, 0)) 0%,
+    var(--color-mid, rgba($background-grey, 0)) 30%,
+    var(--color-mid, rgba($background-grey, 0)) 70%,
+    var(--color-bottom, rgba($background-grey, 0)) 100%
+  );
+}
+
+.bg-primary {
+  --color-mid: #{rgba($accent-green, 0.2)};
+  &:has(+ .bg-secondary) {
+    --color-bottom: #{rgba($accent-blue, 0.2)};
+  }
+  &:has(+ .bg-primary) {
+    --color-bottom: #{rgba($accent-green, 0.2)};
+  }
+}
+
+.bg-secondary {
+  --color-mid: #{rgba($accent-blue, 0.2)};
+  &:has(+ .bg-primary) {
+    --color-bottom: #{rgba($accent-green, 0.2)};
+  }
+  &:has(+ .bg-secondary) {
+    --color-bottom: #{rgba($accent-blue, 0.2)};
+  }
+}
+
+.bg-primary + .bg-primary {
+  --color-top: #{rgba($accent-green, 0.2)};
+}
+.bg-secondary + .bg-secondary {
+  --color-top: #{rgba($accent-blue, 0.2)};
+}
+
+.bg-secondary + .bg-primary {
+  --color-top: #{rgba($accent-green, 0.2)};
+}
+.bg-primary + .bg-secondary {
+  --color-top: #{rgba($accent-blue, 0.2)};
+}
+
 // resets
 
 * {

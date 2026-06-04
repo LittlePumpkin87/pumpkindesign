@@ -5,7 +5,7 @@
     let groupIndex = $index
   ) {
     <section
-      [id]="sectionGroup.configuration?.id || ''"
+      [id]="sectionGroup.configuration?.section_id || ''"
       class="section bg-{{ pageStructure().colors[groupIndex] || 'primary' }}"
     >
       <div class="container">

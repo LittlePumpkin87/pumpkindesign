@@ -89,17 +89,18 @@
   transform: translateX(10%);
   pointer-events: none;
   margin-top: $spacing-05;
-  padding: $spacing-03;
+  padding: $spacing-03 $spacing-05;
   background-color: $background-grey-transparent;
   &.active {
     opacity: 1;
     transform: translateX(0%);
     pointer-events: auto;
   }
-  app-link {
+  li {
     @include transition(all, 400ms);
     @include border-open($accent-green);
     margin: $spacing-03;
+    padding: $spacing-03;
     &:hover {
       filter: $shadow-blue;
       @include border-open($accent-blue);

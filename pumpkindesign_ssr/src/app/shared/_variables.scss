@@ -6,23 +6,21 @@ $background-brown: #524034;
 $background-blue: #3b777c;
 $accent-green: #567333;
 $accent-orange: #d1681d;
-$accent-blue: #5cbcc4;
+$accent-blue: #1dc2d1;
 $text-white: #fff;
 $text-black: #000;
-$font-text: "Signika Negative";
-$font-header: "Berkshire Swash";
+$font-text: 'Signika Negative';
+$font-header: 'Berkshire Swash';
 $shadow-header: drop-shadow($text-black -2px -2px 1px)
   drop-shadow($background-blue -0.1rem -0.1rem 5rem)
   drop-shadow($background-blue 0.1rem 0.1rem 5rem);
-$shadow: drop-shadow(#1c110a 0 0.2rem 0.2rem)
-  drop-shadow(#1c110a 0 -0.2rem 0.2rem);
+$shadow: drop-shadow(#1c110a 0 0.2rem 0.2rem) drop-shadow(#1c110a 0 -0.2rem 0.2rem);
 $shadow-subtle: drop-shadow(#1c110a 0 0.2rem 0.2rem);
 $shadow-green: drop-shadow($accent-green 0 0.2rem 0.2rem)
   drop-shadow($accent-green 0 -0.2rem 0.2rem);
 $shadow-orange: drop-shadow($accent-orange 0 0.2rem 0.2rem)
   drop-shadow($accent-orange 0 -0.2rem 0.2rem);
-$shadow-blue: drop-shadow($accent-blue 0 0.2rem 0.2rem)
-  drop-shadow($accent-blue 0 -0.2rem 0.2rem);
+$shadow-blue: drop-shadow($accent-blue 0 0.2rem 0.2rem) drop-shadow($accent-blue 0 -0.2rem 0.2rem);
 $border-bottom: 0.5rem 0.5rem 2rem 2rem;
 $border-top: 2rem 2rem 0.5rem 0.5rem;
 

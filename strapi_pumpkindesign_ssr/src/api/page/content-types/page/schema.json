@@ -82,7 +82,10 @@
       },
       "components": [
         "atoms.textblock",
-        "molecules.card-list"
+        "molecules.card-list",
+        "technical.separator",
+        "organisms.timeline",
+        "organisms.certificate"
       ]
     }
   }

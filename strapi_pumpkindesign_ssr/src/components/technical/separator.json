@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_technical_separators",
+  "info": {
+    "displayName": "separator"
+  },
+  "options": {},
+  "attributes": {
+    "forcedPrimary": {
+      "type": "boolean"
+    },
+    "section_id": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
