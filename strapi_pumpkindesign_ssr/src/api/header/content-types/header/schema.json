@@ -26,6 +26,32 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "favicon": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "robots": {
+      "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "enum": [
+        "noindex, nofollow",
+        "noindex, follow",
+        "index, follow",
+        "index, nofollow"
+      ]
     }
   }
 }
