@@ -32,6 +32,8 @@ export interface TextBlock {
   subline: string;
   richtext: string;
   headline: string;
+  centered: boolean;
+  format: 'H1' | 'H2' | 'H3' | 'H4' | 'H5' | 'H6';
 }
 
 export interface Image {

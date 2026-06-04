@@ -1,47 +1,57 @@
-import { Component, Input, Type } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ComponentRegistry } from '../../../utils/component.registry';
-import { MapperRegistry } from '../../../utils/mapper.registry';
-
-interface RenderableBlock {
-  component: Type<any>;
-  item: any;
-}
+import { Component, computed, inject, input, afterNextRender, effect } from '@angular/core';
+import { ContentService, PageStructure } from '../../../services/content.service';
+import { DynamicRenderDirective } from '../../../utils/dynamic-render.directive';
+import { Item } from '../../../interfaces/page.interface';
 
 @Component({
   selector: 'lpd-content-renderer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [DynamicRenderDirective],
   templateUrl: './content-renderer.html',
-  styleUrl: './content-renderer.scss',
 })
 export class ContentRendererComponent {
-  public renderableBlocks: RenderableBlock[] = [];
+  content = input<Item[]>();
+  renderAsSections = input<boolean>(true);
+  private readonly contentService = inject(ContentService);
 
-  @Input({ required: true }) set rawBlocks(blocks: any[]) {
-    if (!blocks || !Array.isArray(blocks)) {
-      this.renderableBlocks = [];
-      return;
+  pageStructure = computed<PageStructure>(() => {
+    const itemsToRender = this.content();
+    if (!itemsToRender || itemsToRender.length === 0) {
+      return { groups: [], colors: [], navItems: [] };
     }
 
-    this.renderableBlocks = blocks.reduce((acc: RenderableBlock[], rawData: any) => {
-      const componentName = rawData.__component;
-      
-      const ComponentClass = ComponentRegistry[componentName];
-      const mapperFunction = MapperRegistry[componentName];
+    if (this.renderAsSections()) {
+      return this.contentService.preparePageStructure(itemsToRender);
+    }
 
-      if (ComponentClass && mapperFunction) {
-        const cleanItem = mapperFunction(rawData);
-        
-        acc.push({
-          component: ComponentClass,
-          item: cleanItem
-        });
-      } else {
-        console.warn(`[ContentRenderer] Missing registry entries for: ${componentName}`);
+    return { groups: [], colors: [], navItems: [] };
+  });
+
+  constructor() {
+   effect(() => {
+      console.log('5. [ContentRenderer] Received content Input:', this.content());
+      console.log('6. [ContentRenderer] Computed pageStructure:', this.pageStructure());
+    });
+    afterNextRender(() => {
+      const hash = globalThis.location.hash.replace('#', '');
+      if (hash) {
+        setTimeout(() => {
+          const targetElement = document.getElementById(hash);
+          if (targetElement) {
+            const prefersReducedMotion = globalThis.matchMedia(
+              '(prefers-reduced-motion: reduce)',
+            ).matches;
+
+            targetElement.scrollIntoView({
+              behavior: prefersReducedMotion ? 'auto' : 'smooth',
+              block: 'start',
+            });
+            targetElement.setAttribute('tabindex', '-1');
+            targetElement.focus({ preventScroll: true });
+            targetElement.style.outline = 'none';
+          }
+        }, 50);
       }
-
-      return acc;
-    }, []);
+    });
   }
 }

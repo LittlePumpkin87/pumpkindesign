@@ -1,14 +1,19 @@
-import { Component, input } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { TextBlock } from '../../../interfaces/atom.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lpd-textblock',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './textblock.html',
   styleUrl: './textblock.scss',
 })
-export class Textblock {
+export class TextblockComponent {
+  item = input<TextBlock>();
 
-  content = input<TextBlock>();
-
+ constructor() {
+    effect(() => {
+      console.log('[Textblock]', this.item());
+    });
+  }
 }

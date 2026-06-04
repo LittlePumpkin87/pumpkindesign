@@ -1,0 +1,7 @@
+@use '../../../shared/index.scss' as *;
+
+.headline {
+  filter: $shadow-header;
+  animation: text-pop-up-top .6s both;
+  margin: 4rem 1rem;
+}

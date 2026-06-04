@@ -1,20 +1,26 @@
-<div class="textblock">
-  @if (content()?.subline) {
-    <span class="subline">{{ content()?.subline }}</span>
+<div class="textblock" [ngClass]="item()?.centered ? 'centered' : 'left'">
+  @if (item()?.subline) {
+    <span class="subline">{{ item()?.subline }}</span>
   }
-  @switch (content()?.headline) {
+  @switch (item()?.format) {
     @case ('H1') {
-      <h2>{{ content()?.headline }}</h2>
+      <h2>{{ item()?.headline }}</h2>
     }
     @case ('H2') {
-      <h2>{{ content()?.headline }}</h2>
+      <h2>{{ item()?.headline }}</h2>
     }
     @case ('H3') {
-      <h3>{{ content()?.headline }}</h3>
+      <h3>{{ item()?.headline }}</h3>
     }
-    @default {
-      <h2>{{ content()?.headline }}</h2>
+    @case ('H4') {
+      <h4>{{ item()?.headline }}</h4>
+    }
+    @case ('H5') {
+      <h5>{{ item()?.headline }}</h5>
+    }
+    @case ('H6') {
+      <h6>{{ item()?.headline }}</h6>
     }
   }
-  <span [innerHTML]="content()?.richtext"></span>
+  <div [innerHTML]="item()?.richtext"></div>
 </div>

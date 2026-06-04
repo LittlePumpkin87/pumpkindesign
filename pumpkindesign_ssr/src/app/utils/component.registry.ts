@@ -1,6 +1,14 @@
 import { Type } from '@angular/core';
-import { Textblock } from '../components/atoms/textblock/textblock';
+import { TextblockComponent } from '../components/atoms/textblock/textblock';
 
-export const ComponentRegistry: Record<string, Type<any>> = {
-  'content.text-block': Textblock,
+interface ComponentConfig {
+  tagName: string;
+  component: Type<unknown>;
+}
+
+export const COMPONENT_REGISTRY: Record<string, ComponentConfig> = {
+  'atoms.textblock': {
+    tagName: 'lpd-textblock',
+    component: TextblockComponent,
+  },
 };

@@ -1,10 +1,25 @@
-<p>
-  content-renderer works!<br />
-  {{ renderableBlocks | json }}
-</p>
-
-@for (block of renderableBlocks; track $index) {
-  <ng-container *ngComponentOutlet="block.component; inputs: { item: block.item }" />
-} @empty {
-  <p>No content found.</p>
+@if (renderAsSections()) {
+  @for (
+    sectionGroup of pageStructure().groups;
+    track $index;
+    let groupIndex = $index
+  ) {
+    <section
+      [id]="sectionGroup.configuration?.id || ''"
+      class="section bg-{{ pageStructure().colors[groupIndex] || 'primary' }}"
+    >
+      <div class="container">
+        @for (cmsItem of sectionGroup.items; track $index) {
+          <ng-container
+            [lpdDynamicRender]="cmsItem"
+            [sectionColor]="pageStructure().colors[groupIndex]"
+          ></ng-container>
+        }
+      </div>
+    </section>
+  }
+} @else {
+  @for (cmsItem of content(); track $index) {
+    <ng-container [lpdDynamicRender]="cmsItem"></ng-container>
+  }
 }

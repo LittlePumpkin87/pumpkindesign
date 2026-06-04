@@ -1,5 +1,7 @@
-type MapperFunction = (rawData: any) => any;
+import { mapTextBlockData } from "../mapper/textblock.mapper";
 
-export const MapperRegistry: Record<string, MapperFunction> = {
-  // setup mapper here e.g.:
+type MapperFunction = (data: any, ...args: any[]) => any;
+
+export const COMPONENT_MAPPERS: Record<string, MapperFunction> = {
+  'atoms.textblock': mapTextBlockData,
 };
