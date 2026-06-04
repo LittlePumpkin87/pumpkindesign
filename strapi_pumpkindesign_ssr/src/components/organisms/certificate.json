@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_organisms_certificates",
+  "info": {
+    "displayName": "certificate"
+  },
+  "options": {},
+  "attributes": {
+    "certificate_item": {
+      "type": "component",
+      "component": "technical.certificate-item",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

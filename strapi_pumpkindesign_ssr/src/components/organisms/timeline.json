@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_organisms_timelines",
+  "info": {
+    "displayName": "timeline"
+  },
+  "options": {},
+  "attributes": {
+    "timeline_item": {
+      "type": "component",
+      "component": "technical.timeline-item",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

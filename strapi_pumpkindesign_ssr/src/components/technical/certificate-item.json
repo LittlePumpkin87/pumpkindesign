@@ -1,20 +1,19 @@
 {
-  "collectionName": "components_organisms_certificates",
+  "collectionName": "components_technical_certificate_items",
   "info": {
-    "displayName": "certificates"
+    "displayName": "certificate_item"
   },
   "options": {},
   "attributes": {
+    "label": {
+      "type": "string"
+    },
     "file": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
-        "files",
-        "images"
+        "files"
       ]
-    },
-    "label": {
-      "type": "string"
     }
   },
   "config": {}

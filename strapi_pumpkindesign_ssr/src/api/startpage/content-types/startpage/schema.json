@@ -73,8 +73,6 @@
         }
       },
       "components": [
-        "organisms.resume",
-        "organisms.certificates",
         "atoms.textblock",
         "molecules.card-list"
       ]

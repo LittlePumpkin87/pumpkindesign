@@ -1,7 +1,7 @@
 {
-  "collectionName": "components_organisms_resumes",
+  "collectionName": "components_technical_timeline_items",
   "info": {
-    "displayName": "timeline"
+    "displayName": "timeline_item"
   },
   "options": {},
   "attributes": {
@@ -9,9 +9,9 @@
       "type": "string"
     },
     "short_description": {
-      "type": "string"
+      "type": "text"
     },
-    "long_text": {
+    "long_description": {
       "type": "blocks"
     }
   },
