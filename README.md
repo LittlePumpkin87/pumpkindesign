@@ -2,6 +2,8 @@
 
 This repository contains the full source code for my personal portfolio and freelance website. To ensure a seamless, modern, and easily deployable architecture, the entire application is containerized using Docker, combining both the frontend and the backend into an **All-in-One** setup.
 
+You have to create your own `.env file.` The easiest way is to copy the .env.example file and fill in your secrets.
+
 To start all at once locally use the command `docker compose --env-file ./strapi_pumpkindesign_ssr/.env -f docker-compose.dev.yml up -d --build --force-recreate` as shell command
 
 Replace `docker-compose.dev.yml` with `docker-compose.yml` for production environment
