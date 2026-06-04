@@ -20,7 +20,7 @@
   </button>
   <ul class="HamburgerLink" [ngClass]="{ active: isActive }">
     @for (link of items(); track $index) {
-      <li>
+      <li class="link-item">
         <lpd-link [item]="link"></lpd-link>
       </li>
     }

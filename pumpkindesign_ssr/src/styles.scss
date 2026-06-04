@@ -4,11 +4,14 @@ body,
 html {
   font-family: 'Signika Negative', sans-serif;
   background-color: $background-grey;
-  color: #fff;
+  color: $text-white;
   padding: 0;
   margin: 0;
 }
 
+main {
+  margin: 10rem 0 0 0;
+}
 // resets
 
 * {
