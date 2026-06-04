@@ -1,9 +1,37 @@
 @font-face {
-  font-display: swap;
-  font-family: 'Signika Negative';
+  font-family: 'Signika Negative Regular';
   font-style: normal;
-  font-weight: 400;
-  src: url('/fonts/signikanegative-regular.woff') format('woff');
+  font-weight: normal;
+  src:
+    local('Signika Negative Regular'),
+    url('../shared/fonts/SignikaNegative-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Signika Negative Light';
+  font-style: normal;
+  font-weight: normal;
+  src:
+    local('Signika Negative Light'),
+    url('../shared/fonts/SignikaNegative-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Signika Negative SemiBold';
+  font-style: normal;
+  font-weight: normal;
+  src:
+    local('Signika Negative SemiBold'),
+    url('../shared/fonts/SignikaNegative-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Signika Negative Bold';
+  font-style: normal;
+  font-weight: normal;
+  src:
+    local('Signika Negative Bold'),
+    url('../shared/fonts/SignikaNegative-Bold.woff') format('woff');
 }
 
 @font-face {
@@ -11,7 +39,7 @@
   font-family: 'Berkshire Swash';
   font-style: normal;
   font-weight: 400;
-  src: url('/fonts/berkshireswash-regular.woff') format('woff');
+  src: url('../shared/fonts/berkshireswash-regular.woff') format('woff');
 }
 
 @font-face {
@@ -19,19 +47,19 @@
   font-family: 'Font Awesome 7 Brands';
   font-style: normal;
   font-weight: 400;
-  src: url('/fonts/fa-brands-400.woff2') format('woff2');
+  src: url('../shared/fonts/fa-brands-400.woff2') format('woff2');
 }
 @font-face {
   font-display: swap;
   font-family: 'Font Awesome 7 Regular';
   font-style: normal;
   font-weight: 400;
-  src: url('/fonts/fa-regular-400.woff2') format('woff2');
+  src: url('../shared/fonts/fa-regular-400.woff2') format('woff2');
 }
 @font-face {
   font-display: swap;
   font-family: 'Font Awesome 7 Solid';
   font-style: normal;
   font-weight: 900;
-  src: url('/fonts/fa-solid-900.woff2') format('woff2');
+  src: url('../shared/fonts/fa-solid-900.woff2') format('woff2');
 }
