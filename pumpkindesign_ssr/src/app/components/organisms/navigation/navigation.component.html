@@ -1,4 +1,4 @@
-<div id="MobileNav">
+<nav id="MobileNav">
   <span id="close"></span>
   <button id="HamToggle" (click)="toggleMenu()" onkeydown="toggleMenu()" onkeypress="toggleMenu()">
     <svg
@@ -18,9 +18,11 @@
       />
     </svg>
   </button>
-  <div class="HamburgerLink" [ngClass]="{ active: isActive }">
+  <ul class="HamburgerLink" [ngClass]="{ active: isActive }">
     @for (link of items(); track $index) {
-      <lpd-link [item]="link"></lpd-link>
+      <li>
+        <lpd-link [item]="link"></lpd-link>
+      </li>
     }
-  </div>
-</div>
+  </ul>
+</nav>
