@@ -1,0 +1,14 @@
+name: Deploy via Portainer Webhook
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, synology-docker]
+
+    steps:
+    - name: Trigger Portainer Update
+      run: curl -X POST ${{ secrets.PORTAINER_WEBHOOK }}
