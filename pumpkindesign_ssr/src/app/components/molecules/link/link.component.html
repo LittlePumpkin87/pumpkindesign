@@ -3,9 +3,9 @@
     {{ item()?.label }}
     <lpd-icon [iconName]="item()?.iconName" [iconPrefix]="item()?.iconPrefix || 'fas'"></lpd-icon>
   </a>
-} @else {
+} @else if (item()?.isExternal) {
   <a class="link" [attr.href]="item()?.href" [target]="'_blank'">
     {{ item()?.label }}
     <lpd-icon [iconName]="item()?.iconName" [iconPrefix]="item()?.iconPrefix || 'fas'"></lpd-icon>
   </a>
-}
+} @else {} <!-- TODO implement mail phone and icon only links -->

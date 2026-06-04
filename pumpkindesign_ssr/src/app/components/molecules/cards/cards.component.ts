@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'lpd-cards',
@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss',
 })
-export class CardsComponent {}
+export class CardsComponent {
+
+  items = input<any[]>(); // TODO change any to CardItem interface
+}
