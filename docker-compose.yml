@@ -9,9 +9,9 @@ services:
     ports:
       - "4200:4000"
     environment:
-        - NODE_ENV=production
-        - PORT=4000
-        - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
+      - NODE_ENV=production
+      - PORT=4000
+      - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
     networks:
       - strapi_net
     depends_on:
@@ -20,15 +20,15 @@ services:
   # --- STRAPI BACKEND (PROD) ---
   strapi:
     container_name: strapi_prod
-    build: 
+    build:
       context: ./strapi_pumpkindesign_ssr
-      dockerfile: Dockerfile.prod 
+      dockerfile: Dockerfile.prod
     restart: unless-stopped
     env_file: ./strapi_pumpkindesign_ssr/.env
     environment:
       - NODE_ENV=production
     volumes:
-      - ./strapi_pumpkindesign_ssr/public/uploads:/opt/app/public/uploads
+      - strapi-uploads:/opt/app/public/uploads
     ports:
       - "1337:1337"
     networks:
@@ -53,24 +53,9 @@ services:
       timeout: 5s
       retries: 5
 
-  # --- PGADMIN (PROD) ---
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_prod
-    restart: unless-stopped
-    env_file: ./strapi_pumpkindesign_ssr/.env
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USERNAME}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
-    ports:
-      - "8080:80"
-    networks:
-      - strapi_net
-    depends_on:
-      - strapiDB
-
 volumes:
   strapi-data:
+  strapi-uploads:
 
 networks:
   strapi_net:
