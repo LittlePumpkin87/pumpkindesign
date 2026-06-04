@@ -84,21 +84,6 @@
       },
       "component": "technical.email-link",
       "repeatable": false
-    },
-    "icon": {
-      "type": "component",
-      "conditions": {
-        "visible": {
-          "==": [
-            {
-              "var": "linktype"
-            },
-            "icon"
-          ]
-        }
-      },
-      "component": "technical.icon-link",
-      "repeatable": false
     }
   },
   "config": {}

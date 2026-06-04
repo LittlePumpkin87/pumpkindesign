@@ -12,7 +12,6 @@ export class IconComponent {
   public iconPrefix = input<string>('fas');
   public iconName = input<string>();
   public color = input<string>();
-
   public computedClasses = computed(() => {
     const name = this.iconName();
     const prefix = this.iconPrefix();

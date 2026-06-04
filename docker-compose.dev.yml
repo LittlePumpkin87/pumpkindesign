@@ -58,22 +58,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # --- PGADMIN ---
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    restart: unless-stopped
-    env_file: ./strapi_pumpkindesign_ssr/.env
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USERNAME}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
-    ports:
-      - "8080:80"
-    networks:
-      - strapi_net
-    depends_on:
-      - strapiDB
-
 volumes:
   strapi-data:
 

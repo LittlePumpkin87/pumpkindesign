@@ -5,14 +5,45 @@
   },
   "options": {},
   "attributes": {
-    "icon_name": {
-      "type": "string"
+    "icon": {
+      "type": "component",
+      "component": "technical.icon",
+      "repeatable": false
     },
-    "icon_prefix": {
-      "type": "string"
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "internal",
+        "external"
+      ]
+    },
+    "page": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "type"
+            },
+            "internal"
+          ]
+        }
+      }
     },
     "url": {
-      "type": "string"
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "type"
+            },
+            "external"
+          ]
+        }
+      }
     }
   },
   "config": {}

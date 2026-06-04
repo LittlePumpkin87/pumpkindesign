@@ -12,6 +12,18 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::page.page"
+    },
+    "icon": {
+      "type": "component",
+      "component": "technical.icon",
+      "repeatable": false
+    },
+    "icon_position": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "right"
+      ]
     }
   },
   "config": {}

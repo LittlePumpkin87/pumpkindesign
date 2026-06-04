@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_molecules_footer_columns",
+  "info": {
+    "displayName": "footer_column"
+  },
+  "options": {},
+  "attributes": {
+    "cta": {
+      "type": "component",
+      "component": "molecules.cta",
+      "repeatable": true,
+      "max": 5
+    }
+  },
+  "config": {}
+}
