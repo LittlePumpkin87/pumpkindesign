@@ -65,6 +65,12 @@ pumpkindesign_ssr/
     ├── main.ts             # Client entry point
     └── server.ts           # SSR Node server setup
 ```
+## 📁 REST API (Strapi)
+
+  BASE_URL/api/head to fetch global Header Data like Facicon, Logo etc.
+  BASE_URL/api/page-by-path?path=PATH_OF_YOUR_PAGE to fetch full cleaned up Data from a single page which is used for content renderer and services
+  BASE_URL/api/foot to fetch global Footer Data
+
 
 ## 👩‍💻 About the Developer
 

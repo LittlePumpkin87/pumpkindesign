@@ -4,18 +4,29 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 3rem;
-
+  gap: 2rem;
+  @include tablet {
+    gap: 1rem;
+  }
+  @include medium-desktop {
+    gap: 3rem;
+  }
   .simple {
     @include flex(column, flex-start);
     @include border-open($accent-blue);
     @include transition;
-    @include tile-width(3, 3rem);
+    @include tile-width(1, 0);
     cursor: pointer;
     text-align: justify;
     padding: $spacing-05 $spacing-05;
     background-color: $accent-green;
     animation: pop-up-down 500ms both;
+    @include tablet {
+      @include tile-width(2, 1rem);
+    }
+    @include medium-desktop {
+      @include tile-width(3, 3rem);
+    }
     &:hover {
       background-color: $accent-blue;
       animation: pop-up-top 500ms both;

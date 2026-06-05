@@ -55,41 +55,40 @@ function getAutoPopulate(uid: string, maxDepth = 8, currentDepth = 1): any {
   return populate;
 }
 
+function cleanData(data: any, isRoot = true): any {
+  if (Array.isArray(data)) {
+    return data.map((item) => cleanData(item, false));
+  }
+
+  if (data !== null && typeof data === "object") {
+    if (data.url && data.mime && data.provider) {
+      return {
+        url: data.url,
+        alternativeText: data.alternativeText || "",
+        ext: data.ext,
+        size: data.size,
+      };
+    }
+    if (!isRoot && data.path && data.documentId && data.seo_title !== undefined) {
+      return {
+        path: `/${data.path}`,
+      };
+    }
+    delete data.createdBy;
+    delete data.updatedBy;
+    for (const key in data) {
+      data[key] = cleanData(data[key], false);
+    }
+    return data;
+  }
+
+  return data;
+}
+
 export default {
   async page(ctx: any) {
     try {
       const searchPath = ctx.query.path || "/";
-
-      const cleanData = (data: any, isRoot = true): any => {
-        if (Array.isArray(data)) {
-          return data.map((item) => cleanData(item, false));
-        }
-
-        if (data !== null && typeof data === "object") {
-          if (data.url && data.mime && data.provider) {
-            return {
-              url: data.url,
-              alternativeText: data.alternativeText || "",
-              ext: data.ext,
-              size: data.size,
-            };
-          }
-          if (!isRoot && data.path && data.documentId && data.seo_title !== undefined) {
-            return {
-              path: `/${data.path}`,
-            };
-          }
-          delete data.createdBy;
-          delete data.updatedBy;
-
-          for (const key in data) {
-            data[key] = cleanData(data[key], false);
-          }
-          return data;
-        }
-
-        return data;
-      };
 
       if (searchPath === "/") {
         const startpageUid = "api::startpage.startpage";
@@ -120,6 +119,35 @@ export default {
     } catch (err) {
       console.error("Router Error:", err);
       ctx.internalServerError("An error occurred in the router API", err);
+    }
+  },
+
+  async header(ctx: any) {
+    try {
+      const headerUid = "api::header.header";
+      const header = await strapi.documents(headerUid).findFirst({
+        populate: getAutoPopulate(headerUid),
+      });
+
+      if (!header) return ctx.notFound("Header not found");
+      return ctx.send({ data: cleanData(header), type: "header" });
+    } catch (err) {
+      console.error("Header Error:", err);
+      ctx.internalServerError("An error occurred in the header API", err);
+    }
+  },
+  async footer(ctx: any) {
+    try {
+      const footerUid = "api::footer.footer";
+      const footer = await strapi.documents(footerUid).findFirst({
+        populate: getAutoPopulate(footerUid),
+      });
+
+      if (!footer) return ctx.notFound("Header not found");
+      return ctx.send({ data: cleanData(footer), type: "header" });
+    } catch (err) {
+      console.error("Header Error:", err);
+      ctx.internalServerError("An error occurred in the header API", err);
     }
   },
 };
