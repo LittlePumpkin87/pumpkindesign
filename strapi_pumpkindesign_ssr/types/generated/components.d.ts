@@ -38,7 +38,7 @@ export interface MoleculesCta extends Struct.ComponentSchema {
 }
 
 export interface OrganismsCertificates extends Struct.ComponentSchema {
-  collectionName: 'components_organisms_certificates';
+  collectionName: 'components_organisms_certificate';
   info: {
     displayName: 'certificates';
   };

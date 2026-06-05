@@ -1,16 +1,17 @@
 services:
-  # --- ANGULAR FRONTEND (PROD / BFF) ---
+  # --- ANGULAR FRONTEND (PROD) ---
   angular_frontend:
     container_name: angular_prod
     build:
       context: ./pumpkindesign_ssr
       dockerfile: Dockerfile.prod
+      args:
+        - CACHE_BUSTER=${CACHE_BUSTER:-1}
     restart: unless-stopped
     ports:
-      - "4200:4000"
+      - "4200:4200"
     environment:
-      - NODE_ENV=production
-      - PORT=4000
+      - NODE_ENV=production 
       - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
     networks:
       - strapi_net
@@ -24,13 +25,21 @@ services:
       context: ./strapi_pumpkindesign_ssr
       dockerfile: Dockerfile.prod
     restart: unless-stopped
-    env_file: ./strapi_pumpkindesign_ssr/.env
     environment:
       - NODE_ENV=production
-    volumes:
-      - strapi-uploads:/opt/app/public/uploads
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=strapiDB
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - APP_KEYS=${APP_KEYS}
+      - API_TOKEN_SALT=${API_TOKEN_SALT}
+      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET}
+      - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
-      - "1337:1337"
+      - "127.0.0.1:1337:1337"
     networks:
       - strapi_net
     depends_on:
@@ -39,24 +48,26 @@ services:
 
   # --- POSTGRES DATENBANK (PROD) ---
   strapiDB:
-    container_name: strapiDB_prod
+    container_name: strapiDB
     restart: unless-stopped
     image: postgres:16-alpine
-    env_file: ./strapi_pumpkindesign_ssr/.env
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - strapi-data:/var/lib/postgresql/data/
     networks:
       - strapi_net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${DATABASE_USERNAME} -d $${DATABASE_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
 volumes:
   strapi-data:
-  strapi-uploads:
 
 networks:
-  strapi_net:
+  strapi_net: #replace later with current existing network on portainer
     driver: bridge

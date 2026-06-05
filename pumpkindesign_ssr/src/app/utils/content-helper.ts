@@ -7,7 +7,7 @@ export const getImageUrl = (imageData: any): string | undefined => {
   if (!imageData) {
     return undefined;
   }
-  let url = imageData.url || imageData.image?.url;
+  let url = imageData.url;
   if (!url) {
     return undefined;
   }

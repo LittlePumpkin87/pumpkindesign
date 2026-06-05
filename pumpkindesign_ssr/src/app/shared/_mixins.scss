@@ -17,18 +17,6 @@
   align-items: $align-items;
 }
 
-@mixin image-background(
-  $size: contain,
-  $repeat: no-repeat,
-  $position: center,
-  $url: url(/images/own_logo/Logo_colored.png)
-) {
-  background-size: $size;
-  background-repeat: $repeat;
-  background-position: $position;
-  background-image: $url;
-}
-
 @mixin transition($properties: all, $duration: 600ms, $timing-function: ease-in-out, $delay: 0s) {
   transition-property: $properties;
   transition-duration: $duration;

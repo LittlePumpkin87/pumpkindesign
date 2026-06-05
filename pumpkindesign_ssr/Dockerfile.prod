@@ -12,5 +12,5 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package*.json ./
 RUN npm ci --omit=dev
-EXPOSE 4000
+EXPOSE 4200
 CMD ["node", "dist/pumpkindesign_ssr/server/server.mjs"]
