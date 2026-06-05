@@ -16,7 +16,7 @@ export class Page {
   public readonly navService = inject(NavigationService);
   public readonly pageService = inject(PageService);
   public navData = this.navService.mainNavigation;
-
+  readonly header = this.navService.headerData;
   readonly page = this.pageService.currentPage;
 
   constructor() {

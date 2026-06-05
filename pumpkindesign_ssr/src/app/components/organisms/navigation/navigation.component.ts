@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { LinkComponent } from '../../molecules/link/link.component';
-import { NavigationItem } from '../../../interfaces/atom.interface';
+import { HeaderData, NavigationItem } from '../../../interfaces/atom.interface';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class NavigationComponent {
   items = input<NavigationItem[]>([]);
+  logoData = input<{ item: HeaderData } | undefined>();
   private readonly router = inject(Router);
 
   constructor() {

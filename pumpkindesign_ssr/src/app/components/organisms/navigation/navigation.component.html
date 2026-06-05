@@ -1,5 +1,9 @@
 <nav id="MobileNav">
-  <img src="" alt="">
+  @if (logoData()?.item?.logo) {
+    <a class="logo" href="/" aria-label="zurück zur Startseite">
+      <img [src]="logoData()?.item?.logo" [alt]="logoData()?.item?.logoAlt" />
+    </a>
+  }
   <span id="close"></span>
   <button id="HamToggle" (click)="toggleMenu()" onkeydown="toggleMenu()" onkeypress="toggleMenu()">
     <svg

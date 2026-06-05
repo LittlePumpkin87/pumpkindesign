@@ -16,9 +16,19 @@ export interface NavigationItem {
   href?: string;
   documentId?: string | null;
   locale?: string;
-  items?: NavigationItem[];
+  items: NavigationItem[]
 }
 
+export interface HeaderData {
+  logo: string | undefined;
+  logoAlt: string;
+  favicon: string | undefined;
+  robots: string;
+}
+
+export interface HeaderWrapper {
+  item: HeaderData;
+}
 export interface Icon {
   name: string;
   prefix?: string;

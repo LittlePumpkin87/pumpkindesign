@@ -1,22 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { shareReplay, catchError, map, filter, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { shareReplay, map, filter } from 'rxjs/operators';
 import { Router, Scroll } from '@angular/router';
 
 import { environment } from '../../environments/environment';
-import { NavigationItem } from '../interfaces/atom.interface';
-import { mapStrapiNavigation } from '../mapper/navigation.mapper';
-
+import { mapHeaderData, mapStrapiNavigation } from '../mapper/navigation.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly API_URL = environment.API_URL;
-
-  private readonly NAV_ENDPOINT = `${this.API_URL}/api/navigation/render/main?type=TREE`;
 
   constructor() {
     this.initAnchorScroll();
@@ -33,21 +28,18 @@ export class NavigationService {
     });
   }
 
-  public readonly navigationRequest$ = this.http.get<any[]>(this.NAV_ENDPOINT).pipe(
-    tap((rawData) => console.log('1. [NavigationService] RAW DATA FROM STRAPI:', rawData)),
+  private readonly navigationRequest$ = this.http
+    .get<any[]>(`${this.API_URL}/api/navigation/render/main?type=TREE`)
+    .pipe(
+      map((data) => mapStrapiNavigation(data)),
+      shareReplay(1),
+    );
 
-    map((rawData) => mapStrapiNavigation(rawData)),
-
-    tap((mappedData) => console.log('2. [NavigationService] MAPPED FRONTEND DATA:', mappedData)),
-
+  private readonly headerRequest$ = this.http.get<any>(`${this.API_URL}/api/head`).pipe(
+    map((data) => mapHeaderData(data)),
     shareReplay(1),
-    catchError((err) => {
-      console.error('[NavigationService] Main navigation error:', err);
-      return of([] as NavigationItem[]);
-    }),
   );
 
-  readonly mainNavigation = toSignal(this.navigationRequest$, {
-    initialValue: [],
-  });
+  readonly mainNavigation = toSignal(this.navigationRequest$, { initialValue: [] });
+  readonly headerData = toSignal(this.headerRequest$, { initialValue: undefined });
 }

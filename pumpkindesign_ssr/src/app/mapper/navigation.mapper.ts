@@ -1,11 +1,12 @@
-import { NavigationItem } from '../interfaces/atom.interface';
+import { HeaderData, NavigationItem } from '../interfaces/atom.interface';
+import { getImageUrl } from '../utils/content-helper';
 
 export function mapStrapiNavigation(rawData: any[]): NavigationItem[] {
   if (!rawData || !Array.isArray(rawData)) return [];
 
   return rawData.map((rawItem) => {
     const item: NavigationItem = {
-      iconName: rawItem.additionalFields.iconName,
+      iconName: rawItem.additionalFields?.iconName,
       label: rawItem.title,
       href: rawItem.path,
       isInternal: rawItem.type === 'INTERNAL',
@@ -24,4 +25,20 @@ export function mapStrapiNavigation(rawData: any[]): NavigationItem[] {
 
     return item;
   });
+}
+
+export function mapHeaderData(rawData: any): { item: HeaderData } | undefined {
+  if (!rawData) {
+    return undefined;
+  }
+  const data = rawData.data || rawData;
+
+  return {
+    item: {
+      logo: getImageUrl(data.logo),
+      logoAlt: data.logo.alternativeText,
+      favicon: getImageUrl(data.favicon),
+      robots: data.robots,
+    },
+  };
 }

@@ -95,6 +95,7 @@
     opacity: 1;
     transform: translateX(0%);
     pointer-events: auto;
+    z-index: 999;
   }
   li {
     @include transition(all, 400ms);
@@ -110,7 +111,16 @@
 
 #MobileNav {
   position: sticky;
-  @include flex(row, flex-end, center);
+  @include flex(row, space-between, center);
   background-color: $accent-orange;
   border-radius: $border-bottom;
+  height: 5rem;
+  padding: 0 0 0 2rem;
+  @include tablet {
+    height: 8rem;
+  }
+}
+
+.logo {
+  height: 75%;
 }
