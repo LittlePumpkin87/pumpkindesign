@@ -13,7 +13,7 @@ export const getImageUrl = (imageData: any): string | undefined => {
   }
   const isAbsolute = url.startsWith('http');
   if (!isAbsolute) {
-    url = `${environment.API_IMAGE_URL}${url}`;
+    url = `${environment.IMAGE_PATH}${url}`;
   }
   return url;
 };

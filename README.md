@@ -4,9 +4,9 @@ This repository contains the full source code for my personal portfolio and free
 
 You have to create your own `.env file.` The easiest way is to copy the .env.example file and fill in your secrets.
 
-To start all at once locally use the command `docker compose --env-file ./strapi_pumpkindesign_ssr/.env -f docker-compose.dev.yml up -d --build --force-recreate` as shell command
+To start all at once locally use the command `docker compose --env-file .env -f docker-compose.dev.yml up -d --build --force-recreate` as shell command
 
-Replace `docker-compose.dev.yml` with `docker-compose.yml` for production environment or just use `docker compose --env-file ./strapi_pumpkindesign_ssr/.env -d --build`
+Replace `docker-compose.dev.yml` with `docker-compose.yml` for production environment or just use `docker compose --env-file .env -d --build`
 
 make sure your docker engine is running!
 

@@ -16,7 +16,7 @@ export class NavigationService {
   private readonly router = inject(Router);
   private readonly API_URL = environment.API_URL;
 
-  private readonly NAV_ENDPOINT = `${this.API_URL}/navigation/render/main?type=TREE`;
+  private readonly NAV_ENDPOINT = `${this.API_URL}/api/navigation/render/main?type=TREE`;
 
   constructor() {
     this.initAnchorScroll();

@@ -1,12 +1,9 @@
 export const environment = {
   production: true,
-  API_URL: 'https://strapi.littlepumpkindeisgn.de/api',
-  BASE_URL: 'https://www.littlepumpkindesign.de',
-  ALLOWED_HOSTS: [
-    'www.littlepumpkindesign.de',
-    'littlepumpkindesign.de',
-    'strapi.littlepumpkindeisgn.de',
-    'cms.littlepumpkindesign.de',
-    'staging.littlepumpkindesign.de',
-  ],
+  API_URL: '',
+  IMAGE_PATH: 'http://localhost:1337',
+  BASE_URL: 'http://localhost:4200',
+  ALLOWED_HOSTS: ['127.0.0.1', 'localhost', '0.0.0.0'],
 };
+
+// TODO change urls when prod environment is about to publish to NAS

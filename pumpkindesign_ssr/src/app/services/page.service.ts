@@ -58,7 +58,7 @@ export class PageService {
 
   getPageDetails(path: string | undefined): Observable<PageItem | undefined> {
     const queryPath = path ? `${path}` : '/';
-    return this.http.get<PageResponse>(`${this.API_URL}/page-by-path?path=${queryPath}`).pipe(
+    return this.http.get<PageResponse>(`${this.API_URL}/api/page-by-path?path=${queryPath}`).pipe(
       tap((response) => console.log('1. [PageService] RAW API Response:', response)),
       map((response) => {
         const page = response?.data;

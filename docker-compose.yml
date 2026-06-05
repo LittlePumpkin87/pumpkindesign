@@ -1,43 +1,38 @@
 services:
-  # --- ANGULAR FRONTEND (PROD) ---
+  # --- ANGULAR FRONTEND ---
   angular_frontend:
     container_name: angular_prod
     build:
       context: ./pumpkindesign_ssr
       dockerfile: Dockerfile.prod
-      args:
-        - CACHE_BUSTER=${CACHE_BUSTER:-1}
     restart: unless-stopped
     ports:
-      - "4200:4200"
+      - "127.0.0.1:4200:4200"
+    env_file:
+          - .env
     environment:
-      - NODE_ENV=production 
-      - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
+      - NODE_ENV=production
+      - PORT=4200
     networks:
       - strapi_net
     depends_on:
       - strapi
 
-  # --- STRAPI BACKEND (PROD) ---
+  # --- STRAPI BACKEND ---
   strapi:
     container_name: strapi_prod
     build:
       context: ./strapi_pumpkindesign_ssr
       dockerfile: Dockerfile.prod
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - DATABASE_CLIENT=postgres
       - DATABASE_HOST=strapiDB
       - DATABASE_PORT=5432
-      - DATABASE_NAME=${DATABASE_NAME}
-      - DATABASE_USERNAME=${DATABASE_USERNAME}
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - APP_KEYS=${APP_KEYS}
-      - API_TOKEN_SALT=${API_TOKEN_SALT}
-      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET}
-      - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
-      - JWT_SECRET=${JWT_SECRET}
+      - PORT=1337
     ports:
       - "127.0.0.1:1337:1337"
     networks:
@@ -46,11 +41,13 @@ services:
       strapiDB:
         condition: service_healthy
 
-  # --- POSTGRES DATENBANK (PROD) ---
+  # --- POSTGRES DATENBANK ---
   strapiDB:
     container_name: strapiDB
     restart: unless-stopped
     image: postgres:16-alpine
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -69,5 +66,5 @@ volumes:
   strapi-data:
 
 networks:
-  strapi_net: #replace later with current existing network on portainer
+  strapi_net:
     driver: bridge

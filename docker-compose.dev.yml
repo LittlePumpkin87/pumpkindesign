@@ -7,14 +7,17 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "4200:4200"
+      - "127.0.0.1:4200:4200"
     volumes:
       - ./pumpkindesign_ssr:/app
       - /app/node_modules
-    command: npm run start
+    env_file:
+      - .env
     environment:
+      - NODE_ENV=development
+      - PORT=4200
       - WATCHPACK_POLLING=true
-    env_file: ./strapi_pumpkindesign_ssr/.env
+    command: npm run start
     networks:
       - strapi_net
     depends_on:
@@ -23,31 +26,32 @@ services:
   # --- STRAPI BACKEND (DEV) ---
   strapi:
     container_name: strapi_dev
-    build: ./strapi_pumpkindesign_ssr
-    image: strapi:latest
+    build:
+      context: ./strapi_pumpkindesign_ssr
+      dockerfile: Dockerfile
     restart: unless-stopped
-    env_file: ./strapi_pumpkindesign_ssr/.env
-    volumes:
-      - ./strapi_pumpkindesign_ssr/config:/opt/app/config
-      - ./strapi_pumpkindesign_ssr/src:/opt/app/src
-      - ./strapi_pumpkindesign_ssr/package.json:/opt/package.json
-      - ./strapi_pumpkindesign_ssr/package-lock.json:/opt/package-lock.json
-      - ./strapi_pumpkindesign_ssr/.env:/opt/app/.env
-      - ./strapi_pumpkindesign_ssr/public/uploads:/opt/app/public/uploads
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=strapiDB
+      - DATABASE_PORT=5432
     ports:
-      - "1337:1337"
+      - "127.0.0.1:1337:1337"
     networks:
       - strapi_net
     depends_on:
       strapiDB:
         condition: service_healthy
-        
-# --- PGADMIN (DEV) ---
+
+  # --- PGADMIN (DEV) ---
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_dev
     restart: unless-stopped
-    env_file: ./strapi_pumpkindesign_ssr/.env
+    env_file:
+      - .env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USERNAME}
       PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
@@ -62,14 +66,19 @@ services:
   strapiDB:
     container_name: strapiDB
     restart: unless-stopped
+    env_file:
+      - .env
     image: postgres:16-alpine
-    env_file: ./strapi_pumpkindesign_ssr/.env
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - strapi-data:/var/lib/postgresql/data/
     networks:
       - strapi_net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${DATABASE_USERNAME} -d $${DATABASE_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
