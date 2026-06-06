@@ -23,9 +23,7 @@ services:
   # --- ANGULAR FRONTEND ---
   angular_frontend:
     container_name: angular_prod
-    build:
-      context: ./pumpkindesign_ssr
-      dockerfile: Dockerfile.prod
+    image: ghcr.io/littlepumpkin87/pumpkin-frontend:latest
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -40,9 +38,7 @@ services:
   # --- STRAPI BACKEND ---
   strapi:
     container_name: strapi_prod
-    build:
-      context: ./strapi_pumpkindesign_ssr
-      dockerfile: Dockerfile.prod
+    image: ghcr.io/littlepumpkin87/pumpkin-strapi:latest
     restart: unless-stopped
     environment:
       - NODE_ENV=production
