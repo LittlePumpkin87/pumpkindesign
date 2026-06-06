@@ -24,7 +24,7 @@ jobs:
         docker build -t ghcr.io/littlepumpkin87/pumpkin-frontend:latest -f ./pumpkindesign_ssr/Dockerfile.prod ./pumpkindesign_ssr
         docker push ghcr.io/littlepumpkin87/pumpkin-frontend:latest
 
-    - name: Build and Push Strapi (Das dauert hier nur 2-3 Minuten!)
+    - name: Build and Push Strapi
       run: |
         docker build -t ghcr.io/littlepumpkin87/pumpkin-strapi:latest -f ./strapi_pumpkindesign_ssr/Dockerfile.prod ./strapi_pumpkindesign_ssr
         docker push ghcr.io/littlepumpkin87/pumpkin-strapi:latest
