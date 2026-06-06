@@ -1,4 +1,20 @@
 services:
+  # --- NGINX ---
+  nginx_proxy:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    restart: unless-stopped
+    networks:
+      Pumpkindesign:
+        ipv4_address: ${IP_V4}
+      pumpkindesign_default:
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${SSL_CERT_PATH}:/etc/ssl/certs/server.crt:ro
+      - ${SSL_KEY_PATH}:/etc/ssl/private/server.key:ro
+    depends_on:
+      - angular_frontend
+  
   # --- ANGULAR FRONTEND ---
   angular_frontend:
     container_name: angular_prod
@@ -6,15 +22,13 @@ services:
       context: ./pumpkindesign_ssr
       dockerfile: Dockerfile.prod
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:4200:4200"
-    env_file:
-          - .env
     environment:
       - NODE_ENV=production
       - PORT=4200
+      - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
+      - BASE_PATH_STRAPI=http://strapi:1337
     networks:
-      - strapi_net
+      - pumpkindesign_default
     depends_on:
       - strapi
 
@@ -33,10 +47,14 @@ services:
       - DATABASE_HOST=strapiDB
       - DATABASE_PORT=5432
       - PORT=1337
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
     ports:
       - "127.0.0.1:1337:1337"
     networks:
-      - strapi_net
+      - pumpkindesign_default
     depends_on:
       strapiDB:
         condition: service_healthy
@@ -49,13 +67,13 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_DB: ${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
     volumes:
       - strapi-data:/var/lib/postgresql/data/
     networks:
-      - strapi_net
+      - pumpkindesign_default
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
@@ -66,5 +84,7 @@ volumes:
   strapi-data:
 
 networks:
-  strapi_net:
-    driver: bridge
+  Pumpkindesign:
+    external: true
+  pumpkindesign_default:
+    external: true
