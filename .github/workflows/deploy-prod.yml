@@ -23,5 +23,7 @@ jobs:
         PG_ADMIN_PASSWORD: ${{ secrets.PG_ADMIN_PASSWORD }}
         SSL_CERT_PATH: ${{ secrets.SSL_CERT_PATH }}
         SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
+        NAS_HTTP_PORT: ${{ secrets.NAS_HTTP_PORT }}
+        NAS_HTTPS_PORT: ${{ secrets.NAS_HTTPS_PORT }}
       run: |
         docker compose -f docker-compose.yml up -d --build
