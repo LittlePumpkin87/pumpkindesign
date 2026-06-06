@@ -29,7 +29,7 @@ services:
       - NODE_ENV=production
       - PORT=4200
       - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
-      - BASE_PATH_STRAPI=http://strapi:1337
+      - BASE_PATH_STRAPI=http://strapi:6466
     networks:
       - pumpkindesign_default
     depends_on:
@@ -45,13 +45,13 @@ services:
       - DATABASE_CLIENT=postgres
       - DATABASE_HOST=strapiDB
       - DATABASE_PORT=5432
-      - PORT=1337
+      - PORT=6466
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - STRAPI_API_TOKEN=${STRAPI_API_TOKEN}
     ports:
-      - "127.0.0.1:1337:1337"
+      - "127.0.0.1:6466:6466"
     networks:
       - pumpkindesign_default
     depends_on:

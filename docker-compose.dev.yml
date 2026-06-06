@@ -38,7 +38,7 @@ services:
       - DATABASE_HOST=strapiDB
       - DATABASE_PORT=5432
     ports:
-      - "127.0.0.1:1337:1337"
+      - "127.0.0.1:6466:6466"
     networks:
       - strapi_net
     depends_on:

@@ -14,7 +14,7 @@ COPY . .
 RUN npx strapi ts:generate-types
 
 # Uncomment the following lines to set the admin panel URL at build time.
-# Without this, the admin panel defaults to localhost:1337.
+# Without this, the admin panel defaults to localhost:6466.
 # ARG STRAPI_ADMIN_BACKEND_URL
 # ENV STRAPI_ADMIN_BACKEND_URL=${STRAPI_ADMIN_BACKEND_URL}
 ENV NODE_ENV=production
@@ -35,7 +35,7 @@ COPY --from=build /opt/app ./
 
 RUN chown -R node:node /opt/app
 USER node
-EXPOSE 1337
+EXPOSE 6466
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:1337/_health || exit 1
+  CMD wget --quiet --tries=1 --spider http://localhost:6466/_health || exit 1
 CMD ["npm", "run", "start"]
