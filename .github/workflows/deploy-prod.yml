@@ -1,0 +1,29 @@
+name: Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, synology-docker]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Build and Deploy via Docker Compose
+      env: 
+        STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        PG_ADMIN_USERNAME: ${{ secrets.PG_ADMIN_USERNAME }}
+        PG_ADMIN_PASSWORD: ${{ secrets.PG_ADMIN_PASSWORD }}
+        SSL_CERT_PATH: ${{ secrets.SSL_CERT_PATH }}
+        SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
+        NAS_HTTP_PORT: ${{ secrets.NAS_HTTP_PORT }}
+        NAS_HTTPS_PORT: ${{ secrets.NAS_HTTPS_PORT }}
+      run: |
+        docker compose -f docker-compose.yml up -d --build
