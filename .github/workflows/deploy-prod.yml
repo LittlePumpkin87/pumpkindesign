@@ -24,4 +24,4 @@ jobs:
         SSL_CERT_PATH: ${{ secrets.SSL_CERT_PATH }}
         SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
       run: |
-        docker compose -f docker-compose.prod.yml up -d --build
+        docker compose -f docker-compose.yml up -d --build
