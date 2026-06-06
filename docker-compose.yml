@@ -7,6 +7,8 @@ services:
     ports:
       - "${NAS_HTTP_PORT}:80"
       - "${NAS_HTTPS_PORT}:443"
+    environment:
+      - IP_V4=${IP_V4}
     networks:
       Pumpkindesign:
         ipv4_address: ${IP_V4}
@@ -67,8 +69,6 @@ services:
     container_name: strapiDB
     restart: unless-stopped
     image: postgres:16-alpine
-    env_file:
-      - .env
     environment:
       - POSTGRES_USER=${DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
