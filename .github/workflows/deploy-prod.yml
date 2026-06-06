@@ -48,6 +48,7 @@ jobs:
         DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         SSL_CERT_PATH: ${{ secrets.SSL_CERT_PATH }}
+        CONFIG_PATH: ${{secrets.CONFIG_PATH}}
         SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
         NAS_HTTP_PORT: ${{ secrets.NAS_HTTP_PORT }}
         NAS_HTTPS_PORT: ${{ secrets.NAS_HTTPS_PORT }}
