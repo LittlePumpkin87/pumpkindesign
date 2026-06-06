@@ -21,5 +21,7 @@ jobs:
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         PG_ADMIN_USERNAME: ${{ secrets.PG_ADMIN_USERNAME }}
         PG_ADMIN_PASSWORD: ${{ secrets.PG_ADMIN_PASSWORD }}
+        SSL_CERT_PATH: ${{ secrets.SSL_CERT_PATH }}
+        SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
       run: |
         docker compose -f docker-compose.prod.yml up -d --build
