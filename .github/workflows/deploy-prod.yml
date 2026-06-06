@@ -51,6 +51,11 @@ jobs:
         SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
         NAS_HTTP_PORT: ${{ secrets.NAS_HTTP_PORT }}
         NAS_HTTPS_PORT: ${{ secrets.NAS_HTTPS_PORT }}
+        APP_KEYS: ${{ secrets.APP_KEYS}}
+        API_TOKEN_SALT: ${{secrets.API_TOKEN_SALT}}
+        ADMIN_JWT_SECRET: ${{secrets.ADMIN_JWT_SECRET}}
+        TRANSFER_TOKEN_SALT: ${{secrets.TRANSFER_TOKEN_SALT}}
+        ENCRYPTION_KEY: ${{secrets.ENCRYPTION_KEY}}
       run: |
         docker compose -f docker-compose.yml pull
         docker compose -f docker-compose.yml up -d
