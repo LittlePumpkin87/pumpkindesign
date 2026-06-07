@@ -42,6 +42,10 @@ Missing Navigation Configuration: The navigation structure has not yet been conf
 
 Empty Content: The initial content for pages, projects, and services has not been created or migrated yet
 
+Missing Images: The image path to view and display ulpoaded strapi images via upload container is not working yet.
+
+`NOTE: All these Issues are currently under development and will be fixed very soon`
+
 ---
 
 ## 📁 Project Structure (Frontend Focus)
