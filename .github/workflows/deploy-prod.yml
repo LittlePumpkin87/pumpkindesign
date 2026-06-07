@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-images:
@@ -13,21 +13,25 @@ jobs:
       packages: write
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Login to GitHub Container Registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and Push Angular
-      run: |
-        docker build -t ghcr.io/littlepumpkin87/pumpkin-frontend:latest -f ./pumpkindesign_ssr/Dockerfile.prod ./pumpkindesign_ssr
-        docker push ghcr.io/littlepumpkin87/pumpkin-frontend:latest
+      - name: Build and Push Angular
+        run: |
+          docker build -t ghcr.io/littlepumpkin87/pumpkin-frontend:latest -f ./pumpkindesign_ssr/Dockerfile.prod ./pumpkindesign_ssr
+          docker push ghcr.io/littlepumpkin87/pumpkin-frontend:latest
 
-    - name: Build and Push Strapi
-      run: |
-        docker build -t ghcr.io/littlepumpkin87/pumpkin-strapi:latest -f ./strapi_pumpkindesign_ssr/Dockerfile.prod ./strapi_pumpkindesign_ssr
-        docker push ghcr.io/littlepumpkin87/pumpkin-strapi:latest
+      - name: Build and Push Strapi
+        run: |
+          docker build -t ghcr.io/littlepumpkin87/pumpkin-strapi:latest -f ./strapi_pumpkindesign_ssr/Dockerfile.prod ./strapi_pumpkindesign_ssr
+          docker push ghcr.io/littlepumpkin87/pumpkin-strapi:latest
 
   deploy-nas:
     name: Deploy to Synology NAS
@@ -35,29 +39,34 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Login to GitHub Container Registry on NAS
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      # NEU: Der offizielle und sichere Docker-Login für deine Synology NAS
+      - name: Log in to the Container registry on NAS
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Pull and Deploy via Docker Compose
-      env: 
-        STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
-        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        SSL_CERT_PATH: ${{ secrets.SSL_CERT_PATH }}
-        CONFIG_PATH: ${{secrets.CONFIG_PATH}}
-        SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
-        NAS_HTTP_PORT: ${{ secrets.NAS_HTTP_PORT }}
-        NAS_HTTPS_PORT: ${{ secrets.NAS_HTTPS_PORT }}
-        APP_KEYS: ${{ secrets.APP_KEYS}}
-        API_TOKEN_SALT: ${{secrets.API_TOKEN_SALT}}
-        ADMIN_JWT_SECRET: ${{secrets.ADMIN_JWT_SECRET}}
-        TRANSFER_TOKEN_SALT: ${{secrets.TRANSFER_TOKEN_SALT}}
-        ENCRYPTION_KEY: ${{secrets.ENCRYPTION_KEY}}
-        JWT_SECRET: ${{secrets.JWT_SECRET}}
-      run: |
-        docker compose -f docker-compose.yml pull
-        docker compose -f docker-compose.yml up -d
+      - name: Pull and Deploy via Docker Compose
+        env:
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          SSL_CERT_PATH: ${{ secrets.SSL_CERT_PATH }}
+          CONFIG_PATH: ${{secrets.CONFIG_PATH}}
+          SSL_KEY_PATH: ${{ secrets.SSL_KEY_PATH }}
+          NAS_HTTP_PORT: ${{ secrets.NAS_HTTP_PORT }}
+          NAS_HTTPS_PORT: ${{ secrets.NAS_HTTPS_PORT }}
+          APP_KEYS: ${{ secrets.APP_KEYS}}
+          API_TOKEN_SALT: ${{secrets.API_TOKEN_SALT}}
+          ADMIN_JWT_SECRET: ${{secrets.ADMIN_JWT_SECRET}}
+          TRANSFER_TOKEN_SALT: ${{secrets.TRANSFER_TOKEN_SALT}}
+          ENCRYPTION_KEY: ${{secrets.ENCRYPTION_KEY}}
+          JWT_SECRET: ${{secrets.JWT_SECRET}}
+        run: |
+          docker compose -f docker-compose.yml pull
+          docker compose -f docker-compose.yml up -d
