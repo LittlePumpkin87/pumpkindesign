@@ -34,6 +34,16 @@ Unlike standard static hosting platforms, the entire stack (both frontend SSR an
 
 ---
 
+## ⚠️ Known Issues
+
+Since the project is still under active development, the following tasks are currently open:
+
+Missing Navigation Configuration: The navigation structure has not yet been configured within the Strapi CMS.
+
+Empty Content: The initial content for pages, projects, and services has not been created or migrated yet
+
+---
+
 ## 📁 Project Structure (Frontend Focus)
 
 The Angular frontend follows a highly scalable architecture inspired by **Atomic Design principles**, separating UI components by complexity and responsibility:
