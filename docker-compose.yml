@@ -52,6 +52,8 @@ services:
       - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "6466:6466"
     networks:
       - pumpkindesign_default
     depends_on:
