@@ -6,8 +6,11 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import crypto from 'node:crypto';
+
 import { environment } from './environments/environment';
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const isProd = process.env['NODE_ENV'] === 'production';
 
 const app = express();
 const allowedHosts = environment.ALLOWED_HOSTS;
@@ -27,11 +30,6 @@ app.use('/api', async (req, res) => {
 
   const token = process.env['STRAPI_API_TOKEN'];
   const strapiUrl = process.env['BASE_PATH_STRAPI'];
-
-  console.log('--- PROXY DEBUG ---');
-  console.log('Token vorhanden:', !!token);
-  console.log('Strapi URL:', strapiUrl);
-  console.log('Original URL:', req.originalUrl);
 
   const targetUrl = `${strapiUrl}${req.originalUrl}`;
 
@@ -57,6 +55,55 @@ app.use('/api', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error while connecting to the CMS.' });
   }
 });
+
+app.use('/**', (req, res, next) =>
+  angularApp
+    .handle(req)
+    .then(async (response) => {
+      if (!response) {
+        return next();
+      }
+
+      if (isProd) {
+        const nonce = crypto.randomBytes(16).toString('base64');
+        let html = await response.text();
+
+        if (html.includes('randomNonceGoesHere')) {
+          html = html.replaceAll('randomNonceGoesHere', nonce);
+        }
+
+        const newResponse = new Response(html, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+        });
+
+        res.setHeader('Permissions-Policy', 'camera=(), geolocation=(), microphone=()');
+        res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+        res.setHeader('X-XSS-Protection', '1; mode=block');
+
+        res.setHeader(
+          'Content-Security-Policy',
+          `base-uri 'self'; ` +
+          `default-src 'self'; ` +
+          `script-src 'self' 'nonce-${nonce}'; ` +
+          `style-src 'self' 'unsafe-inline'; ` +
+          `img-src 'self' data: https://littlepumpkindesign.de https://www.littlepumpkindesign.de; ` +
+          `font-src 'self' data: https://fonts.gstatic.com; ` +
+          `connect-src 'self' https://littlepumpkindesign.de https://www.littlepumpkindesign.de; ` +
+          `frame-src 'self'; ` +
+          `frame-ancestors 'self'`
+        );
+
+        return writeResponseToNodeResponse(newResponse, res);
+      } 
+      
+      else {
+        return writeResponseToNodeResponse(response, res);
+      }
+    })
+    .catch(next),
+);
 
 app.use((req, res, next) => {
   angularApp

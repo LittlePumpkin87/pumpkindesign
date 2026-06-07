@@ -7,7 +7,7 @@ const config: Core.Config.Middlewares = [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['http://localhost:4200', 'http://localhost:6466'],
+      origin: ['littlepumpkindesign.de', 'www.littlepumpkindesign.de'],
       methods: ['GET', 'POST'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeaderOnError: true,
