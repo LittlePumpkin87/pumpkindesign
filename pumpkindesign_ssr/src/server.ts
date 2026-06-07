@@ -56,7 +56,7 @@ app.use('/api', async (req, res) => {
   }
 });
 
-app.use('/**', (req, res, next) =>
+app.use('*', (req, res, next) =>
   angularApp
     .handle(req)
     .then(async (response) => {
