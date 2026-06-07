@@ -33,7 +33,7 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts":  ["littlepumpkindesign.de", ".littlepumpkindesign.de"]
             },
             "ssr": {
               "entry": "src/server.ts"

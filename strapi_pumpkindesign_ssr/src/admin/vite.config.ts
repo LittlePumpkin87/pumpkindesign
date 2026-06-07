@@ -1,14 +1,16 @@
-import { mergeConfig, type UserConfig } from 'vite';
+import { mergeConfig, type UserConfig } from "vite";
 
 export default (config: UserConfig) => {
   // Important: always return the modified config
   return mergeConfig(config, {
     server: {
-      allowedHosts: ['*.littlepumpkindesign.de', 'localhost'],
+      server: {
+        allowedHosts: ["littlepumpkindesign.de", ".littlepumpkindesign.de"],
+      },
     },
     resolve: {
       alias: {
-        '@': '/src',
+        "@": "/src",
       },
     },
   });
