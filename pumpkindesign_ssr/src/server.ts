@@ -26,8 +26,8 @@ app.use(
   }),
 );
 
-app.use('/api', async (req, res) => {
 
+app.use('/api', async (req, res) => {
   const token = process.env['STRAPI_API_TOKEN'];
   const strapiUrl = process.env['BASE_PATH_STRAPI'];
 
@@ -56,7 +56,8 @@ app.use('/api', async (req, res) => {
   }
 });
 
-app.use('*', (req, res, next) =>
+
+app.use((req, res, next) => {
   angularApp
     .handle(req)
     .then(async (response) => {
@@ -72,10 +73,13 @@ app.use('*', (req, res, next) =>
           html = html.replaceAll('randomNonceGoesHere', nonce);
         }
 
+        const newHeaders = new Headers(response.headers);
+        newHeaders.delete('content-length');
+
         const newResponse = new Response(html, {
           status: response.status,
           statusText: response.statusText,
-          headers: response.headers,
+          headers: newHeaders,
         });
 
         res.setHeader('Permissions-Policy', 'camera=(), geolocation=(), microphone=()');
@@ -85,30 +89,21 @@ app.use('*', (req, res, next) =>
         res.setHeader(
           'Content-Security-Policy',
           `base-uri 'self'; ` +
-          `default-src 'self'; ` +
-          `script-src 'self' 'nonce-${nonce}'; ` +
-          `style-src 'self' 'unsafe-inline'; ` +
-          `img-src 'self' data: https://littlepumpkindesign.de https://www.littlepumpkindesign.de; ` +
-          `font-src 'self' data: https://fonts.gstatic.com; ` +
-          `connect-src 'self' https://littlepumpkindesign.de https://www.littlepumpkindesign.de; ` +
-          `frame-src 'self'; ` +
-          `frame-ancestors 'self'`
+            `default-src 'self'; ` +
+            `script-src 'self' 'nonce-${nonce}'; ` +
+            `style-src 'self' 'unsafe-inline'; ` +
+            `img-src 'self' data: https://littlepumpkindesign.de https://www.littlepumpkindesign.de; ` +
+            `font-src 'self' data: https://fonts.gstatic.com; ` +
+            `connect-src 'self' https://littlepumpkindesign.de https://www.littlepumpkindesign.de; ` +
+            `frame-src 'self'; ` +
+            `frame-ancestors 'self'`,
         );
 
         return writeResponseToNodeResponse(newResponse, res);
-      } 
-      
-      else {
+      } else {
         return writeResponseToNodeResponse(response, res);
       }
     })
-    .catch(next),
-);
-
-app.use((req, res, next) => {
-  angularApp
-    .handle(req)
-    .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch(next);
 });
 
