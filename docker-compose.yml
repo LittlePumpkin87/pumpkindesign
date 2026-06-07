@@ -42,6 +42,7 @@ services:
       - DATABASE_HOST=strapiDB
       - DATABASE_PORT=5432
       - PORT=6466
+      - HOST=${HOST}
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
@@ -52,9 +53,6 @@ services:
       - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - JWT_SECRET=${JWT_SECRET}
-
-    ports:
-      - "127.0.0.1:6466:6466"
     networks:
       - pumpkindesign_default
     depends_on:
