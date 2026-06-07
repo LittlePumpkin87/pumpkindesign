@@ -58,7 +58,6 @@ jobs:
         TRANSFER_TOKEN_SALT: ${{secrets.TRANSFER_TOKEN_SALT}}
         ENCRYPTION_KEY: ${{secrets.ENCRYPTION_KEY}}
         JWT_SECRET: ${{secrets.JWT_SECRET}}
-        HOST: ${{secrets.HOST}}
       run: |
         docker compose -f docker-compose.yml pull
         docker compose -f docker-compose.yml up -d
