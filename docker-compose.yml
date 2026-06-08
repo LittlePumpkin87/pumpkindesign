@@ -35,6 +35,8 @@ services:
   strapi:
     container_name: strapi_prod
     image: ghcr.io/littlepumpkin87/pumpkin-strapi:latest
+    volumes:
+      - ${IMAGE_PATH}:/opt/app/public/uploads
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -52,6 +54,7 @@ services:
       - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - JWT_SECRET=${JWT_SECRET}
+      - IMAGE_PATH=${IMAGE_PATH}
     ports:
       - "6466:6466"
     networks:
