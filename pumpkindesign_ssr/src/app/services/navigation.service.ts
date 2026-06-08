@@ -29,13 +29,13 @@ export class NavigationService {
   }
 
   private readonly navigationRequest$ = this.http
-    .get<any[]>(`${this.API_URL}/api/navigation/render/main?type=TREE`)
+    .get<any[]>(`${this.API_URL}/navigation/render/main?type=TREE`)
     .pipe(
       map((data) => mapStrapiNavigation(data)),
       shareReplay(1),
     );
 
-  private readonly headerRequest$ = this.http.get<any>(`${this.API_URL}/api/head`).pipe(
+  private readonly headerRequest$ = this.http.get<any>(`${this.API_URL}/head`).pipe(
     map((data) => mapHeaderData(data)),
     shareReplay(1),
   );
