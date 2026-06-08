@@ -11,11 +11,7 @@ export const getImageUrl = (imageData: any): string | undefined => {
   if (!url) {
     return undefined;
   }
-  const isAbsolute = url.startsWith('http');
-  if (!isAbsolute) {
-    url = `${environment.IMAGE_PATH}${url}`;
-  }
-  return url;
+  return `/api${url}`;
 };
 
 export const getIconData = (iconData: any): Icon | undefined => {
@@ -44,11 +40,8 @@ export const getFileData = (fileData: any) => {
   if (!url) {
     return undefined;
   }
+  url = `/api${url}`;
 
-  const isAbsolute = url.startsWith('http');
-  if (!isAbsolute) {
-    url = `${environment.API_URL}/files/file?path=${url}`;
-  }
   if (fileType) {
     fileType = fileType.startsWith('.') ? fileType.substring(1) : fileType;
     fileType = fileType.toUpperCase();
