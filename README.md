@@ -1,56 +1,75 @@
 # 🎃 Little Pumpkin Design – Portfolio & Freelance Website
 
-This repository contains the full source code for my personal portfolio and freelance website. To ensure a seamless, modern, and easily deployable architecture, the entire application is containerized using Docker, combining both the frontend and the backend into an **All-in-One** setup.
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![Strapi](https://img.shields.io/badge/Strapi-2E7EEA?style=for-the-badge&logo=strapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 
-You have to create your own `.env file.` The easiest way is to copy the .env.example file and fill in your secrets.
+> **Welcome to the source code of my personal portfolio!** > This repository showcases a modern, next-gen full-stack architecture, combining a highly scalable frontend with a headless CMS, entirely containerized and self-hosted.
 
-To start all at once locally use the command `docker compose --env-file .env -f docker-compose.dev.yml up -d --build --force-recreate` as shell command
+## ✨ Key Features & Technical Highlights
 
-Replace `docker-compose.dev.yml` with `docker-compose.yml` for production environment or just use `docker compose --env-file .env -d --build`
-
-make sure your docker engine is running!
-
----
-
-## 🏗️ Project Status & Architecture Road Map
-
-> **Note:** This project is currently **under active development (Work in Progress)**. I am migrating my legacy portfolio to a modern, next-gen full-stack architecture to reflect my daily tech stack in enterprise web development.
-
-The project is split into two main parts, orchestrated to run together flawlessly:
-
-* **Frontend (`pumpkindesign_ssr`):** Developed with **Angular (Latest Version)** using **SSR (Server-Side Rendering)** for optimal SEO and performance, along with TypeScript and SCSS.
-* **Backend / CMS (`strapi_pumpkindesign_ssr`):** Powered by **Strapi (Headless CMS)**, allowing dynamic content management for portfolio projects, services, and blog posts.
-* **DevOps / Deployment (`docker-compose.yml`):** **Docker & Docker Compose** are used to package the Angular production build (served via Nginx) and the Strapi instance into a unified, lightweight, and easily deployable environment.
+This project is built to reflect enterprise-level standards in web development:
+* **Server-Side Rendering (SSR):** Optimized for flawless SEO and lightning-fast Initial Page Loads using the latest Angular features.
+* **Atomic Design Architecture:** Frontend components are strictly separated into Atoms, Molecules, and Organisms for maximum reusability.
+* **Headless CMS Integration:** Dynamic content management via Strapi (REST API).
+* **Automated CI/CD:** Fully automated build and deployment pipelines using **GitHub Actions** (Push to GitHub Container Registry).
+* **Enterprise Security:** * Strict Content Security Policies (CSP) with dynamic Nonces against XSS attacks.
+  * Custom Nginx Reverse Proxy with rigorous file-extension whitelisting to block bots and malicious scanners.
 
 ---
 
-## 🚀 Deployment & Hosting Strategy
+## 🚀 Getting Started (Local Setup)
 
-Unlike standard static hosting platforms, the entire stack (both frontend SSR and backend CMS) is architected for self-hosting:
+### Prerequisites
+Make sure you have the following installed on your machine:
+* [Docker](https://www.docker.com/) & Docker Compose
+* Node.js (for local frontend development)
 
-* **Target Infrastructure:** Hosted on a local **NAS** server environment.
+### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/yourusername/littlepumpkindesign.git](https://github.com/yourusername/littlepumpkindesign.git)
+   cd littlepumpkindesign
+
+```
+
+2. **Environment Variables:**
+You have to create your own `.env` file. The easiest way is to copy the example file and fill in your secrets:
+
+```bash
+cp .env.example .env
+
+```
+
+
+3. **Spin up the environment:**
+Start the entire stack (Frontend + Backend + Database) locally using Docker Compose:
+
+```bash
+docker compose --env-file .env -f docker-compose.dev.yml up -d --build --force-recreate
+
+```
+
+
+*For the production environment, replace `docker-compose.dev.yml` with `docker-compose.yml`.*
+
+---
+
+## 🏗️ Deployment & Hosting Strategy
+
+Unlike standard static hosting platforms, the entire stack is architected for self-hosting to maintain full control over data and infrastructure:
+
+* **Infrastructure:** Hosted on a local **Synology NAS** server environment.
 * **Orchestration:** Multi-container deployment managed via **Docker Compose**.
-* **Routing & Security:** Served via an **Nginx Reverse Proxy** with automated SSL/TLS termination.
-
----
-
-## ⚠️ Known Issues
-
-Since the project is still under active development, the following tasks are currently open:
-
-Missing Navigation Configuration: The navigation structure has not yet been configured within the Strapi CMS.
-
-Empty Content: The initial content for pages, projects, and services has not been created or migrated yet
-
-Missing Images: The image path to view and display ulpoaded strapi images via upload container is not working yet.
-
-`NOTE: All these Issues are currently under development and will be fixed very soon`
+* **Routing:** Served via an **Nginx Reverse Proxy** handling routing and SSL/TLS termination.
 
 ---
 
 ## 📁 Project Structure (Frontend Focus)
 
-The Angular frontend follows a highly scalable architecture inspired by **Atomic Design principles**, separating UI components by complexity and responsibility:
+The Angular frontend follows a highly scalable architecture:
 
 ```text
 pumpkindesign_ssr/
@@ -58,39 +77,42 @@ pumpkindesign_ssr/
 └── src/
     ├── app/
     │   ├── components/     # Atomic Design Architecture
-    │   │   ├── atoms/      # Smallest building blocks (buttons, inputs, icons)
+    │   │   ├── atoms/      # Smallest building blocks (buttons, inputs)
     │   │   ├── molecules/  # Groups of atoms functioning together
     │   │   └── organisms/  # Complex UI components composed of molecules
     │   ├── interfaces/     # TypeScript interfaces and type definitions
-    │   ├── mapper/         # Data mappers (e.g., API response payload to frontend model)
+    │   ├── mapper/         # Data mappers (API payload to frontend models)
     │   ├── services/       # Core business logic and API communication
-    │   ├── shared/         # Shared modules and global components
-    │   ├── utils/          # Helper functions and utilities
-    │   ├── app.config.server.ts
-    │   ├── app.config.ts
-    │   ├── app.html
-    │   ├── app.routes.server.ts
-    │   ├── app.routes.ts
-    │   ├── app.scss
-    │   └── app.ts
-    ├── environments/       # Environment-specific configurations
-    ├── index.html
+    │   └── shared/         # Shared modules and global components
     ├── main.server.ts      # SSR entry point
-    ├── main.ts             # Client entry point
-    └── server.ts           # SSR Node server setup
+    └── server.ts           # Express Node server setup (incl. CSP & Proxy)
+
 ```
-## 📁 REST API (Strapi)
 
-  BASE_URL/api/head to fetch global Header Data like Facicon, Logo etc.
-  BASE_URL/api/page-by-path?path=PATH_OF_YOUR_PAGE to fetch full cleaned up Data from a single page which is used for content renderer and services
-  BASE_URL/api/foot to fetch global Footer Data
+### REST API Endpoints (Strapi)
 
+* `/api/head` - Fetches global Header Data (Favicon, Logo, Navigation).
+* `/api/page-by-path?path=/` - Fetches cleaned-up structural data for a specific page route.
+* `/api/foot` - Fetches global Footer Data.
+
+---
+
+## 🛠️ Development Road Map & To-Dos
+
+This project is under active development. Current focus areas:
+
+* [x] Configure Headless Navigation Structure in Strapi.
+* [x] Create and migrate initial Startpage content.
+* [ ] **WIP:** Fix Docker volume mapping for displaying uploaded Strapi images in the frontend.
+* [ ] Add portfolio case studies.
+
+---
 
 ## 👩‍💻 About the Developer
 
-I am a professional **Web Developer** currently working in the agency environment, specialized in modern frontend architectures and headless content management workflows. 
+I am a professional **Web Developer** currently working in an agency environment, specialized in modern frontend architectures and headless content management workflows.
 
-* **Current Focus:** Angular, TypeScript, Headless CMS integration (Strapi, Webflow, FirstSpirit), and DevOps basics (Docker, CI/CD Pipelines).
-* **Design Background:** With a background in Graphic Design, I focus heavily on pixel-perfect UI implementations and seamless UX/UI concepts.
+* **Current Focus:** Angular, TypeScript, Headless CMS integration (Strapi, Webflow, FirstSpirit), and DevOps (Docker, CI/CD Pipelines).
+* **Design Background:** With a strong background in Graphic Design, I focus heavily on pixel-perfect UI implementations and seamless UX/UI concepts.
 
----
+📫 **Get in touch:** Let's connect on [Xing](https://www.xing.com/profile/Jennifer_Roob/web_profiles?nwt_nav=profile) or check out my live portfolio at [littlepumpkindesign.de](https://littlepumpkindesign.de).
