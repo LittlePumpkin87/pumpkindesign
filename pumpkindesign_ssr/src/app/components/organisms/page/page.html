@@ -4,7 +4,7 @@
 
 <main>
   <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
-  <div [innerHTML]="page()?.main_text"></div>
+  <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
 
   <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
 </main>
