@@ -28,21 +28,14 @@ Make sure you have the following installed on your machine:
 * Node.js (for local frontend development)
 
 ### Installation
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/yourusername/littlepumpkindesign.git](https://github.com/yourusername/littlepumpkindesign.git)
-   cd littlepumpkindesign
 
-```
-
-2. **Environment Variables:**
+**Environment Variables:**
 You have to create your own `.env` file. The easiest way is to copy the example file and fill in your secrets:
 
 ```bash
 cp .env.example .env
 
 ```
-
 
 3. **Spin up the environment:**
 Start the entire stack (Frontend + Backend + Database) locally using Docker Compose:
