@@ -30,6 +30,8 @@ services:
       context: ./strapi_pumpkindesign_ssr
       dockerfile: Dockerfile
     restart: unless-stopped
+    volumes:
+      - ./strapi_pumpkindesign_ssr:/opt/app
     env_file:
       - .env
     environment:
