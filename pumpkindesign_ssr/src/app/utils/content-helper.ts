@@ -1,6 +1,8 @@
 import { environment } from '../../environments/environment';
 import { Icon } from '../interfaces/atom.interface';
 
+const isProd = process.env['NODE_ENV'] === 'production';
+
 // --- Helper functions for mapper ---
 
 export const getImageUrl = (imageData: any): string | undefined => {
@@ -8,10 +10,12 @@ export const getImageUrl = (imageData: any): string | undefined => {
     return undefined;
   }
   let url = imageData.url;
-  if (!url) {
-    return undefined;
+
+  if (isProd) {
+    return `/api${url}`;
   }
-  return `/api${url}`;
+
+  return `http://localhost:6466${url}`;
 };
 
 export const getIconData = (iconData: any): Icon | undefined => {
