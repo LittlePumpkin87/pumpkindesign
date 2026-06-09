@@ -15,7 +15,27 @@
     @if (card.variant === 'reference') {
       <div class="card reference">
         <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
-        <h4 class="card-subline">{{ card.subline }}</h4>
+        <h4 class="card-headline">{{ card.headline }}</h4>
+        @if (card.cta) {
+          <lpd-link class="card-cta" [item]="card.cta"></lpd-link>
+        }
+      </div>
+    }
+    @if (card.variant === 'full') {
+      <div class="card full">
+        @if (card.icon) {
+          <lpd-icon
+            class="card-icon"
+            [iconName]="card.icon.name"
+            [iconPrefix]="card.icon.prefix || 'fas'"
+            [color]="card.icon.color"
+          ></lpd-icon>
+        }
+        <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+        <span class="card-date">{{ card.date }}</span>
+        <h6 class="card-subline">{{ card.subline }}</h6>
+        <h4 class="card-headline">{{ card.headline }}</h4>
+        <div class="card-text" [innerHTML]="card.text"></div>
         @if (card.cta) {
           <lpd-link class="card-cta" [item]="card.cta"></lpd-link>
         }

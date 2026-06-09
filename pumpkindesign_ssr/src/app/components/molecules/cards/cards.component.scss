@@ -17,6 +17,9 @@
     background-color: $accent-green;
     @include flex(column, stretch, center);
     @include tile-width(1, 0);
+    .card-headline {
+      margin: $spacing-03 0;
+    }
     @include tablet {
       @include tile-width(2, 1rem);
     }
@@ -31,9 +34,6 @@
       .card-image {
         height: 5rem;
         width: auto;
-      }
-      .card-headline {
-        margin: $spacing-03 0;
       }
       &:hover {
         background-color: $accent-blue;
@@ -52,14 +52,17 @@
         aspect-ratio: 4/3;
         object-fit: contain;
       }
-      .card-subline {
-        margin: $spacing-03 0;
-      }
       .card-cta {
         margin: auto 0 0 0;
         &:hover {
           color: $accent-orange;
         }
+      }
+    }
+    &.full {
+      align-items: flex-start;
+      .card-image {
+        height: 5rem;
       }
     }
   }
