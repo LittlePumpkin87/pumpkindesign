@@ -97,7 +97,11 @@ This project is under active development. Current focus areas:
 * [x] Configure Headless Navigation Structure in Strapi.
 * [x] Create and migrate initial Startpage content.
 * [x] Fix Docker volume mapping for displaying uploaded Strapi images in the frontend for production.
-* [ ] **WIP** Add portfolio case studies.
+* [ ] **WIP** Add missing component variants for cards
+* [ ] Add CTA variations
+* [ ] Add timeline component
+* [ ] Add resume page
+* [ ] Add portfolio case studies.
 
 ---
 
