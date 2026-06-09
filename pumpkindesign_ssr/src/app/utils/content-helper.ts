@@ -19,17 +19,13 @@ export const getImageUrl = (imageData: any): string | undefined => {
 };
 
 export const getIconData = (iconData: any): Icon | undefined => {
-  if (!iconData) {
+  if (!iconData?.name) {
     return undefined;
   }
-  let name = iconData.name;
-  let prefix = iconData.prefix;
-  let color = iconData.color;
-
   return {
-    name,
-    color,
-    prefix,
+    name: iconData.name,
+    prefix: iconData.prefix || 'fas',
+    color: iconData.color || undefined,
   };
 };
 
@@ -244,50 +240,51 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
 // --- LINK MAPPING ---
 
 const mapSingleLink = (item: any) => {
-  if (!item) {
-    return undefined;
+  if (!item) return undefined;
+
+  const rawLinkType = item.type || item.linkType || item.linktype;
+  if (!rawLinkType) return undefined;
+  
+  const normalizedLinkType = rawLinkType.toLowerCase();
+  let dataNode = item[normalizedLinkType] || item;
+
+  if (Array.isArray(dataNode)) {
+    if (dataNode.length === 0) return undefined;
+    dataNode = dataNode[0];
   }
 
-  const linkType = item.type || item.linkType || item.linktype;
+  if (!dataNode) return undefined;
 
-  if (!linkType) {
-    return undefined;
+  const rawLink = dataNode.link || dataNode.url || dataNode.page || dataNode.path || dataNode;
+  
+  if (!rawLink) return undefined;
+
+  const targetData = resolveLinkTarget(normalizedLinkType, rawLink);
+  
+  if (!targetData) return undefined;
+  if (!targetData.href && targetData.linktype !== 'disabled') return undefined;
+
+  let linkIcon = getIconData(dataNode.icon);
+  
+  if (!linkIcon && item.additionalFields?.iconName) {
+    linkIcon = {
+      name: item.additionalFields.iconName,
+      prefix: item.additionalFields.iconPrefix,
+      color: undefined,
+    };
   }
 
-  let activeDataNode = null;
-  if (['internal', 'external', 'phone', 'email'].includes(linkType)) {
-    activeDataNode = item[linkType];
-  }
-
-  if (!activeDataNode || (Array.isArray(activeDataNode) && activeDataNode.length === 0)) {
-    return undefined;
-  }
-
-  const rawLink =
-    activeDataNode.link || activeDataNode.url || activeDataNode.page || activeDataNode;
-
-  if (!rawLink) {
-    return undefined;
-  }
-
-  const targetData = resolveLinkTarget(linkType, rawLink);
-
-  if (!targetData) {
-    return undefined;
-  }
-
-  if (!targetData.href && targetData.linktype !== 'disabled') {
-    return undefined;
-  }
-
+  // 6. Finales CTA Objekt bauen
   const finalMappedLink = {
-    label: targetData.label || activeDataNode.label || activeDataNode.linkText,
+    label: targetData.label || dataNode.label || dataNode.linkText || item.title,
     href: targetData.href,
     isExternal: targetData.isExternal,
     isInternal: targetData.isInternal,
-    link_style: item.link_style,
+    link_style: item.link_style || item.additionalFields?.link_style || 'textlink',
     fragment: targetData.fragment,
-    linktype: targetData.linktype,
+    linktype: targetData.linktype || normalizedLinkType,
+    icon: linkIcon,
+    icon_position: dataNode.icon_position || item.additionalFields?.icon_position,
   };
 
   return finalMappedLink;
@@ -302,18 +299,13 @@ export const getLinkData = (item: any) => {
 
   if (Array.isArray(linkArraySource)) {
     const validLinks = linkArraySource
-      .map((link: any, index: number) => {
+      .map((link: any) => {
         return mapSingleLink(link);
       })
-      .filter((l: any) => {
-        const isValid = l !== undefined;
-        return isValid;
-      });
+      .filter((l: any) => l !== undefined);
 
     return validLinks.length > 0 ? validLinks : undefined;
   }
 
-  const singleLinkResult = mapSingleLink(item);
-
-  return singleLinkResult;
+  return mapSingleLink(item);
 };

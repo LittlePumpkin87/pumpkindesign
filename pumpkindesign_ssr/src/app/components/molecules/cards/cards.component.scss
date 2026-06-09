@@ -1,44 +1,64 @@
 @use '../../../shared/index.scss' as *;
 
 .card-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
   gap: 2rem;
+  height: 100%;
+  @include flex(row, flex-start, stretch);
   @include tablet {
     gap: 1rem;
   }
   @include medium-desktop {
     gap: 3rem;
   }
-  .simple {
-    @include flex(column, flex-start);
-    @include border-open($accent-blue);
-    @include transition;
-    @include tile-width(1, 0);
+  .card {
+    position: relative;
     cursor: pointer;
-    text-align: justify;
     padding: $spacing-05 $spacing-05;
     background-color: $accent-green;
-    animation: pop-up-down 500ms both;
+    @include flex(column, stretch, center);
+    @include tile-width(1, 0);
     @include tablet {
       @include tile-width(2, 1rem);
     }
     @include medium-desktop {
       @include tile-width(3, 3rem);
     }
-    &:hover {
-      background-color: $accent-blue;
-      animation: pop-up-top 500ms both;
-      filter: $shadow-header;
-      color: $text-black;
+
+    &.simple {
+      animation: pop-up-down 500ms both;
+      text-align: center;
+      @include border-open($accent-blue);
+      .card-image {
+        height: 5rem;
+        width: auto;
+      }
+      .card-headline {
+        margin: $spacing-03 0;
+      }
+      &:hover {
+        background-color: $accent-blue;
+        animation: pop-up-top 500ms both;
+        filter: $shadow-header;
+        color: $text-black;
+      }
     }
-    &__image {
-      height: 5rem;
-      width: auto;
-    }
-    .headline {
-      margin: $spacing-03 0;
+    &.reference {
+      filter: $shadow-subtle;
+      background-color: $accent-green;
+      @include border-elipse-flip($accent-orange);
+      .card-image {
+        height: 15rem;
+        aspect-ratio: 4/3;
+      }
+      .card-subline {
+        margin: $spacing-03 0;
+      }
+      .card-cta {
+        margin: auto 0 0 0;
+        &:hover {
+          color: $accent-orange;
+        }
+      }
     }
   }
 }

@@ -3,10 +3,12 @@ export interface CTA {
   href?: string;
   target?: '_self' | '_blank';
   fragment?: string;
-  iconName?: string;
-  iconPrefix?: string;
   isExternal?: boolean;
   isInternal?: boolean;
+  icon?: Icon; 
+  icon_position?: 'left' | 'right';
+  link_style?: string;
+  linktype?: string;
 }
 
 export interface NavigationItem {

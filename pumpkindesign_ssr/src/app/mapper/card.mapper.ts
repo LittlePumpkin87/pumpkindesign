@@ -14,7 +14,7 @@ export const mapCardData = (rawData: any): { items: Card[] } | undefined => {
       text: serializeRichText(item.text),
       icon: getIconData(item.icon),
       cta: getLinkData(item.cta),
-      imgSrc: getImageUrl(item.image),
+      imgSrc: getImageUrl(item?.image),
     })),
   };
 };

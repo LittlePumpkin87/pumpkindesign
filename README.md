@@ -87,6 +87,7 @@ pumpkindesign_ssr/
 * `/api/head` - Fetches global Header Data (Favicon, Logo, Navigation).
 * `/api/page-by-path?path=/` - Fetches cleaned-up structural data for a specific page route.
 * `/api/foot` - Fetches global Footer Data.
+* `/api/navigation/render/main?type=TREE` - Fetches global Main navigation.
 
 ---
 

@@ -5,8 +5,18 @@ export function mapStrapiNavigation(rawData: any[]): NavigationItem[] {
   if (!rawData || !Array.isArray(rawData)) return [];
 
   return rawData.map((rawItem) => {
+    let navIcon = undefined;
+    if (rawItem.additionalFields?.iconName) {
+      navIcon = {
+        name: rawItem.additionalFields.iconName,
+        prefix: rawItem.additionalFields?.iconPrefix,
+        color: undefined,
+      };
+    }
+
     const item: NavigationItem = {
-      iconName: rawItem.additionalFields?.iconName,
+      icon: navIcon,
+
       label: rawItem.title,
       href: rawItem.path,
       isInternal: rawItem.type === 'INTERNAL',
@@ -16,7 +26,7 @@ export function mapStrapiNavigation(rawData: any[]): NavigationItem[] {
       showInMenu: rawItem.menuAttached,
       locale: rawItem.locale,
       documentId: rawItem.related?.documentId || null,
-      ...(rawItem.related.locale && { locale: rawItem.related.locale }),
+      ...(rawItem.related?.locale && { locale: rawItem.related.locale }),
     };
 
     if (rawItem.items && Array.isArray(rawItem.items) && rawItem.items.length > 0) {

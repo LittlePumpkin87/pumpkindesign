@@ -1,11 +1,23 @@
 @if (item()?.isInternal) {
   <a class="link" [routerLink]="item()?.href" [fragment]="item()?.fragment" [target]="'_self'">
     {{ item()?.label }}
-    <lpd-icon [iconName]="item()?.iconName" [iconPrefix]="item()?.iconPrefix || 'fas'"></lpd-icon>
+
+    @if (item()?.icon?.name) {
+      <lpd-icon
+        [iconName]="item()?.icon?.name"
+        [iconPrefix]="item()?.icon?.prefix || 'fas'"
+      ></lpd-icon>
+    }
   </a>
 } @else if (item()?.isExternal) {
   <a class="link" [attr.href]="item()?.href" [target]="'_blank'">
     {{ item()?.label }}
-    <lpd-icon [iconName]="item()?.iconName" [iconPrefix]="item()?.iconPrefix || 'fas'"></lpd-icon>
+
+    @if (item()?.icon?.name) {
+      <lpd-icon
+        [iconName]="item()?.icon?.name"
+        [iconPrefix]="item()?.icon?.prefix || 'fas'"
+      ></lpd-icon>
+    }
   </a>
-} @else {} <!-- TODO implement mail phone and icon only links -->
+}
