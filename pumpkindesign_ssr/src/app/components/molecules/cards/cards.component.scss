@@ -43,12 +43,14 @@
       }
     }
     &.reference {
+      cursor: auto;
       filter: $shadow-subtle;
       background-color: $accent-green;
       @include border-elipse-flip($accent-orange);
       .card-image {
         height: 15rem;
         aspect-ratio: 4/3;
+        object-fit: contain;
       }
       .card-subline {
         margin: $spacing-03 0;
