@@ -14,8 +14,21 @@
         "reference"
       ]
     },
+    "icon_variant": {
+      "type": "boolean"
+    },
     "image": {
       "type": "media",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "icon_variant"
+            },
+            false
+          ]
+        }
+      },
       "multiple": false,
       "allowedTypes": [
         "images"
@@ -23,23 +36,73 @@
     },
     "icon": {
       "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "icon_variant"
+            },
+            true
+          ]
+        }
+      },
       "component": "technical.icon",
       "repeatable": false
     },
     "date": {
-      "type": "date"
+      "type": "date",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "variant"
+            },
+            "full"
+          ]
+        }
+      }
     },
     "subline": {
-      "type": "string"
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "variant"
+            },
+            "full"
+          ]
+        }
+      }
     },
     "headline": {
       "type": "string"
     },
     "text": {
-      "type": "blocks"
+      "type": "blocks",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "variant"
+            },
+            "full"
+          ]
+        }
+      }
     },
     "cta": {
       "type": "component",
+      "conditions": {
+        "visible": {
+          "!=": [
+            {
+              "var": "variant"
+            },
+            "simple"
+          ]
+        }
+      },
       "component": "molecules.cta",
       "repeatable": false
     }

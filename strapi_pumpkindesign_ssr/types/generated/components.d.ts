@@ -24,6 +24,7 @@ export interface MoleculesCard extends Struct.ComponentSchema {
     date: Schema.Attribute.Date;
     headline: Schema.Attribute.String;
     icon: Schema.Attribute.Component<'technical.icon', false>;
+    icon_variant: Schema.Attribute.Boolean;
     image: Schema.Attribute.Media<'images'>;
     subline: Schema.Attribute.String;
     text: Schema.Attribute.Blocks;
