@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "127.0.0.1:4200:4200"
+      - "4200:4200"
     volumes:
       - ./pumpkindesign_ssr:/app
       - /app/node_modules
@@ -38,7 +38,7 @@ services:
       - DATABASE_HOST=strapiDB
       - DATABASE_PORT=5432
     ports:
-      - "127.0.0.1:6466:6466"
+      - "6466:6466"
     networks:
       - strapi_net
     depends_on:
