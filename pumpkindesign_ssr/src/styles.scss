@@ -30,6 +30,7 @@ main {
       max-width: 90vw;
       @include small-desktop {
         max-width: 70vw;
+        gap: 6rem;
       }
     }
   }
