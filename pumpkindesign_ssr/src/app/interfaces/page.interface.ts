@@ -1,14 +1,16 @@
 export interface PageItem {
-  title: string;
-  SEO_description: string;
-  SEO_keywords: string[];
-  SEO_image: string;
-  meta_robots: string;
+  id: number;
+  documentId: string;
+  slug: string;
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+  seo_image?: string;
+  meta_robots?: string;
   main_headline_h1: string;
   main_text: unknown;
   content: Item[];
 }
-
 export interface Item {
   __component?: string;
   children?: Item[];

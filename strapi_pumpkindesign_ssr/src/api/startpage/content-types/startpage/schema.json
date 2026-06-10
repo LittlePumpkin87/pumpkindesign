@@ -39,6 +39,40 @@
         }
       }
     },
+    "seo_keywords": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "meta_robots": {
+      "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "enum": [
+        "index, follow",
+        "noindex, nofollow",
+        "index, nofollow",
+        "noindex, follow"
+      ]
+    },
+    "seo_image": {
+      "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
     "main_headline_h1": {
       "type": "string",
       "pluginOptions": {

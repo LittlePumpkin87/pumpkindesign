@@ -48,7 +48,11 @@ export function mapHeaderData(rawData: any): { item: HeaderData } | undefined {
       logo: getImageUrl(data.logo),
       logoAlt: data.logo.alternativeText,
       favicon: getImageUrl(data.favicon),
-      robots: data.robots,
+      meta_robots: data.meta_robots,
+      seo_image: getImageUrl(data.seo_image),
+      seo_description: data.seo_description,
+      seo_title: data.seo_title,
+      seo_keywords: data.seo_keywords,
     },
   };
 }

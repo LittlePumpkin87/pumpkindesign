@@ -16,6 +16,7 @@ import { NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { ContentService } from './content.service';
 import { serializeRichText } from '../utils/content-helper';
 import PageResponse, { PageItem } from '../interfaces/page.interface';
+import { SeoService } from './seo.service';
 
 @Injectable({ providedIn: 'root' })
 export class PageService {
@@ -23,7 +24,7 @@ export class PageService {
   private readonly API_URL = environment.API_URL;
   private readonly router = inject(Router);
   private readonly contentService = inject(ContentService);
-
+  private readonly seoService = inject(SeoService);
   readonly currentPage = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -72,7 +73,10 @@ export class PageService {
         }
         return page;
       }),
-      tap((mapped) => console.log('2. [PageService] MAPPED PageItem:', mapped)),
+      tap((mapped) => {
+        console.log('2. [PageService] MAPPED PageItem:', mapped);
+        this.seoService.updateSeoTags(mapped);
+      }),
     );
   }
 }

@@ -25,7 +25,11 @@ export interface HeaderData {
   logo: string | undefined;
   logoAlt: string;
   favicon: string | undefined;
-  robots: string;
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+  seo_image?: string;
+  meta_robots?: string;
 }
 
 export interface HeaderWrapper {
