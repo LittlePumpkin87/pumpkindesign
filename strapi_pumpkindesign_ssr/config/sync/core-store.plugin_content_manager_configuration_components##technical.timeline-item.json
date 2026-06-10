@@ -1,0 +1,105 @@
+{
+  "key": "plugin_content_manager_configuration_components::technical.timeline-item",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "relationOpenMode": "modal",
+      "mainField": "headline",
+      "defaultSortBy": "headline",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "headline": {
+        "edit": {
+          "label": "headline",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "headline",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "short_description": {
+        "edit": {
+          "label": "short_description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "short_description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "long_description": {
+        "edit": {
+          "label": "long_description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "long_description",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "headline",
+        "short_description"
+      ],
+      "edit": [
+        [
+          {
+            "name": "headline",
+            "size": 6
+          },
+          {
+            "name": "short_description",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "long_description",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "technical.timeline-item",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

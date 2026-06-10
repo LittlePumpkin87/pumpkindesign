@@ -1,0 +1,126 @@
+{
+  "key": "plugin_content_manager_configuration_components::organisms.hero",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "relationOpenMode": "modal",
+      "mainField": "headline",
+      "defaultSortBy": "headline",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "cover_image": {
+        "edit": {
+          "label": "cover_image",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "cover_image",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "subline": {
+        "edit": {
+          "label": "subline",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "subline",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "headline": {
+        "edit": {
+          "label": "headline",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "headline",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "cta": {
+        "edit": {
+          "label": "cta",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "cta",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "headline",
+        "cta",
+        "cover_image"
+      ],
+      "edit": [
+        [
+          {
+            "name": "headline",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "cta",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "subline",
+            "size": 6
+          },
+          {
+            "name": "cover_image",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "organisms.hero",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

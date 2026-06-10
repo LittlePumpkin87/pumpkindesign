@@ -1,0 +1,85 @@
+{
+  "key": "plugin_content_manager_configuration_components::technical.separator",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "relationOpenMode": "modal",
+      "mainField": "section_id",
+      "defaultSortBy": "section_id",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "forcedPrimary": {
+        "edit": {
+          "label": "forcedPrimary",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "forcedPrimary",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "section_id": {
+        "edit": {
+          "label": "section_id",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "section_id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "forcedPrimary",
+        "section_id"
+      ],
+      "edit": [
+        [
+          {
+            "name": "forcedPrimary",
+            "size": 4
+          },
+          {
+            "name": "section_id",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "technical.separator",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

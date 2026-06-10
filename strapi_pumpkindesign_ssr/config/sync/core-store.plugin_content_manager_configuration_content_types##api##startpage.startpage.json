@@ -1,0 +1,299 @@
+{
+  "key": "plugin_content_manager_configuration_content_types::api::startpage.startpage",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "relationOpenMode": "modal",
+      "mainField": "seo_title",
+      "defaultSortBy": "seo_title",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "slug": {
+        "edit": {
+          "label": "slug",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "slug",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "seo_title": {
+        "edit": {
+          "label": "seo_title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "seo_title",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "seo_description": {
+        "edit": {
+          "label": "seo_description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "seo_description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "seo_keywords": {
+        "edit": {
+          "label": "seo_keywords",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "seo_keywords",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "meta_robots": {
+        "edit": {
+          "label": "meta_robots",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "meta_robots",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "seo_image": {
+        "edit": {
+          "label": "seo_image",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "seo_image",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "main_headline_h1": {
+        "edit": {
+          "label": "main_headline_h1",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "main_headline_h1",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "main_text": {
+        "edit": {
+          "label": "main_text",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "main_text",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "hero": {
+        "edit": {
+          "label": "hero",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "hero",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "content": {
+        "edit": {
+          "label": "content",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "content",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "slug",
+        "seo_title",
+        "seo_description"
+      ],
+      "edit": [
+        [
+          {
+            "name": "slug",
+            "size": 6
+          },
+          {
+            "name": "seo_title",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "seo_keywords",
+            "size": 6
+          },
+          {
+            "name": "seo_description",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "seo_image",
+            "size": 6
+          },
+          {
+            "name": "meta_robots",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "main_headline_h1",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "main_text",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "hero",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "content",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "api::startpage.startpage"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

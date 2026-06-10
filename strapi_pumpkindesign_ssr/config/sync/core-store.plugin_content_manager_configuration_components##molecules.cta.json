@@ -1,0 +1,186 @@
+{
+  "key": "plugin_content_manager_configuration_components::molecules.cta",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "relationOpenMode": "modal",
+      "mainField": "documentId",
+      "defaultSortBy": "documentId",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "linktype": {
+        "edit": {
+          "label": "linktype",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "linktype",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "link_style": {
+        "edit": {
+          "label": "link_style",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "link_style",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "button_style": {
+        "edit": {
+          "label": "button_style",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "button_style",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "internal": {
+        "edit": {
+          "label": "internal",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "internal",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "external": {
+        "edit": {
+          "label": "external",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "external",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "phone": {
+        "edit": {
+          "label": "phone",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "phone",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "email": {
+        "edit": {
+          "label": "email",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "email",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "linktype",
+        "link_style",
+        "internal"
+      ],
+      "edit": [
+        [
+          {
+            "name": "linktype",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "link_style",
+            "size": 6
+          },
+          {
+            "name": "button_style",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "internal",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "external",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "phone",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "email",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "molecules.cta",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}
