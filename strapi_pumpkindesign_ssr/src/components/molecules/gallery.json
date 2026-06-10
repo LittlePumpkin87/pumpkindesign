@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_molecules_galleries",
+  "info": {
+    "displayName": "gallery"
+  },
+  "options": {},
+  "attributes": {
+    "gallery_item": {
+      "type": "component",
+      "component": "technical.gallery-item",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

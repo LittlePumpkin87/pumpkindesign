@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_organisms_spider_tech_webs",
+  "info": {
+    "displayName": "spider_tech_web"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "skills": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::skill.skill"
+    }
+  },
+  "config": {}
+}

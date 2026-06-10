@@ -1,11 +1,11 @@
 {
-  "collectionName": "components_organisms_heroes",
+  "collectionName": "components_organisms_image_texts",
   "info": {
-    "displayName": "hero"
+    "displayName": "image_text"
   },
   "options": {},
   "attributes": {
-    "cover_image": {
+    "image": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
@@ -17,6 +17,9 @@
     },
     "headline": {
       "type": "string"
+    },
+    "text": {
+      "type": "blocks"
     },
     "cta": {
       "type": "component",

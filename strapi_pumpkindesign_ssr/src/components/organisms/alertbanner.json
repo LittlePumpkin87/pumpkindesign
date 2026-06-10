@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_organisms_alertbanners",
+  "info": {
+    "displayName": "alertbanner"
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "component",
+      "component": "technical.icon",
+      "repeatable": false
+    },
+    "headline": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "cta": {
+      "type": "component",
+      "component": "molecules.cta",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

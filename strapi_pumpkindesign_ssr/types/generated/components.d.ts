@@ -1,5 +1,17 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface AtomsProjectInfobox extends Struct.ComponentSchema {
+  collectionName: 'components_atoms_project_infoboxes';
+  info: {
+    displayName: 'project_infobox';
+  };
+  attributes: {
+    name: Schema.Attribute.String;
+    role: Schema.Attribute.String;
+    techstack: Schema.Attribute.Text;
+  };
+}
+
 export interface AtomsTextblock extends Struct.ComponentSchema {
   collectionName: 'components_atoms_textblocks';
   info: {
@@ -24,7 +36,7 @@ export interface MoleculesCard extends Struct.ComponentSchema {
     date: Schema.Attribute.Date;
     headline: Schema.Attribute.String;
     icon: Schema.Attribute.Component<'technical.icon', false>;
-    icon_variant: Schema.Attribute.Boolean;
+    icon_variant: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     image: Schema.Attribute.Media<'images'>;
     subline: Schema.Attribute.String;
     text: Schema.Attribute.Blocks;
@@ -50,14 +62,13 @@ export interface MoleculesCta extends Struct.ComponentSchema {
     displayName: 'cta';
   };
   attributes: {
+    button_style: Schema.Attribute.Enumeration<['primary', 'secondary']>;
     email: Schema.Attribute.Component<'technical.email-link', false>;
     external: Schema.Attribute.Component<'technical.external-link', true>;
     internal: Schema.Attribute.Component<'technical.internal-link', false>;
-    link_style: Schema.Attribute.Enumeration<
-      ['button', 'textlink', 'icon_right', 'icon_left']
-    >;
+    link_style: Schema.Attribute.Enumeration<['button', 'textlink', 'icon']>;
     linktype: Schema.Attribute.Enumeration<
-      ['external', 'internal', 'phone', 'email', 'icon']
+      ['external', 'internal', 'phone', 'email']
     > &
       Schema.Attribute.DefaultTo<'internal'>;
     phone: Schema.Attribute.Component<'technical.phone-link', false>;
@@ -80,6 +91,29 @@ export interface MoleculesFooterColumn extends Struct.ComponentSchema {
   };
 }
 
+export interface MoleculesGallery extends Struct.ComponentSchema {
+  collectionName: 'components_molecules_galleries';
+  info: {
+    displayName: 'gallery';
+  };
+  attributes: {
+    gallery_item: Schema.Attribute.Component<'technical.gallery-item', true>;
+  };
+}
+
+export interface OrganismsAlertbanner extends Struct.ComponentSchema {
+  collectionName: 'components_organisms_alertbanners';
+  info: {
+    displayName: 'alertbanner';
+  };
+  attributes: {
+    cta: Schema.Attribute.Component<'molecules.cta', false>;
+    description: Schema.Attribute.Text;
+    headline: Schema.Attribute.String;
+    icon: Schema.Attribute.Component<'technical.icon', false>;
+  };
+}
+
 export interface OrganismsCertificate extends Struct.ComponentSchema {
   collectionName: 'components_organisms_certificate';
   info: {
@@ -99,11 +133,48 @@ export interface OrganismsHero extends Struct.ComponentSchema {
     displayName: 'hero';
   };
   attributes: {
-    background: Schema.Attribute.Media<'images'>;
-    cta: Schema.Attribute.Component<'molecules.cta', false>;
+    cover_image: Schema.Attribute.Media<'images'>;
+    cta: Schema.Attribute.Component<'molecules.cta', true> &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 2;
+        },
+        number
+      >;
     headline: Schema.Attribute.String;
     subline: Schema.Attribute.String;
+  };
+}
+
+export interface OrganismsImageText extends Struct.ComponentSchema {
+  collectionName: 'components_organisms_image_texts';
+  info: {
+    displayName: 'image_text';
+  };
+  attributes: {
+    cta: Schema.Attribute.Component<'molecules.cta', true> &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 2;
+        },
+        number
+      >;
+    headline: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+    subline: Schema.Attribute.String;
     text: Schema.Attribute.Blocks;
+  };
+}
+
+export interface OrganismsSpiderTechWeb extends Struct.ComponentSchema {
+  collectionName: 'components_organisms_spider_tech_webs';
+  info: {
+    displayName: 'spider_tech_web';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    headline: Schema.Attribute.String;
+    skills: Schema.Attribute.Relation<'oneToMany', 'api::skill.skill'>;
   };
 }
 
@@ -149,6 +220,17 @@ export interface TechnicalExternalLink extends Struct.ComponentSchema {
     icon_position: Schema.Attribute.Enumeration<['left', 'right']>;
     label: Schema.Attribute.String;
     url: Schema.Attribute.String;
+  };
+}
+
+export interface TechnicalGalleryItem extends Struct.ComponentSchema {
+  collectionName: 'components_technical_gallery_items';
+  info: {
+    displayName: 'gallery_item';
+  };
+  attributes: {
+    image: Schema.Attribute.Media<'images'>;
+    infobox: Schema.Attribute.Component<'atoms.project-infobox', false>;
   };
 }
 
@@ -228,17 +310,23 @@ export interface TechnicalTimelineItem extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'atoms.project-infobox': AtomsProjectInfobox;
       'atoms.textblock': AtomsTextblock;
       'molecules.card': MoleculesCard;
       'molecules.card-list': MoleculesCardList;
       'molecules.cta': MoleculesCta;
       'molecules.footer-column': MoleculesFooterColumn;
+      'molecules.gallery': MoleculesGallery;
+      'organisms.alertbanner': OrganismsAlertbanner;
       'organisms.certificate': OrganismsCertificate;
       'organisms.hero': OrganismsHero;
+      'organisms.image-text': OrganismsImageText;
+      'organisms.spider-tech-web': OrganismsSpiderTechWeb;
       'organisms.timeline': OrganismsTimeline;
       'technical.certificate-item': TechnicalCertificateItem;
       'technical.email-link': TechnicalEmailLink;
       'technical.external-link': TechnicalExternalLink;
+      'technical.gallery-item': TechnicalGalleryItem;
       'technical.icon': TechnicalIcon;
       'technical.icon-link': TechnicalIconLink;
       'technical.internal-link': TechnicalInternalLink;

@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_technical_gallery_items",
+  "info": {
+    "displayName": "gallery_item"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "infobox": {
+      "type": "component",
+      "component": "atoms.project-infobox",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

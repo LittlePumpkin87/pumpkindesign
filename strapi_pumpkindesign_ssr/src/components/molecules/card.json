@@ -15,7 +15,8 @@
       ]
     },
     "icon_variant": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "image": {
       "type": "media",
@@ -79,30 +80,10 @@
       "type": "string"
     },
     "text": {
-      "type": "blocks",
-      "conditions": {
-        "visible": {
-          "==": [
-            {
-              "var": "variant"
-            },
-            "full"
-          ]
-        }
-      }
+      "type": "blocks"
     },
     "cta": {
       "type": "component",
-      "conditions": {
-        "visible": {
-          "!=": [
-            {
-              "var": "variant"
-            },
-            "simple"
-          ]
-        }
-      },
       "component": "molecules.cta",
       "repeatable": false
     }

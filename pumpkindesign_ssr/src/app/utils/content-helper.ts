@@ -274,7 +274,6 @@ const mapSingleLink = (item: any) => {
     };
   }
 
-  // 6. Finales CTA Objekt bauen
   const finalMappedLink = {
     label: targetData.label || dataNode.label || dataNode.linkText || item.title,
     href: targetData.href,

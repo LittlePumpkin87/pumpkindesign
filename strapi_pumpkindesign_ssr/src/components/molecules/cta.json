@@ -12,8 +12,7 @@
         "external",
         "internal",
         "phone",
-        "email",
-        "icon"
+        "email"
       ]
     },
     "link_style": {
@@ -21,8 +20,24 @@
       "enum": [
         "button",
         "textlink",
-        "icon_right",
-        "icon_left"
+        "icon"
+      ]
+    },
+    "button_style": {
+      "type": "enumeration",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "link_style"
+            },
+            "button"
+          ]
+        }
+      },
+      "enum": [
+        "primary",
+        "secondary"
       ]
     },
     "internal": {

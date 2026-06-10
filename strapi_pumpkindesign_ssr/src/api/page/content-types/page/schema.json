@@ -85,7 +85,11 @@
         "molecules.card-list",
         "technical.separator",
         "organisms.timeline",
-        "organisms.certificate"
+        "organisms.certificate",
+        "organisms.spider-tech-web",
+        "organisms.image-text",
+        "organisms.alertbanner",
+        "molecules.gallery"
       ]
     }
   }

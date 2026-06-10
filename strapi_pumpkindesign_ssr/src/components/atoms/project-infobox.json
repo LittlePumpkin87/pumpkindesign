@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_atoms_project_infoboxes",
+  "info": {
+    "displayName": "project_infobox"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "techstack": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}
