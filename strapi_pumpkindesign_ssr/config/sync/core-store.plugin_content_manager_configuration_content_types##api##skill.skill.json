@@ -48,21 +48,6 @@
           "sortable": true
         }
       },
-      "categories": {
-        "edit": {
-          "label": "categories",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "name"
-        },
-        "list": {
-          "label": "categories",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "logo": {
         "edit": {
           "label": "logo",
@@ -105,9 +90,9 @@
           "sortable": true
         }
       },
-      "skills": {
+      "categories": {
         "edit": {
-          "label": "skills",
+          "label": "categories",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -115,14 +100,14 @@
           "mainField": "name"
         },
         "list": {
-          "label": "skills",
+          "label": "categories",
           "searchable": false,
           "sortable": false
         }
       },
-      "connected_skills": {
+      "skill": {
         "edit": {
-          "label": "connected_skills",
+          "label": "skill",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -130,7 +115,22 @@
           "mainField": "name"
         },
         "list": {
-          "label": "connected_skills",
+          "label": "skill",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "subskill": {
+        "edit": {
+          "label": "subskill",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "subskill",
           "searchable": false,
           "sortable": false
         }
@@ -222,10 +222,6 @@
         ],
         [
           {
-            "name": "categories",
-            "size": 6
-          },
-          {
             "name": "logo",
             "size": 6
           }
@@ -242,11 +238,17 @@
         ],
         [
           {
-            "name": "connected_skills",
+            "name": "categories",
             "size": 6
           },
           {
-            "name": "skills",
+            "name": "skill",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "subskill",
             "size": 6
           }
         ]

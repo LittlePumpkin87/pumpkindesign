@@ -124,8 +124,7 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true,
-          "mainField": "headline"
+          "editable": true
         },
         "list": {
           "label": "hero",
@@ -243,6 +242,12 @@
       }
     },
     "layouts": {
+      "list": [
+        "id",
+        "slug",
+        "seo_title",
+        "seo_description"
+      ],
       "edit": [
         [
           {
@@ -304,12 +309,6 @@
             "size": 12
           }
         ]
-      ],
-      "list": [
-        "id",
-        "slug",
-        "seo_title",
-        "seo_description"
       ]
     },
     "uid": "api::page.page"

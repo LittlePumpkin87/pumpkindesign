@@ -787,10 +787,6 @@ export interface ApiSkillSkill extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::categorie.categorie'
     >;
-    connected_skills: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::skill.skill'
-    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -821,7 +817,8 @@ export interface ApiSkillSkill extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
-    skills: Schema.Attribute.Relation<'manyToMany', 'api::skill.skill'>;
+    skill: Schema.Attribute.Relation<'manyToOne', 'api::skill.skill'>;
+    subskill: Schema.Attribute.Relation<'oneToMany', 'api::skill.skill'>;
     uid: Schema.Attribute.UID<'name'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
