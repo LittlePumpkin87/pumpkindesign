@@ -5,9 +5,10 @@ export interface CTA {
   fragment?: string;
   isExternal?: boolean;
   isInternal?: boolean;
-  icon?: Icon; 
+  icon?: Icon;
   icon_position?: 'left' | 'right';
-  link_style?: string;
+  link_style?: 'button' | 'icon' | 'text';
+  button_style?: 'primary' | 'secondary';
   linktype?: string;
 }
 
@@ -18,7 +19,7 @@ export interface NavigationItem {
   href?: string;
   documentId?: string | null;
   locale?: string;
-  items: NavigationItem[]
+  items: NavigationItem[];
 }
 
 export interface HeaderData {

@@ -2,19 +2,32 @@
   @for (card of items(); track $index) {
     @if (card.variant === 'simple') {
       <a class="card simple" [href]="card.cta?.href">
-        <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
-        <lpd-icon
-          [iconName]="card.icon?.name"
-          [color]="card.icon?.color"
-          [iconPrefix]="card.icon?.prefix || 'far'"
-        ></lpd-icon>
+        @if (!card.icon_variant) {
+          <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+        }
+        @if (card.icon_variant) {
+          <lpd-icon
+            [iconName]="card.icon?.name"
+            [color]="card.icon?.color"
+            [iconPrefix]="card.icon?.prefix || 'far'"
+          ></lpd-icon>
+        }
         <h4 class="card-headline">{{ card.headline }}</h4>
         <div [innerHTML]="card.text"></div>
       </a>
     }
     @if (card.variant === 'reference') {
       <div class="card reference">
-        <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+        @if (!card.icon_variant) {
+          <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+        }
+        @if (card.icon_variant) {
+          <lpd-icon
+            [iconName]="card.icon?.name"
+            [color]="card.icon?.color"
+            [iconPrefix]="card.icon?.prefix || 'far'"
+          ></lpd-icon>
+        }
         <h4 class="card-headline">{{ card.headline }}</h4>
         @if (card.cta) {
           <lpd-link class="card-cta" [item]="card.cta"></lpd-link>
@@ -23,15 +36,17 @@
     }
     @if (card.variant === 'full') {
       <div class="card full">
-        @if (card.icon) {
+        @if (card.icon_variant) {
           <lpd-icon
             class="card-icon"
-            [iconName]="card.icon.name"
-            [iconPrefix]="card.icon.prefix || 'fas'"
-            [color]="card.icon.color"
+            [iconName]="card.icon?.name"
+            [iconPrefix]="card.icon?.prefix || 'fas'"
+            [color]="card.icon?.color"
           ></lpd-icon>
         }
-        <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+        @if (!card.icon_variant) {
+          <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+        }
         <span class="card-date">{{ card.date }}</span>
         <h6 class="card-subline">{{ card.subline }}</h6>
         <h4 class="card-headline">{{ card.headline }}</h4>

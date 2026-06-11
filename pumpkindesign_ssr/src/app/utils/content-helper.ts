@@ -201,12 +201,13 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
         if (isSameHost) {
           const { pathname, search, hash } = new URL(rawLink);
           const fragment = hash.startsWith('#') ? hash.substring(1) : undefined;
-
+          const icon = getIconData(rawLink)
           result = {
             href: `${pathname}${search}`,
             fragment,
             isInternal: true,
             isExternal: false,
+            icon
           };
         } else {
           result = {
@@ -280,6 +281,7 @@ const mapSingleLink = (item: any) => {
     isExternal: targetData.isExternal,
     isInternal: targetData.isInternal,
     link_style: item.link_style || item.additionalFields?.link_style || 'textlink',
+    button_style: item.button_style,
     fragment: targetData.fragment,
     linktype: targetData.linktype || normalizedLinkType,
     icon: linkIcon,

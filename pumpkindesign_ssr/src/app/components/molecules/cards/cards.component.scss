@@ -15,6 +15,7 @@
     cursor: pointer;
     padding: $spacing-05 $spacing-05;
     background-color: $accent-green;
+    filter: $shadow-subtle;
     @include flex(column, stretch, center);
     @include tile-width(1, 0);
     .card-headline {
@@ -44,7 +45,6 @@
     }
     &.reference {
       cursor: auto;
-      filter: $shadow-subtle;
       background-color: $accent-green;
       @include border-elipse-flip($accent-orange);
       .card-image {
@@ -63,6 +63,13 @@
       align-items: flex-start;
       .card-image {
         height: 5rem;
+        margin-bottom: 1rem;
+      }
+      .card-text {
+        margin-bottom: 2rem;
+      }
+      .card-icon {
+        font-size: 5rem;
       }
     }
   }

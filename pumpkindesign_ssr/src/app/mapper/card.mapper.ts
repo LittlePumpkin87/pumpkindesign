@@ -8,6 +8,7 @@ export const mapCardData = (rawData: any): { items: Card[] } | undefined => {
   return {
     items: rawData.card_item.map((item: any) => ({
       variant: item.variant,
+      icon_variant: item.icon_variant,
       headline: item.headline,
       subline: item.subline,
       date: item.date,

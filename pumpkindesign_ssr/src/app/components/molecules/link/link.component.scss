@@ -1,8 +1,29 @@
 @use '../../../shared/' as *;
 
-.link {
+.textlink,
+.button {
   @include flex(row, space-between, center);
   @include typography-s;
   gap: 0.5rem;
   text-decoration: none;
+}
+
+.button {
+  transform: translateY(0);
+  filter: $shadow-subtle;
+  background-color: $accent-green;
+  padding: 1rem 2rem;
+  @include border-elipse($accent-orange);
+  @include transition(all, 100ms, linear);
+  &:hover {
+    transform: translateY(5px);
+    filter: none;
+  }
+  &--primary {
+    background-color: $accent-orange;
+  }
+}
+
+.icon {
+  font-size: 2rem;
 }

@@ -1,22 +1,70 @@
 @if (item()?.isInternal) {
-  <a class="link" [routerLink]="item()?.href" [fragment]="item()?.fragment" [target]="'_self'">
-    {{ item()?.label }}
-
-    @if (item()?.icon?.name) {
+  <a
+    [ngClass]="[
+      item()?.link_style || 'link',
+      item()?.button_style ? item()?.link_style + '--' + item()?.button_style : '',
+    ]"
+    [routerLink]="item()?.href"
+    [fragment]="item()?.fragment"
+    [target]="'_self'"
+  >
+    @if (item()?.icon?.name && item()?.icon_position === 'left' && item()?.link_style !== 'icon') {
       <lpd-icon
         [iconName]="item()?.icon?.name"
         [iconPrefix]="item()?.icon?.prefix || 'fas'"
+        [color]="item()?.icon?.color"
+      ></lpd-icon>
+    }
+    @if (item()?.link_style !== 'icon') {
+      {{ item()?.label }}
+    }
+    @if (item()?.link_style === 'icon') {
+      <lpd-icon
+        [iconName]="item()?.icon?.name"
+        [iconPrefix]="item()?.icon?.prefix || 'fas'"
+        [color]="item()?.icon?.color"
+      ></lpd-icon>
+    }
+
+    @if (item()?.icon?.name && item()?.icon_position === 'right' && item()?.link_style !== 'icon') {
+      <lpd-icon
+        [iconName]="item()?.icon?.name"
+        [iconPrefix]="item()?.icon?.prefix || 'fas'"
+        [color]="item()?.icon?.color"
       ></lpd-icon>
     }
   </a>
 } @else if (item()?.isExternal) {
-  <a class="link" [attr.href]="item()?.href" [target]="'_blank'">
-    {{ item()?.label }}
-
-    @if (item()?.icon?.name) {
+  <a
+    [ngClass]="[
+      item()?.link_style || 'link',
+      item()?.button_style ? item()?.link_style + '--' + item()?.button_style : '',
+    ]"
+    [attr.href]="item()?.href"
+    [target]="'_blank'"
+  >
+    @if (item()?.icon?.name && item()?.icon_position === 'left' && item()?.link_style !== 'icon') {
       <lpd-icon
         [iconName]="item()?.icon?.name"
         [iconPrefix]="item()?.icon?.prefix || 'fas'"
+        [color]="item()?.icon?.color"
+      ></lpd-icon>
+    }
+    @if (item()?.link_style !== 'icon') {
+      {{ item()?.label }}
+    }
+    @if (item()?.link_style === 'icon') {
+      <lpd-icon
+        [iconName]="item()?.icon?.name"
+        [iconPrefix]="item()?.icon?.prefix || 'fas'"
+        [color]="item()?.icon?.color"
+      ></lpd-icon>
+    }
+    @if (item()?.icon?.name && item()?.icon_position === 'right' && item()?.link_style !== 'icon') {
+      <lpd-icon
+        [iconName]="item()?.icon?.name"
+        [iconPrefix]="item()?.icon?.prefix || 'fas'"
+        [color]="item()?.icon?.color"
       ></lpd-icon>
     }
   </a>
