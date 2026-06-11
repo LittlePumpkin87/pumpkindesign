@@ -105,9 +105,9 @@
           "sortable": false
         }
       },
-      "skill": {
+      "subskills": {
         "edit": {
-          "label": "skill",
+          "label": "subskills",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -115,14 +115,14 @@
           "mainField": "name"
         },
         "list": {
-          "label": "skill",
-          "searchable": true,
-          "sortable": true
+          "label": "subskills",
+          "searchable": false,
+          "sortable": false
         }
       },
-      "subskill": {
+      "skills": {
         "edit": {
-          "label": "subskill",
+          "label": "skills",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -130,7 +130,7 @@
           "mainField": "name"
         },
         "list": {
-          "label": "subskill",
+          "label": "skills",
           "searchable": false,
           "sortable": false
         }
@@ -242,13 +242,13 @@
             "size": 6
           },
           {
-            "name": "skill",
+            "name": "subskills",
             "size": 6
           }
         ],
         [
           {
-            "name": "subskill",
+            "name": "skills",
             "size": 6
           }
         ]

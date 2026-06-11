@@ -66,17 +66,17 @@
       "target": "api::categorie.categorie",
       "mappedBy": "skills"
     },
-    "skill": {
+    "subskills": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::skill.skill",
-      "inversedBy": "subskill"
+      "inversedBy": "skills"
     },
-    "subskill": {
+    "skills": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::skill.skill",
-      "mappedBy": "skill"
+      "mappedBy": "subskills"
     }
   }
 }

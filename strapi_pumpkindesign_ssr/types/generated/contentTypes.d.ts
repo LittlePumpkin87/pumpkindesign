@@ -817,8 +817,8 @@ export interface ApiSkillSkill extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
-    skill: Schema.Attribute.Relation<'manyToOne', 'api::skill.skill'>;
-    subskill: Schema.Attribute.Relation<'oneToMany', 'api::skill.skill'>;
+    skills: Schema.Attribute.Relation<'manyToMany', 'api::skill.skill'>;
+    subskills: Schema.Attribute.Relation<'manyToMany', 'api::skill.skill'>;
     uid: Schema.Attribute.UID<'name'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
