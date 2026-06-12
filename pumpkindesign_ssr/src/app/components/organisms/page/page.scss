@@ -8,8 +8,10 @@
   @include small-desktop {
     position: fixed;
     top: 1%;
-    writing-mode: sideways-rl;
     left: 1%;
+    writing-mode: sideways-rl;
+    height: 100dvh;
+    text-wrap: nowrap;
   }
 }
 

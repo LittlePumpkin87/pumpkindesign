@@ -9,6 +9,9 @@
   @include small-desktop {
     grid-template-columns: 1.5fr 1fr;
   }
+  @include medium-desktop {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 .image {
   overflow: visible;
@@ -28,15 +31,14 @@
   }
   @include medium-desktop {
     height: 55rem;
-    transform: rotate(2deg) translate(0rem, -11rem);
+    transform: rotate(2deg) translate(-3rem, -11rem);
   }
   @include large-desktop {
     height: 50rem;
-    transform: rotate(2deg) translate(12rem, -13rem)
+    transform: rotate(2deg) translate(10rem, -13rem);
   }
   @include huge-desktop {
-    height: 55rem;
-    transform: rotate(2deg) translate(31rem, -18rem);
+    transform: rotate(0deg) translate(22rem, -18rem);
   }
 }
 .cta-wrapper {
