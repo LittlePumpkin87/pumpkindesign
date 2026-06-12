@@ -1,19 +1,53 @@
 @use '../../../shared/' as *;
 
 .wrapper {
-  @include grid(1.5fr 1fr, auto);
-}
-.image-container {
   position: relative;
-  overflow: visible;
+  @include flex(column, flex-start, center);
+  @include tablet {
+    @include grid(1fr 1fr, auto);
+  }
+  @include small-desktop {
+    grid-template-columns: 1.5fr 1fr;
+  }
 }
 .image {
-  position: absolute;
-  top: -9rem;
-  left: 8rem;
-  transform: rotate(8deg);
   overflow: visible;
+  @include mobile-small {
+    height: 100%;
+    margin-bottom: -10rem;
+  }
+  @include tablet {
+    position: absolute;
+    margin-bottom: unset;
+    width: 50%;
+    transform: rotate(-4deg) translate(1rem, 1rem);
+  }
+  @include small-desktop {
+    top: -8rem;
+    left: 3rem;
+    width: 55%;
+    transform: rotate(2deg);
+  }
+  @include medium-desktop {
+    top: -3rem;
+    left: 5rem;
+    width: 60%;
+    transform: rotate(2deg);
+  }
+}
+.cta-wrapper {
+  gap: 1rem;
+  width: 100%;
+  @include flex(column, flex-start, flex-start);
+  @include mobile-medium {
+    flex-direction: row;
+  }
 }
 .content {
   z-index: 1;
+  gap: 1rem;
+  @include flex(column, flex-start, flex-start);
+  @include tablet {
+    grid-column: 2/2;
+  }
 }

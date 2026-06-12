@@ -1,5 +1,11 @@
 @use '../../../shared/' as *;
 
+:host {
+  width: 100%;
+  @include mobile-medium {
+    width: fit-content;
+  }
+}
 .textlink,
 .button {
   @include flex(row, space-between, center);

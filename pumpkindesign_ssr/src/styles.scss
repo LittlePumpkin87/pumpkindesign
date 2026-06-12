@@ -12,14 +12,13 @@ html {
   height: 100dvh;
 }
 
-header {
-  z-index: 999;
-  position: relative;
-}
-
 main {
+  margin-top: 8rem;
+  @include medium-desktop {
+    margin-top: 12rem;
+  }
   section {
-    padding: 6rem 0;
+    padding: 3rem 0;
     .container {
       display: flex;
       gap: 3rem;
@@ -30,7 +29,7 @@ main {
       @include small-desktop {
         max-width: 70vw;
         gap: 6rem;
-        margin-top: 20rem;
+        padding: 6rem 0;
       }
     }
   }

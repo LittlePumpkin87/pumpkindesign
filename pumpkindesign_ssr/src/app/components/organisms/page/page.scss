@@ -2,11 +2,15 @@
 
 .headline {
   filter: $shadow-green;
+  margin: 7rem 2rem 0rem 2rem;
   z-index: 10;
-  position: fixed;
-  top: 20%;
-  writing-mode: sideways-rl;
-  left: 1%;
+  position: relative;
+  @include small-desktop {
+    position: fixed;
+    top: 20%;
+    writing-mode: sideways-rl;
+    left: 1%;
+  }
 }
 
 .main-textblock {
