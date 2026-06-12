@@ -55,8 +55,6 @@ services:
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - JWT_SECRET=${JWT_SECRET}
       - IMAGE_PATH=${IMAGE_PATH}
-    ports:
-      - "6466:6466"
     networks:
       - pumpkindesign_default
     depends_on:
