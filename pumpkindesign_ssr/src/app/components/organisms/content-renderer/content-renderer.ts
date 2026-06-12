@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, afterNextRender, effect } from '@angular/core';
+import { Component, computed, inject, input, afterNextRender } from '@angular/core';
 import { ContentService, PageStructure } from '../../../services/content.service';
 import { DynamicRenderDirective } from '../../../utils/dynamic-render.directive';
 import { Item } from '../../../interfaces/page.interface';
@@ -28,10 +28,6 @@ export class ContentRendererComponent {
   });
 
   constructor() {
-   effect(() => {
-      console.log('5. [ContentRenderer] Received content Input:', this.content());
-      console.log('6. [ContentRenderer] Computed pageStructure:', this.pageStructure());
-    });
     afterNextRender(() => {
       const hash = globalThis.location.hash.replace('#', '');
       if (hash) {

@@ -1,4 +1,4 @@
-import { Component, effect, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TextBlock } from '../../../interfaces/atom.interface';
 import { CommonModule } from '@angular/common';
 
@@ -10,10 +10,4 @@ import { CommonModule } from '@angular/common';
 })
 export class TextblockComponent {
   item = input<TextBlock>();
-
- constructor() {
-    effect(() => {
-      console.log('[Textblock]', this.item());
-    });
-  }
 }

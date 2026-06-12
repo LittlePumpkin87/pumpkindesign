@@ -1,4 +1,4 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { PageItem } from '../../../interfaces/page.interface';
 import { NavigationService } from '../../../services/navigation.service';
@@ -19,11 +19,4 @@ export class Page {
   public navData = this.navService.mainNavigation;
   readonly header = this.navService.headerData;
   readonly page = this.pageService.currentPage;
-
-  constructor() {
-    effect(() => {
-      console.log('3. [PageComponent] pageData() (Input):', this.pageData());
-      console.log('4. [PageComponent] page() (Service):', this.page());
-    });
-  }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, input, effect } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { LinkComponent } from '../../molecules/link/link.component';
@@ -18,9 +18,6 @@ export class NavigationComponent {
   private readonly router = inject(Router);
 
   constructor() {
-    effect(() => {
-      console.log('🧭 Navigations-Daten im Frontend:', this.items());
-    });
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       takeUntilDestroyed(),
