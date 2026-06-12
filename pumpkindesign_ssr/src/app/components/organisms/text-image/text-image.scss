@@ -13,32 +13,30 @@
 .image {
   overflow: visible;
   @include mobile-small {
-    height: 100%;
     margin-bottom: -10rem;
   }
   @include tablet {
     position: absolute;
     margin-bottom: unset;
-    width: 50%;
-    transform: rotate(-4deg) translate(1rem, 1rem);
+    transform: rotate(-4deg) translate(6rem, -6rem);
+    height: 35rem;
+    width: auto;
   }
   @include small-desktop {
-    top: -8rem;
-    left: 3rem;
-    width: 55%;
-    transform: rotate(2deg);
+    height: 50rem;
+    transform: rotate(2deg) translate(-3rem, -5rem);
   }
   @include medium-desktop {
-    top: -3rem;
-    left: 5rem;
-    width: 60%;
-    transform: rotate(2deg);
+    height: 55rem;
+    transform: rotate(2deg) translate(0rem, -11rem);
   }
   @include large-desktop {
-    top: 0rem;
-    left: 30rem;
-    width: 40%;
-    transform: rotate(0deg);
+    height: 50rem;
+    transform: rotate(2deg) translate(12rem, -13rem)
+  }
+  @include huge-desktop {
+    height: 55rem;
+    transform: rotate(2deg) translate(31rem, -18rem);
   }
 }
 .cta-wrapper {

@@ -34,3 +34,8 @@
     @content;
   }
 }
+@mixin huge-desktop {
+  @media (min-width: $huge-desktop) {
+    @content;
+  }
+}
