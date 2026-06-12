@@ -11,7 +11,7 @@ export interface PageItem {
   meta_robots?: string;
   main_headline_h1: string;
   main_text: unknown;
-  alertbanner: AlertItem;
+  alertbanner: AlertItem | undefined;
   content: Item[];
 }
 export interface Item {

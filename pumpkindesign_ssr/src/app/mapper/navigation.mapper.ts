@@ -9,14 +9,13 @@ export function mapStrapiNavigation(rawData: any[]): NavigationItem[] {
     if (rawItem.additionalFields?.iconName) {
       navIcon = {
         name: rawItem.additionalFields.iconName,
-        prefix: rawItem.additionalFields?.iconPrefix,
-        color: undefined,
+        prefix: 'fas',
       };
     }
 
     const item: NavigationItem = {
       icon: navIcon,
-
+      icon_position: 'right',
       label: rawItem.title,
       href: rawItem.path,
       isInternal: rawItem.type === 'INTERNAL',

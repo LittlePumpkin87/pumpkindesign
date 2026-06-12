@@ -8,6 +8,7 @@
   <div class="text">
     <h4 class="headline">{{ item()?.headline }}</h4>
     <div [innerHTML]="item()?.description"></div>
+    <lpd-link [item]="item()?.cta" ></lpd-link>
   </div>
   <button (click)="close()">
     <lpd-icon

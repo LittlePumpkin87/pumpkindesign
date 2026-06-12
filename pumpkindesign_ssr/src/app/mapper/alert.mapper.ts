@@ -5,16 +5,15 @@ export const mapAlertData = (rawData: any): { item: AlertItem } | undefined => {
   if (!rawData) {
     return undefined;
   }
-
   return {
     item: {
       headline: rawData.headline,
-      description: serializeRichText(rawData.description),
+      description:
+        typeof rawData.description === 'string'
+          ? rawData.description
+          : serializeRichText(rawData.description),
       icon: getIconData(rawData.icon),
-      cta: (() => {
-        const cta = getLinkData(rawData.cta);
-        return Array.isArray(cta) ? cta[0] : cta;
-      })(),
+      cta: getLinkData(rawData.cta),
     },
   };
 };

@@ -72,7 +72,7 @@ export class PageService {
             page.main_text = serializeRichText(page.main_text);
           }
           if (page.alertbanner) {
-            mapAlertData(page.alertbanner)
+            page.alertbanner = mapAlertData(page.alertbanner)?.item;
           }
         }
         return page;

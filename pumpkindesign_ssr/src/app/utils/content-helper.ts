@@ -201,13 +201,13 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
         if (isSameHost) {
           const { pathname, search, hash } = new URL(rawLink);
           const fragment = hash.startsWith('#') ? hash.substring(1) : undefined;
-          const icon = getIconData(rawLink)
+          const icon = getIconData(rawLink);
           result = {
             href: `${pathname}${search}`,
             fragment,
             isInternal: true,
             isExternal: false,
-            icon
+            icon,
           };
         } else {
           result = {
@@ -242,6 +242,13 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
 
 const mapSingleLink = (item: any) => {
   if (!item) return undefined;
+
+  // 🔥 DER FIX: Der Idempotenz-Check!
+  // Wenn das Objekt bereits ein 'href' und 'isExternal' besitzt, 
+  // wurde es schon gemappt. Wir geben es direkt zurück und ersparen uns den Rest!
+  if (item.href !== undefined && item.isExternal !== undefined) {
+    return item;
+  }
 
   const rawLinkType = item.type || item.linkType || item.linktype;
   if (!rawLinkType) return undefined;
@@ -292,21 +299,15 @@ const mapSingleLink = (item: any) => {
 };
 
 export const getLinkData = (item: any) => {
-  if (!item) {
-    return undefined;
+  if (!item) return undefined;
+
+  if (Array.isArray(item)) {
+    return item.length > 0 ? mapSingleLink(item[0]) : undefined;
   }
 
   const linkArraySource = item.link || item.links;
-
   if (Array.isArray(linkArraySource)) {
-    const validLinks = linkArraySource
-      .map((link: any) => {
-        return mapSingleLink(link);
-      })
-      .filter((l: any) => l !== undefined);
-
-    return validLinks.length > 0 ? validLinks : undefined;
+    return linkArraySource.length > 0 ? mapSingleLink(linkArraySource[0]) : undefined;
   }
-
   return mapSingleLink(item);
 };
