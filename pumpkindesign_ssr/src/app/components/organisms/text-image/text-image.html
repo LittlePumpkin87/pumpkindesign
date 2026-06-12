@@ -1,19 +1,19 @@
 <div class="wrapper">
-  <div class="image-container">
-    <img
-      class="image"
-      [ngClass]="item()?.image_position"
-      [src]="item()?.imgSrc"
-      [alt]="item()?.imgAlt"
-    />
-  </div>
+  <img
+    class="image"
+    [ngClass]="item()?.image_position"
+    [src]="item()?.imgSrc"
+    [alt]="item()?.imgAlt"
+  />
 
   <div class="content">
     <h5 class="subline">{{ item()?.subline }}</h5>
     <h2>{{ item()?.headline }}</h2>
     <span [innerHTML]="item()?.text"></span>
-    @for (link of item()?.cta; track $index) {
-      <lpd-link [item]="link"></lpd-link>
-    }
+    <div class="cta-wrapper">
+      @for (link of item()?.cta; track $index) {
+        <lpd-link [item]="link"></lpd-link>
+      }
+    </div>
   </div>
 </div>
