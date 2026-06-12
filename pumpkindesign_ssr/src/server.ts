@@ -13,15 +13,9 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const isProd = process.env['NODE_ENV'] === 'production';
 
 const app = express();
-app.set('trust proxy', 1);
 const allowedHosts = environment.ALLOWED_HOSTS;
 const angularApp = new AngularNodeAppEngine({
   allowedHosts: allowedHosts,
-});
-app.use((req, _res, next) => {
-  const ip = req.ip ?? req.headers['x-real-ip'];
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} – ${ip}`);
-  next();
 });
 app.use(
   express.static(browserDistFolder, {
@@ -30,6 +24,7 @@ app.use(
     redirect: false,
   }),
 );
+
 
 app.use('/api', async (req, res) => {
   const token = process.env['STRAPI_API_TOKEN'];
@@ -59,6 +54,7 @@ app.use('/api', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error while connecting to the CMS.' });
   }
 });
+
 
 app.use((req, res, next) => {
   angularApp
