@@ -2,11 +2,14 @@ import { Type } from '@angular/core';
 import { TextblockComponent } from '../components/atoms/textblock/textblock';
 import { CardsComponent } from '../components/molecules/cards/cards.component';
 import { TextImage } from '../components/organisms/text-image/text-image';
+import { Alertbanner } from '../components/organisms/alertbanner/alertbanner';
 
 interface ComponentConfig {
   tagName: string;
   component: Type<unknown>;
 }
+
+// Components which are rendered in dynamic zone
 
 export const COMPONENT_REGISTRY: Record<string, ComponentConfig> = {
   'atoms.textblock': {
@@ -20,5 +23,9 @@ export const COMPONENT_REGISTRY: Record<string, ComponentConfig> = {
   'organisms.image-text': {
     tagName: 'lpd-text-image',
     component: TextImage,
+  },
+  'organisms.alertbanner': {
+    tagName: 'lpd-alertbanner',
+    component: Alertbanner,
   },
 };

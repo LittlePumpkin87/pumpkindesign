@@ -1,0 +1,20 @@
+<div class="alertwrapper" [ngClass]="isVisible ? '' : 'hidden'">
+  <lpd-icon
+    class="icon"
+    [iconName]="item()?.icon?.name"
+    [iconPrefix]="item()?.icon?.prefix || 'fas'"
+    [color]="item()?.icon?.color || '#FFF'"
+  ></lpd-icon>
+  <div class="text">
+    <h4 class="headline">{{ item()?.headline }}</h4>
+    <div [innerHTML]="item()?.description"></div>
+  </div>
+  <button (click)="close()">
+    <lpd-icon
+      class="icon"
+      [iconName]="'xmark'"
+      [iconPrefix]="'fas'"
+      [color]="item()?.icon?.color || '#FFF'"
+    ></lpd-icon>
+  </button>
+</div>

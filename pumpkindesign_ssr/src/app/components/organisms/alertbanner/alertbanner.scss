@@ -1,0 +1,45 @@
+@use '../../../shared/index.scss' as *;
+
+.alertwrapper {
+  position: sticky;
+  margin: 0 auto;
+  width: 100%;
+  background-color: $accent-green;
+  padding: 1rem;
+  border-radius: 2rem;
+  z-index: 10;
+  top: 6rem;
+  transform: translate(0, -2rem);
+  @include grid(max-content 1fr max-content, auto, 2rem, stretch, center);
+  @include small-desktop {
+    max-width: 70vw;
+    transform: translate(0, -1rem);
+    top: 7rem;
+  }
+   @include medium-desktop {
+    top: 8rem;
+    transform: translate(0, -8rem);
+  }
+    @include medium-desktop {
+    top: 14rem;
+  }
+}
+
+button {
+  transition: all 300ms ease-in;
+  &:hover {
+    transition: all 300ms ease-in;
+    transform: rotate(45deg);
+  }
+}
+.icon {
+  font-size: 2rem;
+  color: $text-white;
+}
+.headline {
+  margin-bottom: 0.5rem;
+}
+
+.hidden {
+  display: none;
+}

@@ -1,3 +1,5 @@
+import { AlertItem } from "./organism.interface";
+
 export interface PageItem {
   id: number;
   documentId: string;
@@ -9,6 +11,7 @@ export interface PageItem {
   meta_robots?: string;
   main_headline_h1: string;
   main_text: unknown;
+  alertbanner: AlertItem;
   content: Item[];
 }
 export interface Item {

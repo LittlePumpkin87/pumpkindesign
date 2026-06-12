@@ -128,3 +128,14 @@
     opacity: 1;
   }
 }
+
+@keyframes flip-in {
+  0% {
+    transform: rotateX(80deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}

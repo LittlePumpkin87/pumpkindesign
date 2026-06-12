@@ -1,3 +1,4 @@
+import { mapAlertData } from './../mapper/alert.mapper';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -69,6 +70,9 @@ export class PageService {
           }
           if (page.main_text) {
             page.main_text = serializeRichText(page.main_text);
+          }
+          if (page.alertbanner) {
+            mapAlertData(page.alertbanner)
           }
         }
         return page;

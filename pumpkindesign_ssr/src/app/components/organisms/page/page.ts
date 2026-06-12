@@ -4,10 +4,11 @@ import { PageItem } from '../../../interfaces/page.interface';
 import { NavigationService } from '../../../services/navigation.service';
 import { ContentRendererComponent } from '../content-renderer/content-renderer';
 import { PageService } from '../../../services/page.service';
+import { Alertbanner } from "../alertbanner/alertbanner";
 
 @Component({
   selector: 'lpd-page',
-  imports: [NavigationComponent, ContentRendererComponent],
+  imports: [NavigationComponent, ContentRendererComponent, Alertbanner],
   templateUrl: './page.html',
   styleUrl: './page.scss',
 })

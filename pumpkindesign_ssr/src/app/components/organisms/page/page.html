@@ -1,8 +1,9 @@
 <header>
   <lpd-navigation [logoData]="header()" [items]="navData()"></lpd-navigation>
 </header>
-
 <main>
+  <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
+
   <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
   <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
 
