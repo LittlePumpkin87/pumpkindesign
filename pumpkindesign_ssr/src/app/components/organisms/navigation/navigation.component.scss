@@ -110,14 +110,15 @@
 }
 
 #MobileNav {
-  position: sticky;
-  @include flex(row, space-between, center);
+  position: fixed;
   background-color: $accent-orange;
   border-radius: $border-bottom;
-  height: 5rem;
+  height: 3rem;
+  width: 100%;
   padding: 0 0 0 2rem;
+  @include flex(row, space-between, center);
   @include tablet {
-    height: 8rem;
+    height: 6rem;
   }
 }
 

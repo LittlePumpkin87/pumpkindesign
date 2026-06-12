@@ -1,0 +1,19 @@
+@use '../../../shared/' as *;
+
+.wrapper {
+  @include grid(1.5fr 1fr, auto);
+}
+.image-container {
+  position: relative;
+  overflow: visible;
+}
+.image {
+  position: absolute;
+  top: -9rem;
+  left: 8rem;
+  transform: rotate(8deg);
+  overflow: visible;
+}
+.content {
+  z-index: 1;
+}

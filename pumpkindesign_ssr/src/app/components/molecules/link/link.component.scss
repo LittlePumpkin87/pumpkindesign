@@ -11,7 +11,7 @@
 .button {
   transform: translateY(0);
   filter: $shadow-subtle;
-  background-color: $accent-green;
+  background-color: transparent;
   padding: 1rem 2rem;
   @include border-elipse($accent-orange);
   @include transition(all, 100ms, linear);

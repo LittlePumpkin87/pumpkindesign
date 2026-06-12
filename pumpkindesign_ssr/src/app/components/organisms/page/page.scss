@@ -1,9 +1,12 @@
 @use '../../../shared/index.scss' as *;
 
 .headline {
-  filter: $shadow-header;
-  animation: text-pop-up-top 0.6s both;
-  margin: 4rem;
+  filter: $shadow-green;
+  z-index: 10;
+  position: fixed;
+  top: 20%;
+  writing-mode: sideways-rl;
+  left: 1%;
 }
 
 .main-textblock {

@@ -57,12 +57,12 @@
 
 @keyframes text-pop-up-top {
   0% {
-    transform: translateY(0);
-    transform-origin: 50% 50%;
+    transform: rotate(-90deg) translateY(0);
+    transform-origin: 0% 0%;
   }
   100% {
-    transform: translateY(-50px);
-    transform-origin: 50% 50%;
+    transform: rotate(-90deg) translateX(50px);
+    transform-origin: 0% 0%;
     text-shadow:
       0 1px 0 $background-blue,
       0 2px 0 $background-blue,
