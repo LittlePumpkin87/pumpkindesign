@@ -34,6 +34,12 @@
     width: 60%;
     transform: rotate(2deg);
   }
+  @include large-desktop {
+    top: 0rem;
+    left: 30rem;
+    width: 40%;
+    transform: rotate(0deg);
+  }
 }
 .cta-wrapper {
   gap: 1rem;
