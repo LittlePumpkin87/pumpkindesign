@@ -118,6 +118,20 @@
           "sortable": false
         }
       },
+      "alertbanner": {
+        "edit": {
+          "label": "alertbanner",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "alertbanner",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "hero": {
         "edit": {
           "label": "hero",
@@ -144,20 +158,6 @@
           "label": "main_headline_h1",
           "searchable": true,
           "sortable": true
-        }
-      },
-      "main_text": {
-        "edit": {
-          "label": "main_text",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "main_text",
-          "searchable": false,
-          "sortable": false
         }
       },
       "content": {
@@ -293,7 +293,7 @@
         ],
         [
           {
-            "name": "main_text",
+            "name": "alertbanner",
             "size": 12
           }
         ],

@@ -81,6 +81,16 @@
         "images"
       ]
     },
+    "alertbanner": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "organisms.alertbanner",
+      "repeatable": false
+    },
     "hero": {
       "type": "component",
       "pluginOptions": {
@@ -93,14 +103,6 @@
     },
     "main_headline_h1": {
       "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "main_text": {
-      "type": "blocks",
       "pluginOptions": {
         "i18n": {
           "localized": true
@@ -122,7 +124,6 @@
         "organisms.certificate",
         "organisms.spider-tech-web",
         "organisms.image-text",
-        "organisms.alertbanner",
         "molecules.gallery"
       ]
     }

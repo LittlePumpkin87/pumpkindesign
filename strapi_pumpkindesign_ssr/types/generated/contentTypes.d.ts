@@ -670,6 +670,12 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
+    alertbanner: Schema.Attribute.Component<'organisms.alertbanner', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     content: Schema.Attribute.DynamicZone<
       [
         'atoms.textblock',
@@ -679,7 +685,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'organisms.certificate',
         'organisms.spider-tech-web',
         'organisms.image-text',
-        'organisms.alertbanner',
         'molecules.gallery',
       ]
     > &
@@ -700,12 +705,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;
     main_headline_h1: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    main_text: Schema.Attribute.Blocks &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -847,6 +846,12 @@ export interface ApiStartpageStartpage extends Struct.SingleTypeSchema {
     };
   };
   attributes: {
+    alertbanner: Schema.Attribute.Component<'organisms.alertbanner', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     content: Schema.Attribute.DynamicZone<
       [
         'atoms.textblock',
@@ -856,7 +861,6 @@ export interface ApiStartpageStartpage extends Struct.SingleTypeSchema {
         'organisms.certificate',
         'organisms.spider-tech-web',
         'organisms.image-text',
-        'organisms.alertbanner',
         'molecules.gallery',
       ]
     > &
@@ -868,24 +872,12 @@ export interface ApiStartpageStartpage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    hero: Schema.Attribute.Component<'organisms.hero', false> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::startpage.startpage'
     >;
     main_headline_h1: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    main_text: Schema.Attribute.Blocks &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

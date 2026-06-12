@@ -95,24 +95,24 @@
       "edit": [
         [
           {
+            "name": "subline",
+            "size": 6
+          },
+          {
             "name": "headline",
             "size": 6
           }
         ],
         [
           {
-            "name": "cta",
+            "name": "cover_image",
             "size": 12
           }
         ],
         [
           {
-            "name": "subline",
-            "size": 6
-          },
-          {
-            "name": "cover_image",
-            "size": 6
+            "name": "cta",
+            "size": 12
           }
         ]
       ]

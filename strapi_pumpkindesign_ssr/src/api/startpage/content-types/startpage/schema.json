@@ -81,22 +81,14 @@
         }
       }
     },
-    "main_text": {
-      "type": "blocks",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "hero": {
+    "alertbanner": {
       "type": "component",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "component": "organisms.hero",
+      "component": "organisms.alertbanner",
       "repeatable": false
     },
     "content": {
@@ -114,7 +106,6 @@
         "organisms.certificate",
         "organisms.spider-tech-web",
         "organisms.image-text",
-        "organisms.alertbanner",
         "molecules.gallery"
       ]
     }

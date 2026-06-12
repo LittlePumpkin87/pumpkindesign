@@ -118,30 +118,16 @@
           "sortable": true
         }
       },
-      "main_text": {
+      "alertbanner": {
         "edit": {
-          "label": "main_text",
+          "label": "alertbanner",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "main_text",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "hero": {
-        "edit": {
-          "label": "hero",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "hero",
+          "label": "alertbanner",
           "searchable": false,
           "sortable": false
         }
@@ -273,13 +259,7 @@
         ],
         [
           {
-            "name": "main_text",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "hero",
+            "name": "alertbanner",
             "size": 12
           }
         ],
