@@ -19,6 +19,10 @@
     @include flex(column, stretch, center);
     @include tile-width(1, 0);
     .card-headline {
+      white-space: break-spaces;
+      hyphens: auto;
+      width: 70%;
+      text-wrap: wrap;
       margin: $spacing-03 0;
     }
     @include tablet {
@@ -46,6 +50,7 @@
     &.reference {
       cursor: auto;
       background-color: $accent-green;
+      text-align: center;
       @include border-elipse-flip($accent-orange);
       .card-image {
         height: 15rem;

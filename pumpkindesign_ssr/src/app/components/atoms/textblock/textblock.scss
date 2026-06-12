@@ -11,4 +11,8 @@
   @include tablet {
     padding: 0;
   }
+  @include large-desktop {
+    max-width: 60%;
+    margin: 0 auto;
+  }
 }
