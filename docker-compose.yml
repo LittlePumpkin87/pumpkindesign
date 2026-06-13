@@ -74,6 +74,7 @@ services:
       - POSTGRES_DB=${DATABASE_NAME}
     volumes:
       - strapi-data:/var/lib/postgresql/data/
+      - ${BACKUP_PATH}:/backup
     networks:
       - pumpkindesign_default
     healthcheck:
