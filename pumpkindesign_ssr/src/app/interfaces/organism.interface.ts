@@ -16,3 +16,12 @@ export interface AlertItem {
   description: string;
   cta?: CTA;
 }
+
+export interface FooterItem {
+  rightColumn: CTA[];
+  leftColumn: CTA[];
+  socialCta: CTA[];
+  imgSrc?: string;
+  imgAlt?: string;
+  footnote: string;
+}

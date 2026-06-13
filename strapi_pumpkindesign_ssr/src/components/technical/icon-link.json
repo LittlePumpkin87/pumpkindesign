@@ -44,6 +44,10 @@
           ]
         }
       }
+    },
+    "link_style": {
+      "type": "string",
+      "default": "icon"
     }
   },
   "config": {}

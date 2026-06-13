@@ -2,20 +2,18 @@ import { CTA } from '../interfaces/atom.interface';
 import { TextImageItem } from '../interfaces/organism.interface';
 import { getImageUrl, getLinkData, serializeRichText } from '../utils/content-helper';
 
-export const mapTextImageData = (rawData: any): { item: TextImageItem } | undefined => {
+export const mapTextImageData = (rawData: any): { item: TextImageItem } | undefined | null => {
   if (!rawData) {
     return undefined;
   }
-  // Map CTA Array
-  let normalizedCta: any[] = [];
-  if (Array.isArray(rawData.cta)) {
-    normalizedCta = rawData.cta.map((link: CTA) => getLinkData(link)).filter(Boolean);
-  } else if (rawData.cta) {
-    normalizedCta = [getLinkData(rawData.cta)];
-  } else {
-    normalizedCta = [];
+  const rawCta = rawData.cta;
+  let rawCtaArray: CTA[] = [];
+  if (Array.isArray(rawCta)) {
+    rawCtaArray = rawCta;
+  } else if (rawCta) {
+    rawCtaArray = [rawCta];
   }
-
+  const normalizedCta = rawCtaArray.map((link: any) => getLinkData(link)).filter(Boolean);
   return {
     item: {
       headline: rawData.headline,
@@ -24,7 +22,7 @@ export const mapTextImageData = (rawData: any): { item: TextImageItem } | undefi
       image_position: rawData.image_position,
       cta: normalizedCta,
       imgSrc: getImageUrl(rawData?.image),
-      imgAlt: rawData.image.alternativeText,
+      imgAlt: rawData?.image?.alternativeText || '',
     },
   };
 };

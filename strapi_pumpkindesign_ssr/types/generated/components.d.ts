@@ -160,7 +160,7 @@ export interface OrganismsImageText extends Struct.ComponentSchema {
         number
       >;
     headline: Schema.Attribute.String;
-    image: Schema.Attribute.Media<'images'>;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     subline: Schema.Attribute.String;
     text: Schema.Attribute.Blocks;
   };
@@ -254,6 +254,7 @@ export interface TechnicalIconLink extends Struct.ComponentSchema {
   };
   attributes: {
     icon: Schema.Attribute.Component<'technical.icon', false>;
+    link_style: Schema.Attribute.String & Schema.Attribute.DefaultTo<'icon'>;
     page: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
     type: Schema.Attribute.Enumeration<['internal', 'external']>;
     url: Schema.Attribute.String;

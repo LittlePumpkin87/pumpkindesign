@@ -1,0 +1,27 @@
+@if (item(); as data) {
+  <footer class="footer">
+    <div class="column">
+      @for (link of data.leftColumn; track $index) {
+        <lpd-link [item]="link"></lpd-link>
+      }
+    </div>
+
+    <div class="social-link">
+      @for (socialLink of data.socialCta; track $index) {
+        <lpd-link [item]="socialLink"></lpd-link>
+      }
+    </div>
+
+    @if (data.imgSrc) {
+      <img class="image" [src]="data.imgSrc" [alt]="data.imgAlt || ''" />
+    }
+
+    <div class="column">
+      @for (link of data.rightColumn; track $index) {
+        <lpd-link [item]="link"></lpd-link>
+      }
+    </div>
+
+    <div class="footnote" [innerHTML]="data.footnote"></div>
+  </footer>
+}

@@ -1,4 +1,4 @@
-import { AlertItem } from "./organism.interface";
+import { AlertItem, FooterItem } from "./organism.interface";
 
 export interface PageItem {
   id: number;
@@ -12,6 +12,7 @@ export interface PageItem {
   main_headline_h1: string;
   main_text: unknown;
   alertbanner: AlertItem | undefined;
+  footer: FooterItem | undefined;
   content: Item[];
 }
 export interface Item {
