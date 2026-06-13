@@ -243,9 +243,6 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
 const mapSingleLink = (item: any) => {
   if (!item) return undefined;
 
-  // 🔥 DER FIX: Der Idempotenz-Check!
-  // Wenn das Objekt bereits ein 'href' und 'isExternal' besitzt, 
-  // wurde es schon gemappt. Wir geben es direkt zurück und ersparen uns den Rest!
   if (item.href !== undefined && item.isExternal !== undefined) {
     return item;
   }

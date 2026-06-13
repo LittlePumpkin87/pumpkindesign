@@ -8,10 +8,11 @@
 }
 .textlink,
 .button {
-  @include flex(row, space-between, center);
-  @include typography-s;
   gap: 0.5rem;
   text-decoration: none;
+  width: fit-content;
+  @include flex(row, space-between, center);
+  @include typography-s;
 }
 
 .button {
