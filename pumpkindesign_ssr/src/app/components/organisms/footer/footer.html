@@ -1,5 +1,5 @@
 @if (item(); as data) {
-  <footer class="footer">
+  <div class="footer">
     <div class="column">
       @for (link of data.leftColumn; track $index) {
         <lpd-link [item]="link"></lpd-link>
@@ -23,5 +23,5 @@
     </div>
 
     <div class="footnote" [innerHTML]="data.footnote"></div>
-  </footer>
+  </div>
 }

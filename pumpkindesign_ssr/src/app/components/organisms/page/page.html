@@ -14,5 +14,7 @@
   <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
 </main>
 @if (footerData()) {
-  <lpd-footer [item]="footerData()"></lpd-footer>
+  <footer>
+    <lpd-footer [item]="footerData()"></lpd-footer>
+  </footer>
 }

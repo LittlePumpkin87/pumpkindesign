@@ -1,5 +1,5 @@
 import { environment } from '../../environments/environment';
-import { Icon } from '../interfaces/atom.interface';
+import { CTA, Icon } from '../interfaces/atom.interface';
 
 const isProd = process.env['NODE_ENV'] === 'production';
 
@@ -249,7 +249,7 @@ const mapSingleLink = (item: any) => {
 
   const rawLinkType = item.type || item.linkType || item.linktype;
   if (!rawLinkType) return undefined;
-  
+
   const normalizedLinkType = rawLinkType.toLowerCase();
   let dataNode = item[normalizedLinkType] || item;
 
@@ -261,16 +261,16 @@ const mapSingleLink = (item: any) => {
   if (!dataNode) return undefined;
 
   const rawLink = dataNode.link || dataNode.url || dataNode.page || dataNode.path || dataNode;
-  
+
   if (!rawLink) return undefined;
 
   const targetData = resolveLinkTarget(normalizedLinkType, rawLink);
-  
+
   if (!targetData) return undefined;
   if (!targetData.href && targetData.linktype !== 'disabled') return undefined;
 
   let linkIcon = getIconData(dataNode.icon);
-  
+
   if (!linkIcon && item.additionalFields?.iconName) {
     linkIcon = {
       name: item.additionalFields.iconName,
@@ -307,4 +307,14 @@ export const getLinkData = (item: any) => {
     return linkArraySource.length > 0 ? mapSingleLink(linkArraySource[0]) : undefined;
   }
   return mapSingleLink(item);
+};
+
+// function for mapping CTA arrays
+export const mapCtaArray = (ctaSource: any): CTA[] => {
+  if (!ctaSource || !Array.isArray(ctaSource)) {
+    return [];
+  }
+  return ctaSource
+    .map((item: any) => getLinkData(item))
+    .filter((link: any): link is CTA => link !== undefined);
 };

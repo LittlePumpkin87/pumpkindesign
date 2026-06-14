@@ -42,6 +42,16 @@
   border-right: solid 0.2rem $color;
 }
 
+@mixin border-bottom($color) {
+  border: $color 0.3rem solid;
+  border-radius: 0.5rem 0.5rem 2rem 2rem;
+}
+
+@mixin border-top($color) {
+  border: $color 0.3rem solid;
+  border-radius: 2rem 2rem 0.5rem 0.5rem;
+}
+
 @mixin border-elipse($color) {
   border: $color 0.3rem solid;
   border-radius: 0.5rem 2rem 0.5rem 2rem;

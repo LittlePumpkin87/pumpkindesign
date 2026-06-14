@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { shareReplay, map, tap, catchError } from 'rxjs/operators';
+import { shareReplay, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -14,14 +14,10 @@ export class FooterService {
   private readonly API_URL = environment.API_URL;
 
   private readonly footerRequest$ = this.http.get<any>(`${this.API_URL}/foot`).pipe(
-    tap((rawData) => console.log('📡 [FooterService] Raw API Response:', rawData)),
     map((data) => {
       const mappedData = mapFooterData(data);
-      console.log('🔄 [FooterService] Mapped Data:', mappedData);
       return mappedData?.item;
     }),
-
-    tap((item) => console.log('✅ [FooterService] Extracted Item for Signal:', item)),
 
     catchError((error) => {
       console.error('❌ [FooterService] Error fetching footer data:', error);
