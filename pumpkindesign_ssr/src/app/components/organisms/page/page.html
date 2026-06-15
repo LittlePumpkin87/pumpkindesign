@@ -1,11 +1,10 @@
 <header>
   <lpd-navigation [logoData]="header()" [items]="navData()"></lpd-navigation>
 </header>
+@if (page()?.alertbanner) {
+  <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
+}
 <main>
-  @if (page()?.alertbanner) {
-    <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
-  }
-
   <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
   @if (page()?.main_text) {
     <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
