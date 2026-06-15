@@ -14,12 +14,6 @@ html {
 
 main {
   margin-top: 8rem;
-  @include medium-desktop {
-    margin-top: 15rem;
-  }
-  @include huge-desktop {
-    margin-top: 18rem;
-  }
   section {
     padding: 3rem 0;
     .container {
