@@ -23,3 +23,9 @@
     max-width: 70vw;
   }
 }
+footer {
+  position: relative;
+  background-color: $accent-orange;
+  padding: 2rem 4rem 0;
+  @include border-top($accent-orange);
+}
