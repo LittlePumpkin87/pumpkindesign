@@ -1,6 +1,6 @@
 @if (item(); as data) {
   <div class="footer">
-    <div class="column">
+    <div class="column right">
       @for (link of data.leftColumn; track $index) {
         <lpd-link [item]="link"></lpd-link>
       }
@@ -16,7 +16,7 @@
       <img class="image" [src]="data.imgSrc" [alt]="data.imgAlt || ''" />
     }
 
-    <div class="column">
+    <div class="column left">
       @for (link of data.rightColumn; track $index) {
         <lpd-link [item]="link"></lpd-link>
       }

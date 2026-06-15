@@ -15,6 +15,18 @@
   @include typography-s;
 }
 
+.textlink {
+  ::ng-deep .icon {
+    @include transition(all, 200ms, ease-in);
+  }
+  &:hover {
+    filter: $shadow-blue;
+    ::ng-deep .icon {
+      transform: translate(0.5rem, 0);
+    }
+  }
+}
+
 .button {
   transform: translateY(0);
   filter: $shadow-subtle;
