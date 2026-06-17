@@ -19,7 +19,7 @@ export interface NavigationItem {
   href?: string;
   documentId?: string | null;
   locale?: string;
-  items: NavigationItem[];
+  items: NavigationItem[] | undefined;
 }
 
 export interface HeaderData {

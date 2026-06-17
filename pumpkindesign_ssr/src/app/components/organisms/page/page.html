@@ -1,17 +1,27 @@
-<header>
-  <lpd-navigation [logoData]="header()" [items]="navData()"></lpd-navigation>
-</header>
-@if (page()?.alertbanner) {
-  <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
+@if (header()) {
+  <header>
+    <lpd-navigation [logoData]="header()" [items]="navData()"></lpd-navigation>
+  </header>
 }
-<main>
-  <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
-  @if (page()?.main_text) {
-    <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
-  }
 
-  <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
-</main>
+@if (pageService.isLoading()) {
+  <div class="logo-loader-inline" id="logo-loader-overlay">
+    <img src="logo.png" alt="loading page content..." class="animated-logo" />
+  </div>
+} @else {
+  @if (page()?.alertbanner) {
+    <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
+  }
+  <main>
+    <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
+
+    @if (page()?.main_text) {
+      <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
+    }
+
+    <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
+  </main>
+}
 @if (footerData()) {
   <footer>
     <lpd-footer [item]="footerData()"></lpd-footer>

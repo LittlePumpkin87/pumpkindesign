@@ -130,3 +130,40 @@ span {
   letter-spacing: 0.1rem;
   font-family: 'Signika Negative Light', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.logo-loader-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: $background-grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.animated-logo {
+  width: 120px;
+  height: auto;
+  animation: breathe 2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+}

@@ -1,12 +1,12 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { shareReplay, map, filter, tap } from 'rxjs/operators';
+import { shareReplay, map, filter, tap, catchError } from 'rxjs/operators';
 import { Router, Scroll } from '@angular/router';
-
 import { environment } from '../../environments/environment';
 import { mapHeaderData, mapStrapiNavigation } from '../mapper/navigation.mapper';
 import { SeoService } from './seo.service';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -14,6 +14,12 @@ export class NavigationService {
   private readonly router = inject(Router);
   private readonly API_URL = environment.API_URL;
   private readonly seoService = inject(SeoService);
+
+  private readonly _navLoaded = signal(false);
+  private readonly _headerLoaded = signal(false);
+
+  readonly isReady = computed(() => this._navLoaded() && this._headerLoaded());
+
   constructor() {
     this.initAnchorScroll();
   }
@@ -33,32 +39,37 @@ export class NavigationService {
     .get<any[]>(`${this.API_URL}/navigation/render/main?type=TREE`)
     .pipe(
       map((data) => mapStrapiNavigation(data)),
+      tap(() => this._navLoaded.set(true)),
+      catchError((error) => {
+        console.warn('[NavigationService] clould not load navigation data:', error);
+        this._navLoaded.set(true);
+        return of([]);
+      }),
       shareReplay(1),
     );
 
   private readonly headerRequest$ = this.http.get<any>(`${this.API_URL}/head`).pipe(
     map((data) => mapHeaderData(data)),
     tap((mappedData) => {
+      this._headerLoaded.set(true);
       if (mappedData?.item) {
-        if (mappedData.item.favicon) {
-          this.seoService.setFavicon(mappedData.item.favicon);
-        }
-        if (mappedData.item.meta_robots) {
+        if (mappedData.item.favicon) this.seoService.setFavicon(mappedData.item.favicon);
+        if (mappedData.item.meta_robots)
           this.seoService.updateSeoTags({ meta_robots: mappedData.item.meta_robots });
-        }
-        if (mappedData.item.seo_description) {
+        if (mappedData.item.seo_description)
           this.seoService.updateSeoTags({ seo_description: mappedData.item.seo_description });
-        }
-        if (mappedData.item.seo_image) {
+        if (mappedData.item.seo_image)
           this.seoService.updateSeoTags({ seo_image: mappedData.item.seo_image });
-        }
-        if (mappedData.item.seo_keywords) {
+        if (mappedData.item.seo_keywords)
           this.seoService.updateSeoTags({ seo_keywords: mappedData.item.seo_keywords });
-        }
-        if (mappedData.item.seo_title) {
+        if (mappedData.item.seo_title)
           this.seoService.updateSeoTags({ seo_title: mappedData.item.seo_title });
-        }
       }
+    }),
+    catchError((error) => {
+      console.warn('[NavigationService] could not load header data:', error);
+      this._headerLoaded.set(true);
+      return of(undefined);
     }),
     shareReplay(1),
   );

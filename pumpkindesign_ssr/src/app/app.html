@@ -1,1 +1,6 @@
+@if (showLoader()) {
+  <div class="logo-loader-overlay" [class.fade-out]="fadeLoader()">
+    <img src="logo.png" alt="Loading..." class="animated-logo" />
+  </div>
+}
 <router-outlet />

@@ -1,5 +1,5 @@
 import { mapAlertData } from './../mapper/alert.mapper';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {
@@ -26,6 +26,10 @@ export class PageService {
   private readonly router = inject(Router);
   private readonly contentService = inject(ContentService);
   private readonly seoService = inject(SeoService);
+
+  private readonly _isLoading = signal(true);
+  readonly isLoading = this._isLoading.asReadonly();
+
   readonly currentPage = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -34,27 +38,26 @@ export class PageService {
         const urlTree = this.router.parseUrl(this.router.url);
         const primaryGroup = urlTree.root.children['primary'];
         const segments = primaryGroup?.segments ?? [];
-
         return this.getApiPathFromUrl(segments);
       }),
       distinctUntilChanged(),
-      switchMap((apiPath) => {
-        return this.getPageDetails(apiPath).pipe(
+      tap(() => this._isLoading.set(true)),
+      switchMap((apiPath) =>
+        this.getPageDetails(apiPath).pipe(
+          tap(() => this._isLoading.set(false)),
           catchError((err) => {
             console.error('[PageService] Critical error loading the page:', err);
-
+            this._isLoading.set(false);
             return of(undefined);
           }),
-        );
-      }),
+        ),
+      ),
     ),
     { initialValue: undefined },
   );
 
   private getApiPathFromUrl(segments: UrlSegment[]): string {
-    if (segments.length === 0) {
-      return '';
-    }
+    if (segments.length === 0) return '';
     return segments.map((s) => s.path).join('/');
   }
 
@@ -64,21 +67,13 @@ export class PageService {
       map((response) => {
         const page = response?.data;
         if (page) {
-          if (page.content) {
-            this.contentService.preparePageStructure(page.content);
-          }
-          if (page.main_text) {
-            page.main_text = serializeRichText(page.main_text);
-          }
-          if (page.alertbanner) {
-            page.alertbanner = mapAlertData(page.alertbanner)?.item;
-          }
+          if (page.content) this.contentService.preparePageStructure(page.content);
+          if (page.main_text) page.main_text = serializeRichText(page.main_text);
+          if (page.alertbanner) page.alertbanner = mapAlertData(page.alertbanner)?.item;
         }
         return page;
       }),
-      tap((mapped) => {
-        this.seoService.updateSeoTags(mapped);
-      }),
+      tap((mapped) => this.seoService.updateSeoTags(mapped)),
     );
   }
 }
