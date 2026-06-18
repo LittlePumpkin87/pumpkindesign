@@ -104,6 +104,20 @@
           "sortable": true
         }
       },
+      "glowPathIds": {
+        "edit": {
+          "label": "glowPathIds",
+          "description": "Kommagetrennte Pfad-IDs in der Reihenfolge, in der der Glow beim Hover über diesen Skill wandern soll (z. B. path-1,path-8,path-12,path-43)",
+          "placeholder": "path-1,path-8,path-12,path-43",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "glowPathIds",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "categories": {
         "edit": {
           "label": "categories",
@@ -252,6 +266,12 @@
           {
             "name": "connectedPathIds",
             "size": 4
+          }
+        ],
+        [
+          {
+            "name": "glowPathIds",
+            "size": 8
           }
         ],
         [

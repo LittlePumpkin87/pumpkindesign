@@ -68,6 +68,14 @@
         }
       }
     },
+    "glowPathIds": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
     "categories": {
       "type": "relation",
       "relation": "manyToMany",

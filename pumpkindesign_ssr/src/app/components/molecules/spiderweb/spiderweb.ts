@@ -1,7 +1,7 @@
 import { Component, input, signal, computed, effect, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Skill } from '../../../interfaces/organism.interface';
-import { PATH_ANCHORS, SPIDERWEB_CONFIG, WOBBLE_THREAD_GEOMETRY } from './spiderweb.config';
+import { PATH_ANCHORS, WOBBLE_THREAD_GEOMETRY } from './spiderweb.config';
 import { ThreadFrame, ThreadPendulum } from './spiderweb.physics';
 
 @Component({
@@ -87,15 +87,11 @@ export class SpiderWebComponent implements OnDestroy {
     const current = this.hoveredSkill();
     if (!current) return new Set<string>();
 
-    const paths = new Set<string>();
-
-    const ownPaths = SPIDERWEB_CONFIG[current.slug] || [];
-    ownPaths.forEach((p) => paths.add(p));
+    const paths = new Set<string>(current.glowPathIds);
 
     if (current.isMainSkill && current.subskills) {
       current.subskills.forEach((sub) => {
-        const subPaths = SPIDERWEB_CONFIG[sub.slug] || [];
-        subPaths.forEach((p) => paths.add(p));
+        sub.glowPathIds.forEach((p) => paths.add(p));
       });
     }
 

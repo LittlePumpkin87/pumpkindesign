@@ -1,9 +1,5 @@
 import { ThreadGeometry } from './spiderweb.physics';
 
-export const SPIDERWEB_CONFIG: Record<string, string[]> = {
-  angular: ['path-1', 'path-8', 'path-12', 'path-43'],
-};
-
 export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
   'path-17': { anchorX: 285.34, anchorY: 20.82, restEndX: 284.85, restEndY: 216.55 },
   'path-18': { anchorX: 242.65, anchorY: 148.26, restEndX: 243.21, restEndY: 239.88 },
