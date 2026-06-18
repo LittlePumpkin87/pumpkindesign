@@ -16,18 +16,15 @@ export class App {
   public fadeLoader = signal(false);
 
   constructor() {
-    effect(
-      () => {
-        if (this.loadingService.isAppReady() && isPlatformBrowser(this.platformId)) {
+    effect(() => {
+      if (this.loadingService.isAppReady() && isPlatformBrowser(this.platformId)) {
+        setTimeout(() => {
+          this.fadeLoader.set(true);
           setTimeout(() => {
-            this.fadeLoader.set(true);
-            setTimeout(() => {
-              this.showLoader.set(false);
-            }, 500);
-          }, 1000);
-        }
-      },
-      { allowSignalWrites: true },
-    );
+            this.showLoader.set(false);
+          }, 100);
+        }, 300);
+      }
+    });
   }
 }

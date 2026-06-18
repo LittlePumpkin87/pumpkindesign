@@ -90,6 +90,20 @@
           "sortable": true
         }
       },
+      "connectedPathIds": {
+        "edit": {
+          "label": "connectedPathIds",
+          "description": "ID des Fadens im Spinnenetz-SVG, an dem dieser Skill hängt (z. B. path-17)",
+          "placeholder": "path-17",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "connectedPathIds",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "categories": {
         "edit": {
           "label": "categories",
@@ -233,6 +247,10 @@
           },
           {
             "name": "position_y",
+            "size": 4
+          },
+          {
+            "name": "connectedPathIds",
             "size": 4
           }
         ],

@@ -21,7 +21,21 @@ function getFieldPopulate(attr: any, maxDepth: number, currentDepth: number): an
     return { on: dynamicZoneComponents };
   }
 
-  if (attr.type === "media" || attr.type === "relation") {
+  if (attr.type === "media") {
+    return true;
+  }
+
+  if (attr.type === "relation") {
+    if (attr.target === "api::skill.skill") {
+      return {
+        populate: {
+          logo: true,
+          subskills: {
+            populate: ["logo"],
+          },
+        },
+      };
+    }
     return true;
   }
 

@@ -1,0 +1,87 @@
+@use '../../../shared/index.scss' as *;
+
+.web-container {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  background-color: transparent;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+path {
+  position: static;
+  transform: none;
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.5px;
+  fill: none;
+  transition:
+    stroke 0.3s ease-in-out,
+    stroke-width 0.3s ease-in-out;
+}
+
+.glow {
+  stroke: $accent-orange;
+  stroke-width: 3px;
+  filter: drop-shadow(0 0 8px $accent-orange);
+  stroke-dasharray: calc(var(--length) * 0.3) var(--length);
+  stroke-dashoffset: var(--length);
+}
+
+@keyframes draw-line-var {
+  100% {
+    stroke-dashoffset: calc(var(--length) * -0.3);
+  }
+}
+
+
+.node-interactive {
+  cursor: pointer;
+}
+
+.main-node-circle {
+  fill: $background-brown;
+  stroke: $accent-orange;
+  stroke-width: 2px;
+}
+
+.sub-node-circle {
+  fill: $accent-blue;
+}
+
+.node-text,
+.node-text-sub {
+  fill: $text-white;
+  pointer-events: none;
+}
+
+.wobble-p17 {
+  --length: 196;
+  animation: draw-line-var 0.8s ease-out forwards;
+}
+.wobble-p18 {
+  --length: 92;
+  animation: draw-line-var 0.8s ease-out forwards;
+}
+.wobble-p19 {
+  --length: 35;
+  animation: draw-line-var 0.8s ease-out forwards;
+}
+.wobble-p43 {
+  --length: 115;
+  animation: draw-line-var 0.8s ease-out forwards;
+}
+.wobble-p44 {
+  --length: 57;
+  animation: draw-line-var 0.8s ease-out forwards;
+}
+.wobble-p45 {
+  --length: 99;
+  animation: draw-line-var 0.8s ease-out forwards;
+}

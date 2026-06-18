@@ -25,3 +25,16 @@ export interface FooterItem {
   imgAlt?: string;
   footnote: string;
 }
+
+export interface Skill {
+  imgSrc?: string;
+  imgAlt?: string;
+  slug: string;
+  name: string;
+  description?: string;
+  posX: number;
+  posY: number;
+  isMainSkill: boolean;
+  connectedPathIds: string;
+  subskills?: Skill[];
+}
