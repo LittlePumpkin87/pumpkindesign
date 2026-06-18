@@ -349,19 +349,16 @@
         id="subskill-5"
         [attr.d]="threadFrames()['subskill-5'].d"
         [class.glow]="activePaths().has('subskill-5')"
-        [class.wobble-p17]="activePaths().has('subskill-5')"
       />
       <path
         id="subskill-4"
         [attr.d]="threadFrames()['subskill-4'].d"
         [class.glow]="activePaths().has('subskill-4')"
-        [class.wobble-p18]="activePaths().has('subskill-4')"
       />
       <path
         id="subskill-3"
         [attr.d]="threadFrames()['subskill-3'].d"
         [class.glow]="activePaths().has('subskill-3')"
-        [class.wobble-p19]="activePaths().has('subskill-3')"
       />
 
       <path
@@ -584,66 +581,63 @@
       />
 
       <path
-        id="path-41-1"
+        id="center-top-1"
         [attr.pathLength]="1"
         d="m167.14 212.95s4.1646-6.9409-3.6093-9.162"
-        [class.glow]="activePaths().has('path-41-1')"
+        [class.glow]="activePaths().has('center-top-1')"
       />
       <path
-        id="path-41-2"
+        id="center-top-2"
         [attr.pathLength]="1"
         d="m163.53 203.79s1.3882-10.828-13.049-21.1"
-        [class.glow]="activePaths().has('path-41-2')"
+        [class.glow]="activePaths().has('center-top-2')"
       />
       <path
-        id="path-41-3"
+        id="center-top-3"
         [attr.pathLength]="1"
         d="m150.48 182.69s10.897-10.411 7.0103-20.129"
-        [class.glow]="activePaths().has('path-41-3')"
+        [class.glow]="activePaths().has('center-top-3')"
       />
       <path
-        id="path-41-4"
+        id="center-top-4"
         [attr.pathLength]="1"
         d="m157.49 162.56s21.031 3.7481 22.697-10.134"
-        [class.glow]="activePaths().has('path-41-4')"
+        [class.glow]="activePaths().has('center-top-4')"
       />
       <path
-        id="path-41-5"
+        id="center-top-5"
         [attr.pathLength]="1"
         d="m180.19 152.42s15.825 10.758 22.766 3.2622"
-        [class.glow]="activePaths().has('path-41-5')"
+        [class.glow]="activePaths().has('center-top-5')"
       />
       <path
-        id="path-41-6"
+        id="center-top-6"
         [attr.pathLength]="1"
         d="m202.96 155.69s2.7764 14.437 12.771 9.162"
-        [class.glow]="activePaths().has('path-41-6')"
+        [class.glow]="activePaths().has('center-top-6')"
       />
 
       <path
-        id="path-42"
+        id="center"
         [attr.pathLength]="1"
         d="m176.37 198.79s-0.48587-3.1234-3.8175-2.9846c0 0-1.527-12.841-5.1363-12.563 0 0 5.8304-6.6633 3.8869-10.55 0 0 10.828 0.83291 11.661-3.8869 0 0 6.1774 6.9409 11.036 1.3882 0 0 2.4987 5.8304 9.7173 2.2211"
-        [class.glow]="activePaths().has('path-42')"
+        [class.glow]="activePaths().has('center')"
       />
 
       <path
         id="subskill-6"
         [attr.d]="threadFrames()['subskill-6'].d"
         [class.glow]="activePaths().has('subskill-6')"
-        [class.wobble-p43]="activePaths().has('subskill-6')"
       />
       <path
         id="subskill-1"
         [attr.d]="threadFrames()['subskill-1'].d"
         [class.glow]="activePaths().has('subskill-1')"
-        [class.wobble-p44]="activePaths().has('subskill-1')"
       />
       <path
         id="subskill-2"
         [attr.d]="threadFrames()['subskill-2'].d"
         [class.glow]="activePaths().has('subskill-2')"
-        [class.wobble-p45]="activePaths().has('subskill-2')"
       />
 
       <path
@@ -877,6 +871,7 @@
             <g (mouseenter)="onHover(skill)" (mouseleave)="onLeave()" class="node-interactive">
               @if (skill.imgSrc) {
                 <image
+                  [class]="'logo-icons'"
                   [attr.href]="skill.imgSrc"
                   clip-path="url(#clip-main)"
                   x="-16"
@@ -893,6 +888,7 @@
             <g (mouseenter)="onHover(skill)" (mouseleave)="onLeave()" class="node-interactive">
               @if (skill.imgSrc) {
                 <image
+                  class="logo-icons"
                   [attr.href]="skill.imgSrc"
                   clip-path="url(#clip-sub)"
                   x="-12"

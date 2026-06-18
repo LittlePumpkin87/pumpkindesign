@@ -163,3 +163,9 @@
     transform: scale3d(1, 1, 1);
   }
 }
+
+@keyframes draw-line-var {
+  100% {
+    stroke-dashoffset: calc(var(--length) * -0.3);
+  }
+}

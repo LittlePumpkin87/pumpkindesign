@@ -30,23 +30,14 @@ path {
   stroke: $accent-orange;
   stroke-width: 3px;
   filter: drop-shadow(0 0 8px $accent-orange);
-  stroke-dasharray: calc(var(--length) * 0.3) var(--length);
-  stroke-dashoffset: var(--length);
 }
-
-@keyframes draw-line-var {
-  100% {
-    stroke-dashoffset: calc(var(--length) * -0.3);
-  }
-}
-
 
 .node-interactive {
   cursor: pointer;
 }
 
 .main-node-circle {
-  fill: $background-brown;
+  fill: $background-grey;
   stroke: $accent-orange;
   stroke-width: 2px;
 }
@@ -55,33 +46,12 @@ path {
   fill: $accent-blue;
 }
 
-.node-text,
-.node-text-sub {
-  fill: $text-white;
-  pointer-events: none;
-}
-
-.wobble-p17 {
-  --length: 196;
-  animation: draw-line-var 0.8s ease-out forwards;
-}
-.wobble-p18 {
-  --length: 92;
-  animation: draw-line-var 0.8s ease-out forwards;
-}
-.wobble-p19 {
-  --length: 35;
-  animation: draw-line-var 0.8s ease-out forwards;
-}
-.wobble-p43 {
-  --length: 115;
-  animation: draw-line-var 0.8s ease-out forwards;
-}
-.wobble-p44 {
-  --length: 57;
-  animation: draw-line-var 0.8s ease-out forwards;
-}
-.wobble-p45 {
-  --length: 99;
-  animation: draw-line-var 0.8s ease-out forwards;
+.logo-icons,
+.sub-node-circle,
+.main-node-circle {
+  transition: all 300ms ease-in-out;
+  &:hover {
+    transition: all 300ms ease-in-out;
+    transform: scale(1.3);
+  }
 }
