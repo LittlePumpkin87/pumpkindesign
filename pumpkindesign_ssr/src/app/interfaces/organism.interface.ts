@@ -29,7 +29,6 @@ export interface FooterItem {
 export interface Skill {
   imgSrc?: string;
   imgAlt?: string;
-  slug: string;
   name: string;
   description?: string;
   posX: number;

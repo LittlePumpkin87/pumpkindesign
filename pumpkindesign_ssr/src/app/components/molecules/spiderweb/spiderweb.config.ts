@@ -1,4 +1,4 @@
-import { ThreadGeometry } from './spiderweb.physics';
+import { ChainGeometry, ThreadGeometry } from './spiderweb.physics';
 
 export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
   'subskill-5': { anchorX: 285.34, anchorY: 20.82, restEndX: 284.85, restEndY: 216.55 },
@@ -8,6 +8,582 @@ export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
   'subskill-1': { anchorX: 114.39, anchorY: 295.41, restEndX: 113.28, restEndY: 352.05 },
   'subskill-2': { anchorX: 168.25, anchorY: 208.23, restEndX: 167.69, restEndY: 307.07 },
 };
+
+/**
+ * Every group of SVG path elements that connects end-to-start into one continuous strand,
+ * simulated as a coupled multi-link chain (see ThreadChain) instead of static lines. Groups of
+ * size 1 still go through ThreadChain so they get its faster settle-time constants; it behaves
+ * identically to a single pendulum in that case. Derived from the original static `d` attributes
+ * in spiderweb.html (anchor + each segment's end point), grouped by matching one path's end point
+ * to the next path's start.
+ */
+export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
+  {
+    pathIds: [
+      'top-middle-1',
+      'top-middle-2',
+      'top-middle-3',
+      'top-middle-4',
+      'top-middle-5',
+      'top-middle-6',
+      'top-middle-7',
+      'top-middle-8',
+      'top-middle-9',
+      'top-middle-10',
+    ],
+    geometry: {
+      points: [
+        { x: 185.25, y: 183.45 },
+        { x: 182.29, y: 167.55 },
+        { x: 179.37, y: 151.84 },
+        { x: 175.95, y: 133.43 },
+        { x: 172.24, y: 113.46 },
+        { x: 168.34, y: 92.52 },
+        { x: 163.27, y: 65.25 },
+        { x: 157.2, y: 32.63 },
+        { x: 152.74, y: 8.67 },
+        { x: 148.31, y: -15.22 },
+        { x: 146.59, y: -24.43 },
+      ],
+    },
+  },
+  {
+    pathIds: ['top-second-vertical-1', 'top-second-vertical-2'],
+    geometry: {
+      points: [
+        { x: 39.42, y: 74.41 },
+        { x: 0.55, y: 174.91 },
+        { x: 22.8, y: 336.39 },
+      ],
+      restBows: [-25.79, -47.76],
+    },
+  },
+  {
+    pathIds: [
+      'bottom-left-third-1',
+      'bottom-left-third-2',
+      'bottom-left-third-3',
+      'bottom-left-third-4',
+      'bottom-left-third-5',
+      'bottom-left-third-6',
+      'bottom-left-third-7',
+      'bottom-left-third-8',
+      'bottom-left-third-9',
+      'bottom-left-third-10',
+      'bottom-left-third-11',
+      'bottom-left-third-12',
+      'bottom-left-third-13',
+      'bottom-left-third-14',
+      'bottom-left-third-15',
+      'bottom-left-third-16',
+      'bottom-left-third-17',
+      'bottom-left-third-18',
+    ],
+    geometry: {
+      points: [
+        { x: -13.88, y: 375.92 },
+        { x: 22.13, y: 336.87 },
+        { x: 59.57, y: 300.22 },
+        { x: 80.89, y: 280.02 },
+        { x: 104.53, y: 257.94 },
+        { x: 114.03, y: 249.16 },
+        { x: 131.85, y: 232.81 },
+        { x: 164.14, y: 203.47 },
+        { x: 173.42, y: 195.12 },
+        { x: 185.46, y: 184.35 },
+        { x: 166.3, y: 183.38 },
+        { x: 151.3, y: 182.62 },
+        { x: 129.58, y: 181.52 },
+        { x: 106.71, y: 180.36 },
+        { x: 81.3, y: 179.06 },
+        { x: 56.41, y: 177.81 },
+        { x: 32.11, y: 176.57 },
+        { x: -0.02, y: 174.94 },
+        { x: -14.3, y: 174.22 },
+      ],
+      restBows: [
+        -1.28, -0.34, -0.06, -0.06, -0.01, -0.03, -0.07, -0.01, -0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      ],
+    },
+  },
+  {
+    pathIds: ['top-second-vertical-3'],
+    geometry: {
+      points: [
+        { x: 23.16, y: 336.55 },
+        { x: 33.59, y: 396.04 },
+      ],
+      restBows: [-12.85],
+    },
+  },
+  {
+    pathIds: [
+      'bottom-left-second-1',
+      'bottom-left-second-2',
+      'bottom-left-second-3',
+      'bottom-left-second-4',
+      'bottom-left-second-5',
+    ],
+    geometry: {
+      points: [
+        { x: 121.92, y: 286.5 },
+        { x: 114.87, y: 294.72 },
+        { x: 97.74, y: 315.03 },
+        { x: 74.38, y: 343.42 },
+        { x: 32.54, y: 396.97 },
+        { x: -9.44, y: 461.99 },
+      ],
+      restBows: [0.02, 0.07, 0.13, 0.68, 3.65],
+    },
+  },
+  {
+    pathIds: [
+      'bottom-left-1',
+      'bottom-left-2',
+      'bottom-left-3',
+      'bottom-left-4',
+      'bottom-left-5',
+      'bottom-left-6',
+    ],
+    geometry: {
+      points: [
+        { x: 186.85, y: 183.03 },
+        { x: 176.08, y: 199.16 },
+        { x: 167.57, y: 212.25 },
+        { x: 113.51, y: 300.93 },
+        { x: 80.46, y: 360.74 },
+        { x: 51.32, y: 418.73 },
+        { x: -16.1, y: 629.68 },
+      ],
+      restBows: [0.07, 0.03, 1.26, 0.62, 0.69, 18.87],
+    },
+  },
+  {
+    pathIds: ['top-third-vertical-1'],
+    geometry: {
+      points: [
+        { x: 32.57, y: 176.55 },
+        { x: 54.56, y: 85.38 },
+      ],
+      restBows: [29.11],
+    },
+  },
+  {
+    pathIds: ['top-fourth-vertical-1'],
+    geometry: {
+      points: [
+        { x: 77.39, y: 102.52 },
+        { x: 56.64, y: 177.76 },
+      ],
+      restBows: [-20.24],
+    },
+  },
+  {
+    pathIds: ['top-fifth-vertical-1'],
+    geometry: {
+      points: [
+        { x: 100.23, y: 119.52 },
+        { x: 82.18, y: 179.35 },
+      ],
+      restBows: [-18.99],
+    },
+  },
+  {
+    pathIds: ['top-third-vertical-2'],
+    geometry: {
+      points: [
+        { x: 32.44, y: 176.64 },
+        { x: 60.53, y: 301.51 },
+      ],
+      restBows: [-18.61],
+    },
+  },
+  {
+    pathIds: ['top-fourth-vertical-2'],
+    geometry: {
+      points: [
+        { x: 56.64, y: 177.69 },
+        { x: 81.63, y: 279.86 },
+      ],
+      restBows: [-22.48],
+    },
+  },
+  {
+    pathIds: ['top-fifth-vertical-2'],
+    geometry: {
+      points: [
+        { x: 83.22, y: 179.01 },
+        { x: 104.95, y: 257.65 },
+      ],
+      restBows: [-19.22],
+    },
+  },
+  {
+    pathIds: ['top-third-vertical-3'],
+    geometry: {
+      points: [
+        { x: 59.97, y: 299.85 },
+        { x: 73.85, y: 344.83 },
+      ],
+      restBows: [-14.84],
+    },
+  },
+  {
+    pathIds: ['top-fourth-vertical-3'],
+    geometry: {
+      points: [
+        { x: 81.64, y: 279.22 },
+        { x: 97.11, y: 315.94 },
+      ],
+      restBows: [-12.67],
+    },
+  },
+  {
+    pathIds: ['top-second-vertical-4'],
+    geometry: {
+      points: [
+        { x: 33.04, y: 396.19 },
+        { x: 51.73, y: 418.32 },
+      ],
+      restBows: [-13.16],
+    },
+  },
+  {
+    pathIds: ['top-third-vertical-4'],
+    geometry: {
+      points: [
+        { x: 73.85, y: 343.99 },
+        { x: 79.68, y: 361.76 },
+      ],
+      restBows: [-4.18],
+    },
+  },
+  {
+    pathIds: ['top-sixth-vertical-3'],
+    geometry: {
+      points: [
+        { x: 114.76, y: 248.5 },
+        { x: 97.17, y: 315.68 },
+      ],
+      restBows: [5.74],
+    },
+  },
+  {
+    pathIds: ['top-sixth-vertical-2'],
+    geometry: {
+      points: [
+        { x: 107.72, y: 180.19 },
+        { x: 114.73, y: 248.66 },
+      ],
+      restBows: [-16.37],
+    },
+  },
+  {
+    pathIds: [
+      'center-top-1',
+      'center-top-2',
+      'center-top-3',
+      'center-top-4',
+      'center-top-5',
+      'center-top-6',
+    ],
+    geometry: {
+      points: [
+        { x: 167.14, y: 212.95 },
+        { x: 163.53, y: 203.79 },
+        { x: 150.48, y: 182.69 },
+        { x: 157.49, y: 162.56 },
+        { x: 180.19, y: 152.43 },
+        { x: 202.96, y: 155.68 },
+        { x: 215.73, y: 164.85 },
+      ],
+      restBows: [4.81, 5.16, 5.15, 9, 6.3, 7.58],
+    },
+  },
+  {
+    pathIds: ['center'],
+    geometry: {
+      points: [
+        { x: 176.37, y: 198.79 },
+        { x: 172.55, y: 195.81 },
+        { x: 167.42, y: 183.24 },
+        { x: 171.3, y: 172.69 },
+        { x: 182.96, y: 168.81 },
+        { x: 194, y: 170.19 },
+        { x: 203.72, y: 172.41 },
+      ],
+      restBows: [1.62, 2.58, 2.38, 3.16, 4.59, 3.85],
+    },
+  },
+  {
+    pathIds: [
+      'top-left-1',
+      'top-left-2',
+      'top-left-3',
+      'top-left-4',
+      'top-left-5',
+      'top-left-6',
+      'top-left-7',
+      'top-left-8',
+      'top-left-9',
+      'top-left-10',
+    ],
+    geometry: {
+      points: [
+        { x: -15.55, y: 33.04 },
+        { x: 0.52, y: 45.07 },
+        { x: 39.05, y: 73.91 },
+        { x: 54.08, y: 85.17 },
+        { x: 77.1, y: 102.4 },
+        { x: 99.72, y: 119.33 },
+        { x: 123.57, y: 137.19 },
+        { x: 142.51, y: 151.36 },
+        { x: 157.07, y: 162.26 },
+        { x: 170.62, y: 172.41 },
+        { x: 186.58, y: 184.35 },
+      ],
+    },
+  },
+  {
+    pathIds: [
+      'top-right-1',
+      'top-right-2',
+      'top-right-3',
+      'top-right-4',
+      'top-right-5',
+      'top-right-6',
+      'top-right-7',
+      'top-right-8',
+      'top-right-9',
+      'top-right-10',
+    ],
+    geometry: {
+      points: [
+        { x: 186.02, y: 184.35 },
+        { x: 194.76, y: 169.97 },
+        { x: 203.46, y: 155.65 },
+        { x: 214.96, y: 136.72 },
+        { x: 226.8, y: 117.23 },
+        { x: 240.89, y: 94.06 },
+        { x: 254.15, y: 72.24 },
+        { x: 271.23, y: 44.11 },
+        { x: 285.12, y: 21.26 },
+        { x: 298.87, y: -1.36 },
+        { x: 319.29, y: -34.98 },
+      ],
+    },
+  },
+  {
+    pathIds: [
+      'right-14',
+      'right-13',
+      'right-12',
+      'right-11',
+      'right-10',
+      'right-9',
+      'right-8',
+      'right-7',
+      'right-6',
+      'right-5',
+      'right-4',
+      'right-3',
+      'right-2',
+      'right-1',
+    ],
+    geometry: {
+      points: [
+        { x: 184.91, y: 183.8 },
+        { x: 203.03, y: 172.45 },
+        { x: 214.35, y: 165.36 },
+        { x: 242.25, y: 147.88 },
+        { x: 267.54, y: 132.04 },
+        { x: 285.09, y: 121.04 },
+        { x: 316.96, y: 101.08 },
+        { x: 339.61, y: 86.89 },
+        { x: 347.51, y: 81.94 },
+        { x: 371.05, y: 67.19 },
+        { x: 376.44, y: 63.81 },
+        { x: 407.49, y: 44.36 },
+        { x: 450.64, y: 17.33 },
+        { x: 480.9, y: -1.63 },
+        { x: 516.41, y: -23.87 },
+      ],
+    },
+  },
+];
+
+/**
+ * Groups whose endpoints are fixed (shared junctions with other independent paths), so only the
+ * bow (curvature) oscillates - see RockingChain. Converted from CHAIN_GROUPS because letting
+ * these swing as free pendulums moved their endpoints and visibly broke contact with the paths
+ * that meet them there.
+ */
+export const ROCK_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
+  {
+    pathIds: ['top-second-horizontal-2'],
+    geometry: {
+      points: [
+        { x: 152.84, y: 8.88 },
+        { x: 285.2, y: 21.31 },
+      ],
+      restBows: [29.83],
+    },
+  },
+  {
+    pathIds: ['top-second-horizontal-1'],
+    geometry: {
+      points: [
+        { x: 0.97, y: 45.95 },
+        { x: 152.91, y: 9.51 },
+      ],
+      restBows: [37.88],
+    },
+  },
+  {
+    pathIds: ['top-second-horizontal-1-b'],
+    geometry: {
+      points: [
+        { x: 39.42, y: 74.96 },
+        { x: 152.97, y: 9.37 },
+      ],
+      restBows: [41.34],
+    },
+  },
+  {
+    pathIds: ['top-third-horizontal-2'],
+    geometry: {
+      points: [
+        { x: 157.42, y: 33.53 },
+        { x: 271.37, y: 43.9 },
+      ],
+      restBows: [31.37],
+    },
+  },
+  {
+    pathIds: ['top-third-horizontal-1'],
+    geometry: {
+      points: [
+        { x: 54.76, y: 85.51 },
+        { x: 157.49, y: 32.9 },
+      ],
+      restBows: [45.26],
+    },
+  },
+  {
+    pathIds: ['top-first-horizontal-3'],
+    geometry: {
+      points: [
+        { x: 298.95, y: -1.11 },
+        { x: 407.71, y: 43.93 },
+      ],
+      restBows: [37.58],
+    },
+  },
+  {
+    pathIds: ['top-second-horizontal-3'],
+    geometry: {
+      points: [
+        { x: 285.06, y: 21.45 },
+        { x: 371.9, y: 66.99 },
+      ],
+      restBows: [36.19],
+    },
+  },
+  {
+    pathIds: ['top-fourth-horizontal-1', 'top-fourth-horizontal-2', 'top-fourth-horizontal-3'],
+    geometry: {
+      points: [
+        { x: 77.81, y: 102.73 },
+        { x: 163.81, y: 65.53 },
+        { x: 254.09, y: 71.93 },
+        { x: 317.69, y: 101.19 },
+      ],
+      restBows: [31.37, 19.75, 16.84],
+    },
+  },
+  {
+    pathIds: ['top-third-horizontal-3'],
+    geometry: {
+      points: [
+        { x: 271.57, y: 43.83 },
+        { x: 340.39, y: 86.62 },
+      ],
+      restBows: [30.17],
+    },
+  },
+  {
+    pathIds: [
+      'top-sixth-vertical-1',
+      'top-sixth-horizontal-2',
+      'top-sixth-horizontal-3',
+      'top-sixth-horizontal-4',
+    ],
+    geometry: {
+      points: [
+        { x: 107.86, y: 180.6 },
+        { x: 123.96, y: 137.36 },
+        { x: 172.76, y: 114.46 },
+        { x: 226.27, y: 116.88 },
+        { x: 268.47, y: 132.15 },
+      ],
+      restBows: [12.13, 11.66, 11.52, 11.27],
+    },
+  },
+  {
+    pathIds: ['top-fifth-horizontal-1', 'top-fifth-horizontal-2', 'top-fifth-horizontal-3'],
+    geometry: {
+      points: [
+        { x: 100.3, y: 119.59 },
+        { x: 168.53, y: 93.56 },
+        { x: 240.67, y: 93.92 },
+        { x: 285.97, y: 119.94 },
+      ],
+      restBows: [18.73, 16.53, 13.01],
+    },
+  },
+  {
+    pathIds: [
+      'top-seventh-vertical-1',
+      'top-seventh-vertical-2',
+      'top-seventh-vertical-3',
+      'top-seventh-horizontal-4',
+      'top-seventh-horizontal-5',
+      'top-seventh-horizontal-6',
+    ],
+    geometry: {
+      points: [
+        { x: 114.39, y: 295.23 },
+        { x: 132.16, y: 232.39 },
+        { x: 129.11, y: 181.86 },
+        { x: 142.15, y: 151.6 },
+        { x: 176.3, y: 134.65 },
+        { x: 214.61, y: 136.6 },
+        { x: 240.99, y: 149.09 },
+      ],
+      restBows: [-2.93, 14.5, 8.12, 8.52, 11.4, 11.84],
+    },
+  },
+  {
+    pathIds: ['top-first-horizontal-2'],
+    geometry: {
+      points: [
+        { x: 148.33, y: -14.6 },
+        { x: 299.44, y: -1.46 },
+      ],
+      restBows: [23.78],
+    },
+  },
+  {
+    pathIds: ['top-first-horizontal-1'],
+    geometry: {
+      points: [
+        { x: 0.56, y: 45.53 },
+        { x: 147.99, y: -14.44 },
+      ],
+      restBows: [27.68],
+    },
+  },
+];
 
 export const PATH_ANCHORS: Record<string, { x: number; y: number }> = {
   'top-middle-1': { x: 185.25, y: 183.45 },
@@ -102,7 +678,7 @@ export const PATH_ANCHORS: Record<string, { x: number; y: number }> = {
   'center-top-4': { x: 157.49, y: 162.56 },
   'center-top-5': { x: 180.19, y: 152.42 },
   'center-top-6': { x: 202.96, y: 155.69 },
-  'center': { x: 176.37, y: 198.79 },
+  center: { x: 176.37, y: 198.79 },
   'top-first-horizontal-2': { x: 148.33, y: -14.6 },
   'top-left-1': { x: -15.55, y: 33.04 },
   'top-left-2': { x: 0.52, y: 45.07 },

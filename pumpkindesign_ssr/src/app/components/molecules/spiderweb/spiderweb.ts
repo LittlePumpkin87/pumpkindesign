@@ -1,8 +1,36 @@
 import { Component, input, signal, computed, effect, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Skill } from '../../../interfaces/organism.interface';
-import { PATH_ANCHORS, WOBBLE_THREAD_GEOMETRY } from './spiderweb.config';
-import { ThreadFrame, ThreadPendulum } from './spiderweb.physics';
+import {
+  CHAIN_GROUPS,
+  PATH_ANCHORS,
+  ROCK_GROUPS,
+  WOBBLE_THREAD_GEOMETRY,
+} from './spiderweb.config';
+import {
+  LinkChain,
+  ThreadChain,
+  ThreadFrame,
+  ThreadPendulum,
+  RockingChain,
+} from './spiderweb.physics';
+
+interface ChainLinkRef {
+  group: number;
+  link: number;
+}
+
+const ALL_GROUPS = [...CHAIN_GROUPS, ...ROCK_GROUPS];
+
+const PATH_ID_TO_LINK: Record<string, ChainLinkRef> = Object.fromEntries(
+  ALL_GROUPS.flatMap((group, groupIndex) =>
+    group.pathIds.map((id, linkIndex) => [id, { group: groupIndex, link: linkIndex }]),
+  ),
+);
+
+function randomSignedImpulse(base: number, spread: number): number {
+  return (Math.random() > 0.5 ? 1 : -1) * (base + Math.random() * spread);
+}
 
 @Component({
   selector: 'lpd-spider-web',
@@ -26,6 +54,13 @@ export class SpiderWebComponent implements OnDestroy {
     Object.fromEntries(Object.entries(this.threads).map(([id, thread]) => [id, thread.frame()])),
   );
 
+  private readonly chains: LinkChain[] = [
+    ...CHAIN_GROUPS.map((group) => new ThreadChain(group.geometry)),
+    ...ROCK_GROUPS.map((group) => new RockingChain(group.geometry)),
+  ];
+
+  chainFrames = signal<Record<string, ThreadFrame>>(this.computeChainFrames());
+
   private previouslyActive = new Set<string>();
   private rafId: number | null = null;
   private lastTime = 0;
@@ -33,14 +68,31 @@ export class SpiderWebComponent implements OnDestroy {
   constructor() {
     effect(() => {
       const active = this.activePaths();
-      for (const id of Object.keys(this.threads)) {
-        if (active.has(id) && !this.previouslyActive.has(id)) {
-          this.threads[id].kick((Math.random() > 0.5 ? 1 : -1) * (1.6 + Math.random() * 0.8));
-          this.startLoop();
-        }
-      }
+      this.kickNewlyActiveThreads(active);
+      this.kickNewlyActiveChains(active);
       this.previouslyActive = active;
     });
+  }
+
+  private kickNewlyActiveThreads(active: Set<string>): void {
+    for (const id of Object.keys(this.threads)) {
+      if (active.has(id) && !this.previouslyActive.has(id)) {
+        this.threads[id].kick(randomSignedImpulse(1.6, 0.8));
+        this.startLoop();
+      }
+    }
+  }
+
+  private kickNewlyActiveChains(active: Set<string>): void {
+    for (const id of active) {
+      const ref = PATH_ID_TO_LINK[id];
+      if (!ref || this.previouslyActive.has(id)) continue;
+
+      const isRocking = ref.group >= CHAIN_GROUPS.length;
+      const impulse = isRocking ? randomSignedImpulse(120, 60) : randomSignedImpulse(0.6, 0.3);
+      this.chains[ref.group].kick(impulse, ref.link);
+      this.startLoop();
+    }
   }
 
   ngOnDestroy(): void {
@@ -80,8 +132,28 @@ export class SpiderWebComponent implements OnDestroy {
     }
     this.threadFrames.set(frames);
 
+    for (const chain of this.chains) {
+      const moving = chain.step(dt);
+      anyMoving = anyMoving || moving;
+    }
+    this.chainFrames.set(this.computeChainFrames());
+
     this.rafId = anyMoving ? requestAnimationFrame(this.tick) : null;
   };
+  private computeChainFrames(): Record<string, ThreadFrame> {
+    const result: Record<string, ThreadFrame> = {};
+    ALL_GROUPS.forEach((group, i) => {
+      const chain = this.chains[i];
+      if (group.pathIds.length === 1) {
+        result[group.pathIds[0]] = chain.combinedFrame();
+      } else {
+        chain.frame().forEach((frame, link) => {
+          result[group.pathIds[link]] = frame;
+        });
+      }
+    });
+    return result;
+  }
 
   activePaths = computed(() => {
     const current = this.hoveredSkill();

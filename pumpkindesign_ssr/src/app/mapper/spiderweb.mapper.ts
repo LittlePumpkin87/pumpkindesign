@@ -23,8 +23,6 @@ export function mapSpiderwebData(rawData: any): { skills: Skill[] } {
     const hasSubskills = Array.isArray(item.subskills) && item.subskills.length > 0;
 
     return {
-      id: item.id,
-      slug: item.uid || '',
       name: item.name || '',
       description: item.description || '',
       posX: item.position_x !== null ? Number(item.position_x) : DEFAULT_X,
@@ -46,8 +44,6 @@ function mapSubskills(subskillsData: any[]): Skill[] {
   if (!subskillsData || !Array.isArray(subskillsData)) return [];
 
   return subskillsData.map((sub) => ({
-    id: sub.id,
-    slug: sub.uid || '',
     name: sub.name || '',
     description: sub.description || '',
     posX: sub.position_x !== null ? Number(sub.position_x) : DEFAULT_X,

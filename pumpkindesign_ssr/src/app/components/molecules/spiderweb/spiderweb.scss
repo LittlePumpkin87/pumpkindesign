@@ -36,19 +36,7 @@ path {
   cursor: pointer;
 }
 
-.main-node-circle {
-  fill: $background-grey;
-  stroke: $accent-orange;
-  stroke-width: 2px;
-}
-
-.sub-node-circle {
-  fill: $accent-blue;
-}
-
-.logo-icons,
-.sub-node-circle,
-.main-node-circle {
+.logo-icons {
   transition: all 300ms ease-in-out;
   &:hover {
     transition: all 300ms ease-in-out;
