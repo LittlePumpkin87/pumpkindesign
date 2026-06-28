@@ -2,9 +2,9 @@
   "name": "pumpkindesign",
   "version": "0.0.0",
   "scripts": {
-    "docker start": "docker compose --env-file .env -f docker-compose.dev.yml up -d",
-    "docker recreate": "docker compose --env-file .env -f docker-compose.dev.yml up -d -build --force-recreate",
-    "docker down": "docker compose --env-file .env -f docker-compose.dev.yml down"
+    "docker-start": "docker compose --env-file .env -f docker-compose.dev.yml up -d",
+    "docker-recreate": "docker compose --env-file .env -f docker-compose.dev.yml up -d --build --force-recreate",
+    "docker-down": "docker compose --env-file .env -f docker-compose.dev.yml down"
   },
   "private": true
 }
