@@ -82,6 +82,14 @@ Start the entire stack (Frontend + Backend + Database) locally using Docker Comp
 docker compose --env-file .env -f docker-compose.dev.yml up -d --build --force-recreate
 
 ```
+or use npm commands for quicker start/build/shutdown containers
+
+```bash
+npm run docker start
+npm run docker recreate
+npm run docker down
+
+```
 
 *(For the production environment, replace `docker-compose.dev.yml` with `docker-compose.yml`.)*
 
