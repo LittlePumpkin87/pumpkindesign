@@ -6,6 +6,7 @@ import {
   PATH_ANCHORS,
   ROCK_GROUPS,
   WOBBLE_THREAD_GEOMETRY,
+  routeSegments,
 } from './spiderweb.config';
 import {
   LinkChain,
@@ -19,6 +20,18 @@ interface ChainLinkRef {
   group: number;
   link: number;
 }
+
+/** One segment of a crawling glow route: when it starts drawing, how long it takes, and the
+ *  stroke-dashoffset start sign so it reveals from the end that joins the previous segment. */
+interface GlowSeg {
+  id: string;
+  delay: number;
+  dur: number;
+  from: 1 | -1;
+}
+
+const GLOW_SPEED = 600; // px per second the draw-on travels
+const GLOW_MIN_DUR = 0.08; // seconds, so very short segments still register
 
 const ALL_GROUPS = [...CHAIN_GROUPS, ...ROCK_GROUPS];
 
@@ -67,7 +80,7 @@ export class SpiderWebComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      const active = this.activePaths();
+      const active = this.litPaths();
       this.kickNewlyActiveThreads(active);
       this.kickNewlyActiveChains(active);
       this.previouslyActive = active;
@@ -155,26 +168,82 @@ export class SpiderWebComponent implements OnDestroy {
     return result;
   }
 
-  activePaths = computed(() => {
-    const current = this.hoveredSkill();
-    if (!current) return new Set<string>();
+  // Statically-lit segments (manual glowPathIds override) -> base path [class.glow]. Empty for the
+  // auto-routed crawl, which lives entirely in the overlay layer so the base web stays visible.
+  activePaths = signal<Set<string>>(new Set<string>());
 
-    const paths = new Set<string>(current.glowPathIds);
+  // The crawling glow route(s), rendered as a separate overlay layer above the untouched web.
+  glowOverlay = signal<GlowSeg[]>([]);
 
-    if (current.isMainSkill && current.subskills) {
-      current.subskills.forEach((sub) => {
-        sub.glowPathIds.forEach((p) => paths.add(p));
-      });
+  // Union of both, used only to kick the physics threads/chains a lit segment belongs to.
+  private readonly litPaths = computed(
+    () => new Set<string>([...this.activePaths(), ...this.glowOverlay().map((s) => s.id)]),
+  );
+
+  /** Live path data for an overlay clone, so the glow stays glued to the wobbling web. */
+  frameD(id: string): string | undefined {
+    return this.threadFrames()[id]?.d ?? this.chainFrames()[id]?.d;
+  }
+
+  glowVars(seg: GlowSeg): Record<string, string> {
+    return {
+      '--glow-delay': `${seg.delay}s`,
+      '--glow-dur': `${seg.dur}s`,
+      '--glow-from': `${seg.from}`,
+    };
+  }
+
+  private buildGlow(skill: Skill): { active: Set<string>; overlay: GlowSeg[] } {
+    if (skill.glowPathIds.length) {
+      return { active: new Set(skill.glowPathIds), overlay: [] };
     }
 
-    return paths;
-  });
+    const mainId = skill.connectedPathIds?.trim();
+    const byId = new Map<string, GlowSeg>();
+
+    if (mainId && skill.isMainSkill && skill.subskills) {
+      for (const sub of skill.subskills) {
+        this.addSubskillRoute(mainId, sub, byId);
+      }
+    }
+
+    return { active: new Set<string>(), overlay: [...byId.values()] };
+  }
+
+  private addSubskillRoute(mainId: string, sub: Skill, byId: Map<string, GlowSeg>): void {
+    const subId = sub.connectedPathIds?.trim();
+    if (!subId) return;
+
+    if (sub.glowPathIds.length) {
+      sub.glowPathIds.forEach((id) =>
+        this.mergeSeg(byId, { id, delay: 0, dur: GLOW_MIN_DUR, from: 1 }),
+      );
+      return;
+    }
+
+    let time = 0;
+    for (const seg of routeSegments(mainId, subId, Math.random)) {
+      const dur = Math.max(GLOW_MIN_DUR, seg.len / GLOW_SPEED);
+      this.mergeSeg(byId, { id: seg.pathId, delay: time, dur, from: seg.reversed ? -1 : 1 });
+      time += dur;
+    }
+  }
+
+  private mergeSeg(byId: Map<string, GlowSeg>, seg: GlowSeg): void {
+    const existing = byId.get(seg.id);
+    if (!existing || seg.delay < existing.delay) byId.set(seg.id, seg);
+  }
 
   onHover(skill: Skill): void {
     this.hoveredSkill.set(skill);
+    const glow = this.buildGlow(skill);
+    this.activePaths.set(glow.active);
+    this.glowOverlay.set(glow.overlay);
   }
 
   onLeave(): void {
     this.hoveredSkill.set(null);
+    this.activePaths.set(new Set<string>());
+    this.glowOverlay.set([]);
   }
 }

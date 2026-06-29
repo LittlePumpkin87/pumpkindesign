@@ -861,6 +861,15 @@
         [class.glow]="activePaths().has('right-1')"
       />
 
+      @for (seg of glowOverlay(); track seg.id) {
+        <path
+          class="glow-line"
+          [attr.pathLength]="1"
+          [attr.d]="frameD(seg.id)"
+          [ngStyle]="glowVars(seg)"
+        />
+      }
+
       @for (skill of skills(); track $index) {
         <g
           [attr.transform]="

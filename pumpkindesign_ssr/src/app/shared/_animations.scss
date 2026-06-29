@@ -164,8 +164,11 @@
   }
 }
 
-@keyframes draw-line-var {
-  100% {
-    stroke-dashoffset: calc(var(--length) * -0.3);
+@keyframes glow-draw {
+  from {
+    stroke-dashoffset: var(--glow-from, 1);
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }

@@ -32,6 +32,17 @@ path {
   filter: drop-shadow(0 0 8px $accent-orange);
 }
 
+.glow-line {
+  fill: none;
+  stroke: $accent-orange;
+  stroke-width: 3px;
+  filter: drop-shadow(0 0 8px $accent-orange);
+  stroke-dasharray: 1;
+  stroke-dashoffset: var(--glow-from, 1);
+  animation: glow-draw var(--glow-dur, 0.35s) linear var(--glow-delay, 0s) both;
+  pointer-events: none;
+}
+
 .node-interactive {
   cursor: pointer;
 }

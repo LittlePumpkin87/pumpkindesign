@@ -732,3 +732,150 @@ export const PATH_ANCHORS: Record<string, { x: number; y: number }> = {
   'right-2': { x: 450.64, y: 17.33 },
   'right-1': { x: 480.9, y: -1.63 },
 };
+
+/**
+ * Routable graph over the web. Every chain/rock segment and every subskill thread becomes a weighted
+ * edge between its two endpoint coordinates (bucketed so the slightly different center/junction
+ * representations across strands collapse to one node). This lets a glow route travel along the web -
+ * hopping horizontal arcs - between two skill icons instead of funneling through the center.
+ */
+const BUCKET = 5;
+
+function bucketKey(x: number, y: number): string {
+  return `${Math.round(x / BUCKET)},${Math.round(y / BUCKET)}`;
+}
+
+interface WebEdge {
+  pathId: string;
+  a: string;
+  b: string;
+  len: number;
+}
+
+const WEB_EDGES: WebEdge[] = (() => {
+  const edges: WebEdge[] = [];
+  const push = (pathId: string, p1: { x: number; y: number }, p2: { x: number; y: number }): void => {
+    const a = bucketKey(p1.x, p1.y);
+    const b = bucketKey(p2.x, p2.y);
+    if (a === b) return;
+    edges.push({ pathId, a, b, len: Math.hypot(p2.x - p1.x, p2.y - p1.y) });
+  };
+
+  for (const group of [...CHAIN_GROUPS, ...ROCK_GROUPS]) {
+    group.pathIds.forEach((id, i) =>
+      push(id, group.geometry.points[i], group.geometry.points[i + 1]),
+    );
+  }
+  for (const [id, g] of Object.entries(WOBBLE_THREAD_GEOMETRY)) {
+    push(id, { x: g.anchorX, y: g.anchorY }, { x: g.restEndX, y: g.restEndY });
+  }
+  return edges;
+})();
+
+interface AdjEntry {
+  pathId: string;
+  to: string;
+  len: number;
+  reversed: boolean;
+}
+
+const WEB_GRAPH: Record<string, AdjEntry[]> = (() => {
+  const graph: Record<string, AdjEntry[]> = {};
+  const add = (from: string, entry: AdjEntry): void => {
+    const list = (graph[from] ??= []);
+    list.push(entry);
+  };
+  for (const e of WEB_EDGES) {
+    add(e.a, { pathId: e.pathId, to: e.b, len: e.len, reversed: false });
+    add(e.b, { pathId: e.pathId, to: e.a, len: e.len, reversed: true });
+  }
+  return graph;
+})();
+
+/** Bucket where a skill's icon hangs: a thread's rest endpoint, else the segment's anchor point. */
+export function attachBucket(connectedPathId: string): string | undefined {
+  const id = connectedPathId?.trim();
+  if (!id) return undefined;
+  const thread = WOBBLE_THREAD_GEOMETRY[id];
+  if (thread) return bucketKey(thread.restEndX, thread.restEndY);
+  const anchor = PATH_ANCHORS[id];
+  if (anchor) return bucketKey(anchor.x, anchor.y);
+  return undefined;
+}
+
+export interface RouteSegment {
+  pathId: string;
+  /** True when the route traverses the segment against its drawn (points[i] -> points[i+1]) direction. */
+  reversed: boolean;
+  len: number;
+}
+
+const ROUTE_JITTER = 0.4;
+
+/**
+ * Shortest route of segments through the web from one skill icon to another, in travel order. Edge
+ * costs get a small per-call random jitter so near-equal routes vary on each hover. Returns [] when
+ * either endpoint is unroutable or both hang at the same point.
+ */
+export function routeSegments(
+  fromId: string,
+  toId: string,
+  rng: () => number = Math.random,
+): RouteSegment[] {
+  const start = attachBucket(fromId);
+  const goal = attachBucket(toId);
+  if (!start || !goal || start === goal) return [];
+
+  // Stable weight per edge for this call so Dijkstra stays consistent.
+  const weight: Record<string, number> = {};
+  for (const e of WEB_EDGES) weight[e.pathId] = e.len * (1 + rng() * ROUTE_JITTER);
+
+  const dist: Record<string, number> = { [start]: 0 };
+  const prev: Record<string, { pathId: string; len: number; reversed: boolean; pred: string }> = {};
+  const visited = new Set<string>();
+  const queue = new Set<string>([start]);
+
+  const popClosest = (): string | null => {
+    let best: string | null = null;
+    let bestDist = Infinity;
+    for (const n of queue) {
+      if (dist[n] < bestDist) {
+        bestDist = dist[n];
+        best = n;
+      }
+    }
+    if (best !== null) queue.delete(best);
+    return best;
+  };
+
+  const relax = (u: string): void => {
+    for (const e of WEB_GRAPH[u] ?? []) {
+      if (visited.has(e.to)) continue;
+      const nd = dist[u] + weight[e.pathId];
+      if (nd < (dist[e.to] ?? Infinity)) {
+        dist[e.to] = nd;
+        prev[e.to] = { pathId: e.pathId, len: e.len, reversed: e.reversed, pred: u };
+        queue.add(e.to);
+      }
+    }
+  };
+
+  for (let u = popClosest(); u !== null; u = popClosest()) {
+    if (u === goal) break;
+    visited.add(u);
+    relax(u);
+  }
+
+  if (dist[goal] === undefined) return [];
+
+  const segments: RouteSegment[] = [];
+  let cur = goal;
+  while (cur !== start) {
+    const e = prev[cur];
+    if (!e) return [];
+    segments.push({ pathId: e.pathId, reversed: e.reversed, len: e.len });
+    cur = e.pred;
+  }
+  segments.reverse();
+  return segments;
+}
