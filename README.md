@@ -126,6 +126,43 @@ pumpkindesign_ssr/
 
 ---
 
+## 🕸️ Feature Spotlight: Interactive Tech-Stack Spiderweb
+
+A hand-built SVG spider web where each skill icon hangs on the strands. Hovering a main skill sends a
+glowing line **crawling along the web** to each of its subskills, and the strands physically wobble.
+It's a self-contained molecule with no external animation libraries — just a tiny physics loop, a
+graph search, and CSS.
+
+**Three cooperating layers:**
+
+1. **Physics** ([`spiderweb.physics.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.physics.ts))
+   — a small damped-spring simulation (Hooke's law + damping, semi-implicit Euler). Three body types:
+   `ThreadPendulum` (hanging threads), `ThreadChain` (coupled links that whip like a rope), and
+   `RockingChain` (pinned endpoints, only the curve bows). No DOM access — each body just turns its
+   state into an SVG path string.
+2. **Routing** ([`spiderweb.config.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.config.ts))
+   — the web geometry is turned into a graph (junctions = nodes, segments = weighted edges).
+   `routeSegments()` runs Dijkstra between two icons, so the glow travels *along* the web (hopping
+   horizontal arcs) instead of funnelling through the centre. A small per-hover random jitter varies
+   near-equal routes for an organic feel.
+3. **Crawl render** ([`spiderweb.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.ts) +
+   `.scss`/`.html`) — the route is drawn as one continuous line via a sequenced `stroke-dashoffset`
+   animation on a separate overlay layer, so the faint base web stays fully visible underneath. A
+   `requestAnimationFrame` loop steps the physics and sleeps once everything settles.
+
+**Content model (Strapi `skill`):** editors only set **`connectedPathIds`** — the path id where an
+icon hangs (e.g. `subskill-3`). Subskill relations define which skill connects to which, and the glow
+route is computed automatically. **`glowPathIds`** is an optional manual override for hand-picked
+segments. The path ids are a shared namespace across the SVG template, the config data, and Strapi.
+
+> 💡 **What is Dijkstra?** A classic shortest-path algorithm (Edsger W. Dijkstra, 1959). Given a graph
+> of nodes connected by weighted edges, it finds the cheapest route between two nodes by always
+> expanding the nearest not-yet-finalized node and updating ("relaxing") its neighbours' distances.
+> Here the nodes are web junctions, the edge weights are segment lengths, so the "cheapest route" is
+> the shortest path the glow can take *along the web*.
+
+---
+
 ## 🛠️ Development Roadmap & To-Dos
 
 This project is under active development. Current focus areas:

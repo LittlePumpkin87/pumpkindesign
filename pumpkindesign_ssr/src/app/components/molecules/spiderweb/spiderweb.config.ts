@@ -1,5 +1,21 @@
 import { ChainGeometry, ThreadGeometry } from './spiderweb.physics';
 
+/* =================================================================================================
+ * SPIDER-WEB CONFIG
+ * -------------------------------------------------------------------------------------------------
+ * Pure GEOMETRY DATA, derived from the static SVG in spiderweb.html — which path ids form which
+ * strand and where their points sit:
+ *     - WOBBLE_THREAD_GEOMETRY : the hanging subskill threads (single pendulums).
+ *     - CHAIN_GROUPS           : connected strands simulated as swinging multi-link chains.
+ *     - ROCK_GROUPS            : strands whose endpoints are pinned (only the bow oscillates).
+ *     - PATH_ANCHORS           : the point each non-thread path hangs from / is identified by.
+ * The routing graph + Dijkstra that turn this into glow paths live in spiderweb.routing.ts.
+ *
+ * The ids (e.g. "top-middle-1", "subskill-3") are the same strings used as <path id="..."> in the
+ * template and as `connectedPathIds` in Strapi, so everything keys off one shared id space.
+ * ============================================================================================== */
+
+/** Hanging subskill threads: each pinned at (anchorX, anchorY) with its free end resting at restEnd. */
 export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
   'subskill-5': { anchorX: 285.34, anchorY: 20.82, restEndX: 284.85, restEndY: 216.55 },
   'subskill-4': { anchorX: 242.65, anchorY: 148.26, restEndX: 243.21, restEndY: 239.88 },
@@ -16,9 +32,15 @@ export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
  * identically to a single pendulum in that case. Derived from the original static `d` attributes
  * in spiderweb.html (anchor + each segment's end point), grouped by matching one path's end point
  * to the next path's start.
+ *
+ * A group flagged `pinned: true` is simulated as a PinnedChain instead (both ends fixed, a coherent
+ * wave travels between them) — used for the long radial "frame" strands that anchor to a branch, so
+ * their outer end stays put instead of whipping like a free pendulum, while keeping a natural flowing
+ * motion (and keeping their shared junctions on the rest line where the horizontal arcs meet them).
  */
-export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
+export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?: boolean }[] = [
   {
+    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'top-middle-1',
       'top-middle-2',
@@ -63,6 +85,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
     // out to the bottom-left edge. Originally fused end-to-start with bottom-left-middle into one
     // long edge-to-edge chain (anchor at the bottom edge); split so center is the fixed anchor
     // here too, matching the other main strands instead of just passing through as a midpoint.
+    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'bottom-left-third-9',
       'bottom-left-third-8',
@@ -93,6 +116,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
   {
     // Anchored at the same center junction, swinging out to the left edge. See bottom-left-third
     // above - the two used to be fused into a single edge-to-edge chain.
+    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'bottom-left-middle-9',
       'bottom-left-middle-8',
@@ -150,6 +174,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
     },
   },
   {
+    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'bottom-left-1',
       'bottom-left-2',
@@ -332,6 +357,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
     // Anchored at the center junction like top-middle/top-right/right/bottom-left. The original
     // artwork's path direction ran the other way (edge to center), which left this as the only
     // main strand swinging from its outer tip instead of its center end - reversed to match.
+    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'top-left-10',
       'top-left-9',
@@ -361,6 +387,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
     },
   },
   {
+    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'top-right-1',
       'top-right-2',
@@ -390,6 +417,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
     },
   },
   {
+    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'right-14',
       'right-13',
@@ -601,6 +629,11 @@ export const ROCK_GROUPS: { pathIds: string[]; geometry: ChainGeometry }[] = [
   },
 ];
 
+/**
+ * The reference point for each non-thread path id. Two uses: a skill pinned to a chain segment hangs
+ * its icon here (see SpiderWebComponent.nodePosition), and routing uses it as that id's graph node
+ * (attachBucket). These are the segments' rest start points, taken straight from the artwork.
+ */
 export const PATH_ANCHORS: Record<string, { x: number; y: number }> = {
   'top-middle-1': { x: 185.25, y: 183.45 },
   'top-middle-2': { x: 182.29, y: 167.55 },
@@ -694,7 +727,7 @@ export const PATH_ANCHORS: Record<string, { x: number; y: number }> = {
   'center-top-4': { x: 157.49, y: 162.56 },
   'center-top-5': { x: 180.19, y: 152.42 },
   'center-top-6': { x: 202.96, y: 155.69 },
-  center: { x: 176.37, y: 198.79 },
+  'center': { x: 176.37, y: 198.79 },
   'top-first-horizontal-2': { x: 148.33, y: -14.6 },
   'top-left-1': { x: -15.55, y: 33.04 },
   'top-left-2': { x: 0.52, y: 45.07 },
@@ -732,188 +765,3 @@ export const PATH_ANCHORS: Record<string, { x: number; y: number }> = {
   'right-2': { x: 450.64, y: 17.33 },
   'right-1': { x: 480.9, y: -1.63 },
 };
-
-/**
- * Routable graph over the web. Every chain/rock segment and every subskill thread becomes a weighted
- * edge between its two endpoint coordinates (bucketed so the slightly different center/junction
- * representations across strands collapse to one node). This lets a glow route travel along the web -
- * hopping horizontal arcs - between two skill icons instead of funneling through the center.
- */
-const BUCKET = 5;
-
-function bucketKey(x: number, y: number): string {
-  return `${Math.round(x / BUCKET)},${Math.round(y / BUCKET)}`;
-}
-
-interface WebEdge {
-  pathId: string;
-  a: string;
-  b: string;
-  len: number;
-}
-
-// px: a thread anchor sitting this close to an existing web node is snapped onto it. Guards against
-// two practically-identical points landing in different buckets when they straddle a grid boundary.
-const SNAP_TOL = 6;
-
-// Representative coordinate per chain/rock node bucket, used to snap thread anchors by distance
-// rather than trusting the grid (which can split coincident points across a cell boundary).
-const NODE_COORDS = new Map<string, { x: number; y: number }>();
-
-function nearestNodeBucket(x: number, y: number): string {
-  const own = bucketKey(x, y);
-  if (NODE_COORDS.has(own)) return own;
-  let bestKey = own;
-  let bestDist = SNAP_TOL;
-  for (const [key, c] of NODE_COORDS) {
-    const d = Math.hypot(c.x - x, c.y - y);
-    if (d <= bestDist) {
-      bestDist = d;
-      bestKey = key;
-    }
-  }
-  return bestKey;
-}
-
-const WEB_EDGES: WebEdge[] = (() => {
-  const edges: WebEdge[] = [];
-  const register = (p: { x: number; y: number }): void => {
-    NODE_COORDS.set(bucketKey(p.x, p.y), p);
-  };
-  const push = (
-    pathId: string,
-    a: string,
-    p1: { x: number; y: number },
-    p2: { x: number; y: number },
-  ): void => {
-    const b = bucketKey(p2.x, p2.y);
-    if (a === b) return;
-    edges.push({ pathId, a, b, len: Math.hypot(p2.x - p1.x, p2.y - p1.y) });
-  };
-
-  // Chains/rocks first, registering their endpoint buckets so threads can snap onto them.
-  for (const group of [...CHAIN_GROUPS, ...ROCK_GROUPS]) {
-    group.pathIds.forEach((id, i) => {
-      const p1 = group.geometry.points[i];
-      const p2 = group.geometry.points[i + 1];
-      register(p1);
-      register(p2);
-      push(id, bucketKey(p1.x, p1.y), p1, p2);
-    });
-  }
-  // Threads: snap the anchor end to the nearest existing web node so the hanging icon stays connected.
-  for (const [id, g] of Object.entries(WOBBLE_THREAD_GEOMETRY)) {
-    const anchor = { x: g.anchorX, y: g.anchorY };
-    const restEnd = { x: g.restEndX, y: g.restEndY };
-    push(id, nearestNodeBucket(anchor.x, anchor.y), anchor, restEnd);
-  }
-  return edges;
-})();
-
-interface AdjEntry {
-  pathId: string;
-  to: string;
-  len: number;
-  reversed: boolean;
-}
-
-const WEB_GRAPH: Record<string, AdjEntry[]> = (() => {
-  const graph: Record<string, AdjEntry[]> = {};
-  const add = (from: string, entry: AdjEntry): void => {
-    const list = (graph[from] ??= []);
-    list.push(entry);
-  };
-  for (const e of WEB_EDGES) {
-    add(e.a, { pathId: e.pathId, to: e.b, len: e.len, reversed: false });
-    add(e.b, { pathId: e.pathId, to: e.a, len: e.len, reversed: true });
-  }
-  return graph;
-})();
-
-/** Bucket where a skill's icon hangs: a thread's rest endpoint, else the segment's anchor point. */
-export function attachBucket(connectedPathId: string): string | undefined {
-  const id = connectedPathId?.trim();
-  if (!id) return undefined;
-  const thread = WOBBLE_THREAD_GEOMETRY[id];
-  if (thread) return bucketKey(thread.restEndX, thread.restEndY);
-  const anchor = PATH_ANCHORS[id];
-  if (anchor) return bucketKey(anchor.x, anchor.y);
-  return undefined;
-}
-
-export interface RouteSegment {
-  pathId: string;
-  /** True when the route traverses the segment against its drawn (points[i] -> points[i+1]) direction. */
-  reversed: boolean;
-  len: number;
-}
-
-const ROUTE_JITTER = 0.4;
-
-/**
- * Shortest route of segments through the web from one skill icon to another, in travel order. Edge
- * costs get a small per-call random jitter so near-equal routes vary on each hover. Returns [] when
- * either endpoint is unroutable or both hang at the same point.
- */
-export function routeSegments(
-  fromId: string,
-  toId: string,
-  rng: () => number = Math.random,
-): RouteSegment[] {
-  const start = attachBucket(fromId);
-  const goal = attachBucket(toId);
-  if (!start || !goal || start === goal) return [];
-
-  // Stable weight per edge for this call so Dijkstra stays consistent.
-  const weight: Record<string, number> = {};
-  for (const e of WEB_EDGES) weight[e.pathId] = e.len * (1 + rng() * ROUTE_JITTER);
-
-  const dist: Record<string, number> = { [start]: 0 };
-  const prev: Record<string, { pathId: string; len: number; reversed: boolean; pred: string }> = {};
-  const visited = new Set<string>();
-  const queue = new Set<string>([start]);
-
-  const popClosest = (): string | null => {
-    let best: string | null = null;
-    let bestDist = Infinity;
-    for (const n of queue) {
-      if (dist[n] < bestDist) {
-        bestDist = dist[n];
-        best = n;
-      }
-    }
-    if (best !== null) queue.delete(best);
-    return best;
-  };
-
-  const relax = (u: string): void => {
-    for (const e of WEB_GRAPH[u] ?? []) {
-      if (visited.has(e.to)) continue;
-      const nd = dist[u] + weight[e.pathId];
-      if (nd < (dist[e.to] ?? Infinity)) {
-        dist[e.to] = nd;
-        prev[e.to] = { pathId: e.pathId, len: e.len, reversed: e.reversed, pred: u };
-        queue.add(e.to);
-      }
-    }
-  };
-
-  for (let u = popClosest(); u !== null; u = popClosest()) {
-    if (u === goal) break;
-    visited.add(u);
-    relax(u);
-  }
-
-  if (dist[goal] === undefined) return [];
-
-  const segments: RouteSegment[] = [];
-  let cur = goal;
-  while (cur !== start) {
-    const e = prev[cur];
-    if (!e) return [];
-    segments.push({ pathId: e.pathId, reversed: e.reversed, len: e.len });
-    cur = e.pred;
-  }
-  segments.reverse();
-  return segments;
-}
