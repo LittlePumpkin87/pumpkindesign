@@ -752,22 +752,60 @@ interface WebEdge {
   len: number;
 }
 
+// px: a thread anchor sitting this close to an existing web node is snapped onto it. Guards against
+// two practically-identical points landing in different buckets when they straddle a grid boundary.
+const SNAP_TOL = 6;
+
+// Representative coordinate per chain/rock node bucket, used to snap thread anchors by distance
+// rather than trusting the grid (which can split coincident points across a cell boundary).
+const NODE_COORDS = new Map<string, { x: number; y: number }>();
+
+function nearestNodeBucket(x: number, y: number): string {
+  const own = bucketKey(x, y);
+  if (NODE_COORDS.has(own)) return own;
+  let bestKey = own;
+  let bestDist = SNAP_TOL;
+  for (const [key, c] of NODE_COORDS) {
+    const d = Math.hypot(c.x - x, c.y - y);
+    if (d <= bestDist) {
+      bestDist = d;
+      bestKey = key;
+    }
+  }
+  return bestKey;
+}
+
 const WEB_EDGES: WebEdge[] = (() => {
   const edges: WebEdge[] = [];
-  const push = (pathId: string, p1: { x: number; y: number }, p2: { x: number; y: number }): void => {
-    const a = bucketKey(p1.x, p1.y);
+  const register = (p: { x: number; y: number }): void => {
+    NODE_COORDS.set(bucketKey(p.x, p.y), p);
+  };
+  const push = (
+    pathId: string,
+    a: string,
+    p1: { x: number; y: number },
+    p2: { x: number; y: number },
+  ): void => {
     const b = bucketKey(p2.x, p2.y);
     if (a === b) return;
     edges.push({ pathId, a, b, len: Math.hypot(p2.x - p1.x, p2.y - p1.y) });
   };
 
+  // Chains/rocks first, registering their endpoint buckets so threads can snap onto them.
   for (const group of [...CHAIN_GROUPS, ...ROCK_GROUPS]) {
-    group.pathIds.forEach((id, i) =>
-      push(id, group.geometry.points[i], group.geometry.points[i + 1]),
-    );
+    group.pathIds.forEach((id, i) => {
+      const p1 = group.geometry.points[i];
+      const p2 = group.geometry.points[i + 1];
+      register(p1);
+      register(p2);
+      push(id, bucketKey(p1.x, p1.y), p1, p2);
+    });
   }
+  // Threads: snap the anchor end to the nearest existing web node so the hanging icon stays connected.
   for (const [id, g] of Object.entries(WOBBLE_THREAD_GEOMETRY)) {
-    push(id, { x: g.anchorX, y: g.anchorY }, { x: g.restEndX, y: g.restEndY });
+    const anchor = { x: g.anchorX, y: g.anchorY };
+    const restEnd = { x: g.restEndX, y: g.restEndY };
+    push(id, nearestNodeBucket(anchor.x, anchor.y), anchor, restEnd);
   }
   return edges;
 })();
