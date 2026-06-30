@@ -468,8 +468,8 @@ export class RockingChain implements LinkChain {
 // PinnedChain constants. The interior points obey a discrete wave equation (each pulled toward the
 // average of its two neighbours = string tension), damped. With semi-implicit Euler this is stable
 // while STRING_TENSION stays well under ~400 for the clamped dt of 0.05s.
-const STRING_TENSION = 200; // wave stiffness/speed: higher = faster ripples
-const STRING_DAMPING = 3.5; // how quickly the wave dies out
+const STRING_TENSION = 110; // wave stiffness/speed: higher = faster ripples (lower = gentler, less jitter)
+const STRING_DAMPING = 4.5; // how quickly the wave dies out
 const STRING_SETTLE_EPSILON = 0.02; // below this displacement+velocity the strand is treated as still
 
 interface StringPoint {

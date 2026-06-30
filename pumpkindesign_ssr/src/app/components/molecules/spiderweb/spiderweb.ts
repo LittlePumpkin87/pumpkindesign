@@ -16,7 +16,15 @@ import {
   RockingChain,
   PinnedChain,
   resetJunctionShifts,
+  ChainGeometry,
 } from './spiderweb.physics';
+
+/** Build the right physics body for a CHAIN_GROUPS entry based on its `sim` discriminator. */
+function buildChain(sim: 'pinned' | 'rock' | undefined, geometry: ChainGeometry): LinkChain {
+  if (sim === 'pinned') return new PinnedChain(geometry);
+  if (sim === 'rock') return new RockingChain(geometry);
+  return new ThreadChain(geometry);
+}
 
 /** Locates a path id within the physics model: which chain (group) and which link inside it. */
 interface ChainLinkRef {
@@ -90,13 +98,13 @@ export class SpiderWebComponent implements OnDestroy {
     Object.fromEntries(Object.entries(this.threads).map(([id, thread]) => [id, thread.frame()])),
   );
 
-  // The chain bodies, same order as ALL_GROUPS. ThreadChain = free-swinging strand (one fixed end);
-  // PinnedChain = both ends fixed, a coherent wave travels between them (for the outer anchor radials,
-  // flagged `pinned`); RockingChain = every endpoint fixed, each segment bows on its own (ROCK_GROUPS).
+  // The chain bodies, same order as ALL_GROUPS. Each CHAIN_GROUPS entry picks its simulation via `sim`:
+  // 'pinned' = PinnedChain (both ends fixed, a coherent wave travels between them — the anchor radials);
+  // 'rock' = RockingChain (every endpoint fixed, only the bow oscillates — the structural connectors);
+  // omitted = ThreadChain (one fixed end, the other swings free — currently unused). ROCK_GROUPS (the
+  // horizontal arcs) are RockingChain too.
   private readonly chains: LinkChain[] = [
-    ...CHAIN_GROUPS.map((group) =>
-      group.pinned ? new PinnedChain(group.geometry) : new ThreadChain(group.geometry),
-    ),
+    ...CHAIN_GROUPS.map((group) => buildChain(group.sim, group.geometry)),
     ...ROCK_GROUPS.map((group) => new RockingChain(group.geometry)),
   ];
 
@@ -227,7 +235,7 @@ export class SpiderWebComponent implements OnDestroy {
   }
 
   private kickImpulseFor(chain: LinkChain): number {
-    if (chain instanceof PinnedChain) return randomSignedImpulse(80, 40); // transverse wave velocity
+    if (chain instanceof PinnedChain) return randomSignedImpulse(50, 25); // transverse wave velocity (subtle)
     if (chain instanceof RockingChain) return randomSignedImpulse(120, 60); // bow velocity
     return randomSignedImpulse(0.6, 0.3); // ThreadChain angular velocity
   }

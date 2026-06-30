@@ -33,14 +33,19 @@ export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
  * in spiderweb.html (anchor + each segment's end point), grouped by matching one path's end point
  * to the next path's start.
  *
- * A group flagged `pinned: true` is simulated as a PinnedChain instead (both ends fixed, a coherent
- * wave travels between them) — used for the long radial "frame" strands that anchor to a branch, so
- * their outer end stays put instead of whipping like a free pendulum, while keeping a natural flowing
- * motion (and keeping their shared junctions on the rest line where the horizontal arcs meet them).
+ * The `sim` flag picks how a group is simulated:
+ *   - `'pinned'` → PinnedChain (both ends fixed, a coherent wave travels between them). Used for the
+ *     long radial "frame" strands that anchor to a branch, so their outer end stays put instead of
+ *     whipping like a free pendulum, while keeping a natural flowing motion.
+ *   - `'rock'`   → RockingChain (every endpoint fixed, only the bow oscillates). Used for the internal
+ *     connector strands whose both endpoints are shared junctions, so they stay attached to the
+ *     strands they cross (same treatment as the horizontal arcs in ROCK_GROUPS).
+ *   - omitted    → ThreadChain (one fixed end, the other swings free). Currently unused — every web
+ *     strand here is structural; only the icon-bearing threads (ThreadPendulum) dangle.
  */
-export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?: boolean }[] = [
+export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; sim?: 'pinned' | 'rock' }[] = [
   {
-    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
+    sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'top-middle-1',
       'top-middle-2',
@@ -70,6 +75,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-second-vertical-1', 'top-second-vertical-2'],
     geometry: {
       points: [
@@ -85,7 +91,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     // out to the bottom-left edge. Originally fused end-to-start with bottom-left-middle into one
     // long edge-to-edge chain (anchor at the bottom edge); split so center is the fixed anchor
     // here too, matching the other main strands instead of just passing through as a midpoint.
-    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
+    sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'bottom-left-third-9',
       'bottom-left-third-8',
@@ -116,7 +122,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
   {
     // Anchored at the same center junction, swinging out to the left edge. See bottom-left-third
     // above - the two used to be fused into a single edge-to-edge chain.
-    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
+    sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'bottom-left-middle-9',
       'bottom-left-middle-8',
@@ -144,6 +150,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-second-vertical-3'],
     geometry: {
       points: [
@@ -154,6 +161,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: [
       'bottom-left-second-1',
       'bottom-left-second-2',
@@ -174,7 +182,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
-    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
+    sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'bottom-left-1',
       'bottom-left-2',
@@ -197,6 +205,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-third-vertical-1'],
     geometry: {
       points: [
@@ -207,6 +216,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-fourth-vertical-1'],
     geometry: {
       points: [
@@ -217,6 +227,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-fifth-vertical-1'],
     geometry: {
       points: [
@@ -227,6 +238,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-third-vertical-2'],
     geometry: {
       points: [
@@ -237,6 +249,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-fourth-vertical-2'],
     geometry: {
       points: [
@@ -247,6 +260,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-fifth-vertical-2'],
     geometry: {
       points: [
@@ -257,6 +271,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-third-vertical-3'],
     geometry: {
       points: [
@@ -267,6 +282,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-fourth-vertical-3'],
     geometry: {
       points: [
@@ -277,6 +293,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-second-vertical-4'],
     geometry: {
       points: [
@@ -287,6 +304,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-third-vertical-4'],
     geometry: {
       points: [
@@ -297,6 +315,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-sixth-vertical-3'],
     geometry: {
       points: [
@@ -307,6 +326,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['top-sixth-vertical-2'],
     geometry: {
       points: [
@@ -317,6 +337,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: [
       'center-top-1',
       'center-top-2',
@@ -339,6 +360,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
+    sim: 'rock', // connector: both ends are shared junctions -> fixed endpoints
     pathIds: ['center'],
     geometry: {
       points: [
@@ -357,7 +379,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     // Anchored at the center junction like top-middle/top-right/right/bottom-left. The original
     // artwork's path direction ran the other way (edge to center), which left this as the only
     // main strand swinging from its outer tip instead of its center end - reversed to match.
-    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
+    sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'top-left-10',
       'top-left-9',
@@ -387,7 +409,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
-    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
+    sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'top-right-1',
       'top-right-2',
@@ -417,7 +439,7 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; pinned?
     },
   },
   {
-    pinned: true, // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
+    sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [
       'right-14',
       'right-13',
