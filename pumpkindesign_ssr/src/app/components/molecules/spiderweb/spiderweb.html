@@ -1,14 +1,5 @@
 <div class="web-container">
   <svg viewBox="0 0 640.97 666.17" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <clipPath id="clip-main">
-        <circle r="16" />
-      </clipPath>
-      <clipPath id="clip-sub">
-        <circle r="12" />
-      </clipPath>
-    </defs>
-
     <g transform="translate(16.768 36.437)" class="web-group">
       <path
         id="top-middle-1"
@@ -882,12 +873,11 @@
                 class="logo-icons"
                 [attr.href]="skill.imgSrc"
                 [attr.aria-label]="skill.imgAlt"
-                clip-path="url(#clip-main)"
                 x="-16"
                 y="-16"
                 width="32"
                 height="32"
-                preserveAspectRatio="xMidYMid slice"
+                preserveAspectRatio="xMidYMid meet"
               />
             </g>
           } @else {
@@ -896,12 +886,11 @@
                 class="logo-icons"
                 [attr.href]="skill.imgSrc"
                 [attr.aria-label]="skill.imgAlt"
-                clip-path="url(#clip-sub)"
                 x="-12"
                 y="-12"
                 width="24"
                 height="24"
-                preserveAspectRatio="xMidYMid slice"
+                preserveAspectRatio="xMidYMid meet"
               />
             </g>
           }
