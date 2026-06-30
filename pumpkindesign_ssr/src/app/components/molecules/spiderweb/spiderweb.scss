@@ -47,6 +47,11 @@ path {
   cursor: pointer;
 }
 
+.sub-reveal {
+  pointer-events: none;
+  animation: sub-fade-in 0.3s ease-out var(--reveal-delay, 0s) both;
+}
+
 .logo-icons {
   transition: all 300ms ease-in-out;
   &:hover {

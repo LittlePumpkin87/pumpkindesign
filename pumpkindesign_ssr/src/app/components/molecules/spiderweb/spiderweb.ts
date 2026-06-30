@@ -125,6 +125,10 @@ export class SpiderWebComponent implements OnDestroy {
   // The crawling glow route(s), rendered as a separate overlay layer above the untouched web.
   glowOverlay = signal<GlowSeg[]>([]);
 
+  // Subskill icons revealed while their main is hovered, each with a fade-in delay matched to when the
+  // glow reaches it. Empty when nothing is hovered, so at rest the web shows only the main skills.
+  subReveal = signal<{ skill: Skill; delay: number }[]>([]);
+
   // Union of both, used only to kick the physics threads/chains a lit segment belongs to.
   private readonly litPaths = computed(
     () => new Set<string>([...this.activePaths(), ...this.glowOverlay().map((s) => s.id)]),
@@ -250,21 +254,27 @@ export class SpiderWebComponent implements OnDestroy {
    * The result feeds two signals: `activePaths` (static override -> base path .glow) and `glowOverlay`
    * (the crawling overlay layer). Both are rebuilt on every hover, which is what re-rolls the routes.
    */
-  private buildGlow(skill: Skill): { active: Set<string>; overlay: GlowSeg[] } {
+  private buildGlow(skill: Skill): {
+    active: Set<string>;
+    overlay: GlowSeg[];
+    reveals: { skill: Skill; delay: number }[];
+  } {
     if (skill.glowPathIds.length) {
-      return { active: new Set(skill.glowPathIds), overlay: [] };
+      return { active: new Set(skill.glowPathIds), overlay: [], reveals: [] };
     }
 
     const mainId = skill.connectedPathIds?.trim();
     const byId = new Map<string, GlowSeg>();
+    const reveals: { skill: Skill; delay: number }[] = [];
 
     if (mainId && skill.isMainSkill && skill.subskills) {
       for (const sub of skill.subskills) {
-        this.addSubskillRoute(mainId, sub, byId);
+        const arrival = this.addSubskillRoute(mainId, sub, byId);
+        reveals.push({ skill: sub, delay: arrival });
       }
     }
 
-    return { active: new Set<string>(), overlay: [...byId.values()] };
+    return { active: new Set<string>(), overlay: [...byId.values()], reveals };
   }
 
   /**
@@ -275,16 +285,17 @@ export class SpiderWebComponent implements OnDestroy {
    * segment's length (constant speed across joins) with a floor so tiny segments still register, and
    * `from` (from the route's `reversed` flag) tells the CSS which end to reveal from.
    */
-  private addSubskillRoute(mainId: string, sub: Skill, byId: Map<string, GlowSeg>): void {
+  /** Returns the time (s) at which the glow reaches this subskill — used to delay its icon reveal. */
+  private addSubskillRoute(mainId: string, sub: Skill, byId: Map<string, GlowSeg>): number {
     const subId = sub.connectedPathIds?.trim();
-    if (!subId) return;
+    if (!subId) return 0;
 
     // A subskill can carry its own manual override; then it just lights statically (no crawl).
     if (sub.glowPathIds.length) {
       sub.glowPathIds.forEach((id) =>
         this.mergeSeg(byId, { id, delay: 0, dur: GLOW_MIN_DUR, from: 1 }),
       );
-      return;
+      return GLOW_MIN_DUR;
     }
 
     let time = 0;
@@ -293,6 +304,7 @@ export class SpiderWebComponent implements OnDestroy {
       this.mergeSeg(byId, { id: seg.pathId, delay: time, dur, from: seg.reversed ? -1 : 1 });
       time += dur; // next segment starts where this one ends -> one continuous line
     }
+    return time; // total crawl time to this subskill
   }
 
   // A segment shared by two routes is drawn once; keep the earliest start so the crawl stays smooth.
@@ -344,12 +356,15 @@ export class SpiderWebComponent implements OnDestroy {
     const glow = this.buildGlow(skill);
     this.activePaths.set(glow.active);
     this.glowOverlay.set(glow.overlay);
+    this.subReveal.set(glow.reveals);
   }
 
-  // Leave handler: clear everything so the glow disappears and the info box closes.
+  // Leave handler: clear everything so the glow disappears, the revealed subskills hide, and the info
+  // box closes.
   onLeave(): void {
     this.hoveredSkill.set(null);
     this.activePaths.set(new Set<string>());
     this.glowOverlay.set([]);
+    this.subReveal.set([]);
   }
 }

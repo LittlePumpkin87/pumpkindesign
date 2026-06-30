@@ -172,3 +172,12 @@
     stroke-dashoffset: 0;
   }
 }
+
+@keyframes sub-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

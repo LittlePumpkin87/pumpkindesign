@@ -896,6 +896,26 @@
           }
         </g>
       }
+
+      @for (r of subReveal(); track r.skill.connectedPathIds) {
+        <g
+          [attr.transform]="
+            'translate(' + nodePosition(r.skill).x + ',' + nodePosition(r.skill).y + ')'
+          "
+        >
+          <image
+            class="logo-icons sub-reveal"
+            [ngStyle]="{ '--reveal-delay': r.delay + 's' }"
+            [attr.href]="r.skill.imgSrc"
+            [attr.aria-label]="r.skill.imgAlt"
+            x="-12"
+            y="-12"
+            width="24"
+            height="24"
+            preserveAspectRatio="xMidYMid meet"
+          />
+        </g>
+      }
     </g>
   </svg>
 
