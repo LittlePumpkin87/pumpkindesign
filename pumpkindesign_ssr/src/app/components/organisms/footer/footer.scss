@@ -4,9 +4,10 @@
   width: 100%;
   margin: 0 auto;
   max-width: 80vw;
-  @include flex(column, flex-start, flex-start);
+  @include grid(1fr 1fr, auto);
   @include mobile-medium {
     @include grid(1fr 1.5fr 1fr, auto);
+    gap: 3rem;
   }
   @include tablet {
     max-width: 70vw;
@@ -14,25 +15,25 @@
 }
 
 .image {
-  height: 15rem;
-  width: auto;
-  position: absolute;
-  right: 0;
+  grid-column: 1/4;
+  grid-row: 3;
   object-fit: contain;
-  transform: translate(-20%);
   @include mobile-medium {
-    transform: unset;
-    position: unset;
+    grid-row: 1;
     grid-column: 2;
-    grid-row: 2;
+    max-width: 15rem;
+    justify-self: center;
   }
 }
 
 .footnote {
   justify-self: center;
   grid-column: 1/4;
-  grid-row: 3;
+  grid-row: 4;
   margin-top: 3rem;
+  @include mobile-medium {
+    grid-row: 2;
+  }
 }
 
 .social-link {
@@ -49,7 +50,7 @@
   }
 }
 .column {
-  grid-row: 1/3;
+  grid-row: 1;
   gap: 1rem;
   @include flex(column, flex-start, flex-start, nowrap);
   &.right {
