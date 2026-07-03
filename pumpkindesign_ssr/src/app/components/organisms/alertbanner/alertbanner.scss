@@ -9,17 +9,10 @@
   padding: 1rem;
   border-radius: 2rem;
   z-index: 10;
-  top: 6rem;
-  transform: translate(0, -2rem);
+  top: 4rem;
   @include grid(max-content 1fr max-content, auto, 2rem, stretch, center);
   @include small-desktop {
-    max-width: 70vw;
-    transform: translate(0, -1rem);
-    top: 7rem;
-  }
-  @include medium-desktop {
-    top: 8rem;
-    transform: translate(0, -8rem);
+    max-width: 70dvw;
   }
 }
 

@@ -13,14 +13,7 @@ html {
 }
 
 main {
-  min-height: 50%;
-  margin-top: 8rem;
-  @include medium-desktop {
-    margin-top: 15rem;
-  }
-  @include huge-desktop {
-    margin-top: 18rem;
-  }
+  min-height: 50dvh;
   section {
     padding: 3rem 0;
     .container {

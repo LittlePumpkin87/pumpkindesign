@@ -21,24 +21,24 @@
   @include tablet {
     position: absolute;
     margin-bottom: unset;
-    transform: rotate(-4deg) translate(6rem, -6rem);
+    transform: rotate(-4deg) translate(6rem, -2rem);
     height: 35rem;
     width: auto;
   }
   @include small-desktop {
     height: 50rem;
-    transform: rotate(2deg) translate(-3rem, -5rem);
+    transform: rotate(2deg) translate(-3rem, -2rem);
   }
   @include medium-desktop {
     height: 55rem;
-    transform: rotate(2deg) translate(-3rem, -11rem);
+    transform: rotate(2deg) translate(-3rem, -4rem);
   }
   @include large-desktop {
     height: 50rem;
-    transform: rotate(2deg) translate(10rem, -13rem);
+    transform: rotate(2deg) translate(10rem, -4rem);
   }
   @include huge-desktop {
-    transform: rotate(0deg) translate(22rem, -18rem);
+    transform: rotate(0deg) translate(22rem, -4rem);
   }
 }
 .cta-wrapper {

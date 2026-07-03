@@ -74,7 +74,8 @@
   border: none;
   background: none;
   svg {
-    width: 5rem;
+    width: 3.5rem;
+    margin-right: 1rem;
   }
 }
 
@@ -132,13 +133,10 @@
   z-index: 999;
   background-color: $accent-orange;
   border-radius: $border-bottom;
-  height: 5rem;
+  height: 4rem;
   width: 100%;
   padding: 0 0 0 2rem;
   @include flex(row, space-between, center);
-  @include tablet {
-    height: 6rem;
-  }
 }
 
 .logo {
