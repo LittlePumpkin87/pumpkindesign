@@ -25,8 +25,14 @@
   </button>
   <ul class="HamburgerLink" [ngClass]="{ active: isActive }">
     @for (link of items(); track $index) {
-      <li class="link-item">
-        <lpd-link [item]="link"></lpd-link>
+      <li>
+        <lpd-link
+          [item]="link"
+          class="link-item"
+          (click)="toggleMenu()"
+          onkeydown="toggleMenu()"
+          onkeypress="toggleMenu()"
+        ></lpd-link>
       </li>
     }
   </ul>
