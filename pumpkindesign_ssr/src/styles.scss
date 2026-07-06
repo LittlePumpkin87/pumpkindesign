@@ -55,6 +55,13 @@ a {
   &:visited {
     color: inherit;
   }
+  &.link--inline {
+    text-decoration: underline;
+    color: $accent-blue;
+    &:hover {
+      filter: $shadow-blue;
+    }
+  }
 }
 img {
   width: 100%;

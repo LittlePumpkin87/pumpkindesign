@@ -65,4 +65,18 @@ path {
     transform: scale(1.3);
   }
 }
-
+.info-box {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: fit-content;
+  min-height: 20rem;
+  max-width: 30rem;
+  transform: translate(0, 12rem);
+  padding: 1rem;
+  z-index: 15;
+  backdrop-filter: blur(0.4rem);
+  @include flex(row, flex-start, flex-start);
+  @include border-elipse($accent-orange);
+}
