@@ -3,16 +3,28 @@
 .web-container {
   display: block;
   width: 100%;
-  margin: 0 auto;
+  margin: 10rem auto 0 auto;
   position: relative;
-  background-color: transparent;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url('../../../../assets/images/branches.svg') no-repeat top left;
+    width: 130%;
+    height: 100%;
+    display: block;
+    transform: translate(-12%, -9%);
+  }
 }
 
 svg {
+  position: relative;
   display: block;
   width: 100%;
   height: auto;
   overflow: visible;
+  z-index: 10;
 }
 
 path {
@@ -24,12 +36,6 @@ path {
   transition:
     stroke 0.3s ease-in-out,
     stroke-width 0.3s ease-in-out;
-}
-
-.glow {
-  stroke: $accent-orange;
-  stroke-width: 3px;
-  filter: drop-shadow(0 0 8px $accent-orange);
 }
 
 .glow-line {
@@ -59,3 +65,4 @@ path {
     transform: scale(1.3);
   }
 }
+

@@ -17,10 +17,10 @@
  *
  * Three body types, differing only in WHAT oscillates:
  *   - ThreadPendulum : a free-hanging thread; its swing ANGLE oscillates (one link).
- *   - ThreadChain    : many coupled links; each link's angle oscillates relative to its parent,
- *                      so motion travels down the strand like a whip (free outer endpoint).
  *   - RockingChain   : endpoints pinned; only the BOW (mid-curve bulge) oscillates, like a plucked
  *                      guitar string. Used where a segment shares junctions with other paths.
+ *   - PinnedChain    : pinned at BOTH ends; interior junctions slide transversely and a coherent
+ *                      wave travels between the fixed ends (see below). Used for the radial strands.
  * ============================================================================================== */
 
 /** Fixed geometry of a hanging thread: where it's pinned (anchor) and where its free end rests. */
@@ -45,7 +45,7 @@ export interface ThreadFrame {
   end: ThreadPoint;
 }
 
-/** Common shape of ThreadChain and RockingChain, so callers can drive either uniformly. */
+/** Common shape of RockingChain and PinnedChain, so callers can drive either uniformly. */
 export interface LinkChain {
   kick(impulse: number, linkIndex?: number): void;
   step(dt: number): boolean;
@@ -125,12 +125,6 @@ const STIFFNESS = 50; // ThreadPendulum: pull back toward rest angle
 const DAMPING = 2; // ThreadPendulum: friction on angular velocity (low -> long, soft swing)
 const BOW_FACTOR = 0.2; // how strongly velocity bends the rope into a whip-like bow (see frame())
 const SETTLE_EPSILON = 0.0008; // below this offset+velocity the motion is treated as stopped
-
-// A chain couples N links together, so each one's own decay tail stacks on top of its
-// parent's. ThreadPendulum's soft, long-swinging feel would take ages to settle across many
-// links, so chains use their own stiffer, more damped (but still slightly underdamped) spring.
-const CHAIN_STIFFNESS = 110;
-const CHAIN_DAMPING = 18;
 
 // RockingChain oscillates the bow distance itself (not an angle), so these constants live on
 // a different scale than the angular ones above.
@@ -225,138 +219,6 @@ export interface ChainGeometry {
   restBows?: number[];
 }
 
-/** One link of a ThreadChain. `angle`/`angularVelocity` are the live state; the rest is fixed. */
-interface ChainLink {
-  length: number; // fixed link length
-  restAngle: number; // angle this link points at when undisturbed
-  restBow: number; // baseline curvature from the original artwork (kept even at rest)
-  angle: number; // live angle (animated)
-  angularVelocity: number; // live angular velocity (animated)
-}
-
-/**
- * A chain of coupled pendulum links: link 0 hangs from the fixed anchor like ThreadPendulum,
- * each following link targets its own rest angle plus however far its parent has swung off-rest,
- * then lags behind that target with its own spring. This propagates motion down the chain with
- * a phase delay, giving a whip/rope-like wave instead of every link moving in lockstep.
- */
-export class ThreadChain implements LinkChain {
-  private readonly anchorX: number;
-  private readonly anchorY: number;
-  private readonly links: ChainLink[];
-
-  constructor(geometry: ChainGeometry) {
-    this.anchorX = geometry.points[0].x;
-    this.anchorY = geometry.points[0].y;
-
-    this.links = [];
-    for (let i = 1; i < geometry.points.length; i++) {
-      const prev = geometry.points[i - 1];
-      const cur = geometry.points[i];
-      const dx = cur.x - prev.x;
-      const dy = cur.y - prev.y;
-      const restAngle = Math.atan2(dy, dx);
-      this.links.push({
-        length: Math.hypot(dx, dy),
-        restAngle,
-        restBow: geometry.restBows?.[i - 1] ?? 0,
-        angle: restAngle,
-        angularVelocity: 0,
-      });
-    }
-  }
-
-  kick(impulse: number, linkIndex = 0): void {
-    this.links[linkIndex].angularVelocity += impulse;
-  }
-
-  /** Advances the simulation by dt seconds. Returns true while any link is still in motion. */
-  step(dt: number): boolean {
-    let stillMoving = false;
-    let parentAngle = 0;
-    let parentAngularVelocity = 0;
-    let parentRestAngle = 0;
-
-    for (const link of this.links) {
-      // Damping acts on motion *relative to the parent link* (like a real, slightly stiff
-      // joint), not on absolute velocity. That way a link riding along with its still-swinging
-      // parent dissipates no energy, but any lag behind the parent is actively damped out -
-      // otherwise every link drives the next at its own resonant frequency and the chain
-      // never settles.
-      const restRelative = link.restAngle - parentRestAngle;
-      const relativeAngle = link.angle - parentAngle;
-      const relativeVelocity = link.angularVelocity - parentAngularVelocity;
-
-      const angularAccel =
-        -CHAIN_STIFFNESS * (relativeAngle - restRelative) - CHAIN_DAMPING * relativeVelocity;
-      link.angularVelocity += angularAccel * dt;
-      link.angle += link.angularVelocity * dt;
-
-      const settled =
-        Math.abs(link.angle - parentAngle - restRelative) < SETTLE_EPSILON &&
-        Math.abs(link.angularVelocity - parentAngularVelocity) < SETTLE_EPSILON;
-
-      if (settled) {
-        link.angle = parentAngle + restRelative;
-        link.angularVelocity = parentAngularVelocity;
-      } else {
-        stillMoving = true;
-      }
-
-      parentAngle = link.angle;
-      parentAngularVelocity = link.angularVelocity;
-      parentRestAngle = link.restAngle;
-    }
-
-    return stillMoving;
-  }
-
-  /**
-   * Convert the live link angles into bezier curves. Walks the chain from the anchor outward: each
-   * link's end becomes the next link's start, so the segments stay connected as the chain whips.
-   */
-  private linkCurves(): LinkCurve[] {
-    const curves: LinkCurve[] = [];
-    // Follow the shared anchor junction if a PinnedChain is moving it, so the strand stays attached.
-    const shift = junctionShiftAt(this.anchorX, this.anchorY);
-    let startX = this.anchorX + shift.dx;
-    let startY = this.anchorY + shift.dy;
-
-    for (const link of this.links) {
-      // This link's endpoint, in polar form from its (moving) start point.
-      const endX = startX + link.length * Math.cos(link.angle);
-      const endY = startY + link.length * Math.sin(link.angle);
-
-      const dirX = (endX - startX) / link.length;
-      const dirY = (endY - startY) / link.length;
-      const midX = (startX + endX) / 2;
-      const midY = (startY + endY) / 2;
-
-      // Bow = artwork's resting curvature plus a velocity-driven bulge; offset perpendicular to the
-      // link (same (-dirY, dirX) trick as ThreadPendulum.frame()).
-      const bow = link.restBow + link.angularVelocity * BOW_FACTOR * link.length;
-      const ctrlX = midX - dirY * bow;
-      const ctrlY = midY + dirX * bow;
-
-      curves.push({ startX, startY, ctrlX, ctrlY, endX, endY });
-      startX = endX; // chain to the next link
-      startY = endY;
-    }
-
-    return curves;
-  }
-
-  /** One frame per link, each a small bowed bezier segment chained from the anchor outward. */
-  frame(): ThreadFrame[] {
-    return framesFrom(this.linkCurves());
-  }
-
-  /** All links as one continuous multi-segment path, for chains rendered as a single SVG element. */
-  combinedFrame(): ThreadFrame {
-    return combinedFrameFrom(this.linkCurves());
-  }
-}
-
 /** One link of a RockingChain. Endpoints are fixed; only `bow`/`bowVelocity` animate. */
 interface RockLink {
   startX: number; // fixed start point
@@ -370,7 +232,7 @@ interface RockLink {
 }
 
 /**
- * Unlike ThreadChain, both endpoints of every link stay fixed at their rest position - only the
+ * Both endpoints of every link stay fixed at their rest position - only the
  * bow (the curve's bulge away from the straight chord) oscillates, like a string fixed at both
  * ends being plucked in the middle. Use this for segments whose endpoints are shared junctions
  * with other independent paths, where letting an endpoint swing would visibly break contact.
@@ -480,12 +342,12 @@ interface StringPoint {
 }
 
 /**
- * A strand pinned at BOTH ends, like a guitar string plucked in the middle. Unlike ThreadChain (one
- * fixed end, the other whips) and RockingChain (every endpoint fixed, each segment bulges on its own),
- * here the interior junction POINTS slide transversely and are coupled by a wave equation, so a single
- * coherent wave travels along the strand and reflects between the fixed ends before damping out.
+ * A strand pinned at BOTH ends, like a guitar string plucked in the middle. Unlike RockingChain
+ * (every endpoint fixed, each segment bulges on its own), here the interior junction POINTS slide
+ * transversely and are coupled by a wave equation, so a single coherent wave travels along the
+ * strand and reflects between the fixed ends before damping out.
  *
- * Used for the long radial "frame" strands: it keeps ThreadChain's flowing whole-line motion, but the
+ * Used for the long radial "frame" strands: it gives a flowing whole-line motion, but the
  * outer (branch) end stays put instead of swinging away — and the shared inner junctions stay on the
  * rest line, so the horizontal arcs meeting them don't lose contact.
  *

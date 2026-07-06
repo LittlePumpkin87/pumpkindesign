@@ -1,19 +1,13 @@
+import { serializeRichText } from './../utils/content-helper';
 import { Skill } from '../interfaces/organism.interface';
 import { getImageUrl } from '../utils/content-helper';
 
 const DEFAULT_X = 185.25;
 const DEFAULT_Y = 183.45;
 
-function parsePathIds(value: unknown): string[] {
-  if (typeof value !== 'string') return [];
-  return value
-    .split(',')
-    .map((id) => id.trim())
-    .filter(Boolean);
-}
-
 export function mapSpiderwebData(rawData: any): { skills: Skill[] } {
-  const data = rawData?.skills ? rawData.skills : Array.isArray(rawData) ? rawData : [];
+  const rawSkills = rawData?.skills ? rawData.skills : rawData;
+  const data = Array.isArray(rawSkills) ? rawSkills : [];
 
   if (!data || !Array.isArray(data)) {
     return { skills: [] };
@@ -24,12 +18,11 @@ export function mapSpiderwebData(rawData: any): { skills: Skill[] } {
 
     return {
       name: item.name || '',
-      description: item.description || '',
+      description: serializeRichText(item.description) || '',
       posX: item.position_x !== null ? Number(item.position_x) : DEFAULT_X,
       posY: item.position_y !== null ? Number(item.position_y) : DEFAULT_Y,
       isMainSkill: item.isMainSkill !== undefined ? item.isMainSkill : hasSubskills,
       connectedPathIds: item.connectedPathIds || '',
-      glowPathIds: parsePathIds(item.glowPathIds),
       subskills: item.subskills ? mapSubskills(item.subskills) : [],
       imgSrc: item.logo ? getImageUrl(item.logo) : undefined,
       imgAlt: item.logo?.AlternateText || '',
@@ -52,7 +45,6 @@ function mapSubskills(subskillsData: any[]): Skill[] {
     imgSrc: sub.logo ? getImageUrl(sub.logo) : undefined,
     imgAlt: sub.logo?.AlternateText || '',
     connectedPathIds: sub.connectedPathIds || '',
-    glowPathIds: parsePathIds(sub.glowPathIds),
     subskills: [],
   }));
 }

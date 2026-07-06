@@ -10,7 +10,6 @@ import {
 import { routeSegments } from './spiderweb.routing';
 import {
   LinkChain,
-  ThreadChain,
   ThreadFrame,
   ThreadPendulum,
   RockingChain,
@@ -20,10 +19,8 @@ import {
 } from './spiderweb.physics';
 
 /** Build the right physics body for a CHAIN_GROUPS entry based on its `sim` discriminator. */
-function buildChain(sim: 'pinned' | 'rock' | undefined, geometry: ChainGeometry): LinkChain {
-  if (sim === 'pinned') return new PinnedChain(geometry);
-  if (sim === 'rock') return new RockingChain(geometry);
-  return new ThreadChain(geometry);
+function buildChain(sim: 'pinned' | 'rock', geometry: ChainGeometry): LinkChain {
+  return sim === 'pinned' ? new PinnedChain(geometry) : new RockingChain(geometry);
 }
 
 /** Locates a path id within the physics model: which chain (group) and which link inside it. */
@@ -41,11 +38,11 @@ interface GlowSeg {
   from: 1 | -1;
 }
 
-const GLOW_SPEED = 600; // px per second the draw-on travels
-const GLOW_MIN_DUR = 0.08; // seconds, so very short segments still register
+const GLOW_SPEED = 600;
+const GLOW_MIN_DUR = 0.08;
 
 // All simulated strands in one array; the index into it lines up with `chains` in the component.
-// ThreadChains come first, then RockingChains, so `group >= CHAIN_GROUPS.length` means "a rocking one".
+// CHAIN_GROUPS come first, then ROCK_GROUPS, so `group >= CHAIN_GROUPS.length` means "a rocking one".
 const ALL_GROUPS = [...CHAIN_GROUPS, ...ROCK_GROUPS];
 
 // Reverse lookup: path id -> which chain/link it is, so kicking a lit segment finds its body in O(1).
@@ -65,7 +62,7 @@ function randomSignedImpulse(base: number, spread: number): number {
  *   1. Owns the physics bodies (threads/chains) and a requestAnimationFrame loop that steps them and
  *      publishes their current SVG paths into the `threadFrames`/`chainFrames` signals.
  *   2. On hover of a main skill, computes the glow route(s) to its subskills (buildGlow) and exposes
- *      them via `activePaths` (static override) and `glowOverlay` (the crawling overlay layer).
+ *      them via `glowOverlay` (the crawling overlay layer).
  *   3. Positions each skill icon on the (moving) web via `nodePosition`.
  * The template binds to the signals, so the view re-renders automatically as state changes.
  */
@@ -77,10 +74,12 @@ function randomSignedImpulse(base: number, spread: number): number {
   imports: [CommonModule],
 })
 export class SpiderWebComponent implements OnDestroy {
-  /* ========================== INPUTS & VIEW STATE ========================== */
 
-  skills = input<Skill[]>(); // the skills to render, passed in by the parent
-  hoveredSkill = signal<Skill | null>(null); // currently hovered skill (drives the info box)
+  skills = input<Skill[]>();
+
+  // The main skill whose info box is open. Only ever set by a click/tap on a main skill — never by
+  // hover — so the box appears on click, not on pure hover. null = no box.
+  selectedSkill = signal<Skill | null>(null);
 
   /* ============================ PHYSICS STATE =============================
    * (Declaration order matters: `threadFrames` reads `threads`, `chainFrames` reads `chains`.) */
@@ -100,9 +99,8 @@ export class SpiderWebComponent implements OnDestroy {
 
   // The chain bodies, same order as ALL_GROUPS. Each CHAIN_GROUPS entry picks its simulation via `sim`:
   // 'pinned' = PinnedChain (both ends fixed, a coherent wave travels between them — the anchor radials);
-  // 'rock' = RockingChain (every endpoint fixed, only the bow oscillates — the structural connectors);
-  // omitted = ThreadChain (one fixed end, the other swings free — currently unused). ROCK_GROUPS (the
-  // horizontal arcs) are RockingChain too.
+  // 'rock' = RockingChain (every endpoint fixed, only the bow oscillates — the structural connectors).
+  // ROCK_GROUPS (the horizontal arcs) are RockingChain too.
   private readonly chains: LinkChain[] = [
     ...CHAIN_GROUPS.map((group) => buildChain(group.sim, group.geometry)),
     ...ROCK_GROUPS.map((group) => new RockingChain(group.geometry)),
@@ -118,10 +116,6 @@ export class SpiderWebComponent implements OnDestroy {
   /* ============================= GLOW STATE ===============================
    * (`litPaths` reads both signals below it, so they're declared first.) */
 
-  // Statically-lit segments (manual glowPathIds override) -> base path [class.glow]. Empty for the
-  // auto-routed crawl, which lives entirely in the overlay layer so the base web stays visible.
-  activePaths = signal<Set<string>>(new Set<string>());
-
   // The crawling glow route(s), rendered as a separate overlay layer above the untouched web.
   glowOverlay = signal<GlowSeg[]>([]);
 
@@ -129,9 +123,9 @@ export class SpiderWebComponent implements OnDestroy {
   // glow reaches it. Empty when nothing is hovered, so at rest the web shows only the main skills.
   subReveal = signal<{ skill: Skill; delay: number }[]>([]);
 
-  // Union of both, used only to kick the physics threads/chains a lit segment belongs to.
+  // The lit overlay segments' ids, used only to kick the physics threads/chains they belong to.
   private readonly litPaths = computed(
-    () => new Set<string>([...this.activePaths(), ...this.glowOverlay().map((s) => s.id)]),
+    () => new Set<string>(this.glowOverlay().map((s) => s.id)),
   );
 
   /* ============================== LIFECYCLE =============================== */
@@ -224,8 +218,8 @@ export class SpiderWebComponent implements OnDestroy {
   }
 
   // Same for chain segments. A path id maps to (chain, link) via PATH_ID_TO_LINK. The impulse scale
-  // differs per body type: ThreadChain takes a small radian angle, while RockingChain/PinnedChain move
-  // a pixel distance (bow / transverse displacement) and so need a much larger kick.
+  // differs per body type: RockingChain and PinnedChain both move a pixel distance (bow / transverse
+  // displacement), so the kick is sized to that.
   private kickNewlyActiveChains(active: Set<string>): void {
     for (const id of active) {
       const ref = PATH_ID_TO_LINK[id];
@@ -240,29 +234,21 @@ export class SpiderWebComponent implements OnDestroy {
 
   private kickImpulseFor(chain: LinkChain): number {
     if (chain instanceof PinnedChain) return randomSignedImpulse(50, 25); // transverse wave velocity (subtle)
-    if (chain instanceof RockingChain) return randomSignedImpulse(120, 60); // bow velocity
-    return randomSignedImpulse(0.6, 0.3); // ThreadChain angular velocity
+    return randomSignedImpulse(120, 60); // RockingChain bow velocity
   }
 
   /* ===================== GLOW: route building (per hover) ===================== */
 
   /**
-   * onHover(main) -> buildGlow:
-   *   - If the skill has a manual `glowPathIds` override, those segments light statically (no crawl).
-   *   - Otherwise, for a main skill we route main -> each subskill via routeSegments() and turn each
-   *     route into timed GlowSeg[] (see addSubskillRoute for the crawl timing).
-   * The result feeds two signals: `activePaths` (static override -> base path .glow) and `glowOverlay`
-   * (the crawling overlay layer). Both are rebuilt on every hover, which is what re-rolls the routes.
+   * onHover(main) -> buildGlow: for a main skill we route main -> each subskill via routeSegments()
+   * and turn each route into timed GlowSeg[] (see addSubskillRoute for the crawl timing).
+   * The result feeds `glowOverlay` (the crawling overlay layer), rebuilt on every hover, which is
+   * what re-rolls the routes.
    */
   private buildGlow(skill: Skill): {
-    active: Set<string>;
     overlay: GlowSeg[];
     reveals: { skill: Skill; delay: number }[];
   } {
-    if (skill.glowPathIds.length) {
-      return { active: new Set(skill.glowPathIds), overlay: [], reveals: [] };
-    }
-
     const mainId = skill.connectedPathIds?.trim();
     const byId = new Map<string, GlowSeg>();
     const reveals: { skill: Skill; delay: number }[] = [];
@@ -274,7 +260,7 @@ export class SpiderWebComponent implements OnDestroy {
       }
     }
 
-    return { active: new Set<string>(), overlay: [...byId.values()], reveals };
+    return { overlay: [...byId.values()], reveals };
   }
 
   /**
@@ -289,14 +275,6 @@ export class SpiderWebComponent implements OnDestroy {
   private addSubskillRoute(mainId: string, sub: Skill, byId: Map<string, GlowSeg>): number {
     const subId = sub.connectedPathIds?.trim();
     if (!subId) return 0;
-
-    // A subskill can carry its own manual override; then it just lights statically (no crawl).
-    if (sub.glowPathIds.length) {
-      sub.glowPathIds.forEach((id) =>
-        this.mergeSeg(byId, { id, delay: 0, dur: GLOW_MIN_DUR, from: 1 }),
-      );
-      return GLOW_MIN_DUR;
-    }
 
     let time = 0;
     for (const seg of routeSegments(mainId, subId, Math.random)) {
@@ -347,24 +325,29 @@ export class SpiderWebComponent implements OnDestroy {
     };
   }
 
-  /* ============================= HOVER HANDLERS ============================= */
+  /* ============================= INTERACTION HANDLERS ============================= */
 
-  // Hover handler: remember the skill and rebuild the glow (rerolls the random route + restarts the
-  // crawl). Setting glowOverlay also triggers the constructor effect, which kicks the lit strands.
+  // Pointer enter / tap on a skill: rebuild the glow (rerolls the random route + restarts the crawl)
+  // and reveal its subskills. Never opens the info box — that's click-only. Setting glowOverlay also
+  // triggers the constructor effect, which kicks the lit strands.
   onHover(skill: Skill): void {
-    this.hoveredSkill.set(skill);
     const glow = this.buildGlow(skill);
-    this.activePaths.set(glow.active);
     this.glowOverlay.set(glow.overlay);
     this.subReveal.set(glow.reveals);
   }
 
-  // Leave handler: clear everything so the glow disappears, the revealed subskills hide, and the info
-  // box closes.
+  // Pointer leaves a skill: clear the glow and the revealed subskills. The info box is click-
+  // controlled, so it stays open until the skill is clicked again or another main skill is clicked.
   onLeave(): void {
-    this.hoveredSkill.set(null);
-    this.activePaths.set(new Set<string>());
     this.glowOverlay.set([]);
     this.subReveal.set([]);
+  }
+
+  // Click / tap on a MAIN skill: toggle its info box. Also (re)triggers the glow, so on touch — where
+  // there is no mouseenter — a single tap both lights the web and opens the box (hover + click at
+  // once). On desktop the box only ever opens here, never on pure hover.
+  onSelect(skill: Skill): void {
+    this.selectedSkill.update((current) => (current === skill ? null : skill));
+    this.onHover(skill);
   }
 }

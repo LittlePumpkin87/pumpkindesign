@@ -27,11 +27,9 @@ export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
 
 /**
  * Every group of SVG path elements that connects end-to-start into one continuous strand,
- * simulated as a coupled multi-link chain (see ThreadChain) instead of static lines. Groups of
- * size 1 still go through ThreadChain so they get its faster settle-time constants; it behaves
- * identically to a single pendulum in that case. Derived from the original static `d` attributes
- * in spiderweb.html (anchor + each segment's end point), grouped by matching one path's end point
- * to the next path's start.
+ * simulated as a coupled multi-link chain instead of static lines. Derived from the original static
+ * `d` attributes in spiderweb.html (anchor + each segment's end point), grouped by matching one
+ * path's end point to the next path's start.
  *
  * The `sim` flag picks how a group is simulated:
  *   - `'pinned'` → PinnedChain (both ends fixed, a coherent wave travels between them). Used for the
@@ -40,10 +38,8 @@ export const WOBBLE_THREAD_GEOMETRY: Record<string, ThreadGeometry> = {
  *   - `'rock'`   → RockingChain (every endpoint fixed, only the bow oscillates). Used for the internal
  *     connector strands whose both endpoints are shared junctions, so they stay attached to the
  *     strands they cross (same treatment as the horizontal arcs in ROCK_GROUPS).
- *   - omitted    → ThreadChain (one fixed end, the other swings free). Currently unused — every web
- *     strand here is structural; only the icon-bearing threads (ThreadPendulum) dangle.
  */
-export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; sim?: 'pinned' | 'rock' }[] = [
+export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; sim: 'pinned' | 'rock' }[] = [
   {
     sim: 'pinned', // anchor radial: both ends fixed -> PinnedChain wave, branch end stays put
     pathIds: [

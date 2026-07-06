@@ -35,6 +35,5 @@ export interface Skill {
   posY: number;
   isMainSkill: boolean;
   connectedPathIds: string;
-  glowPathIds: string[];
   subskills?: Skill[];
 }

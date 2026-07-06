@@ -23,6 +23,14 @@
         }
       }
     },
+    "description": {
+      "type": "blocks",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
     "uid": {
       "type": "uid",
       "pluginOptions": {
@@ -44,32 +52,8 @@
         "images"
       ]
     },
-    "position_x": {
-      "type": "integer",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "position_y": {
-      "type": "integer",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "connectedPathIds": {
       "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "glowPathIds": {
-      "type": "text",
       "pluginOptions": {
         "i18n": {
           "localized": true
