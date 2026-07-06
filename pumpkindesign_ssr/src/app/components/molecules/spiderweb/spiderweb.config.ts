@@ -172,9 +172,9 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; sim: 'p
         { x: 97.74, y: 315.03 },
         { x: 74.38, y: 343.42 },
         { x: 32.54, y: 396.97 },
-        { x: -9.44, y: 461.99 },
+        { x: 13, y: 422 },
       ],
-      restBows: [0.02, 0.07, 0.13, 0.68, 3.65],
+      restBows: [0.02, 0.07, 0.13, 0.68, 1],
     },
   },
   {
@@ -195,9 +195,9 @@ export const CHAIN_GROUPS: { pathIds: string[]; geometry: ChainGeometry; sim: 'p
         { x: 113.51, y: 300.93 },
         { x: 80.46, y: 360.74 },
         { x: 51.32, y: 418.73 },
-        { x: -16.1, y: 629.68 },
+        { x: 25, y: 440 },
       ],
-      restBows: [0.07, 0.03, 1.26, 0.62, 0.69, 18.87],
+      restBows: [0.07, 0.03, 1.26, 0.62, 0.69, 2],
     },
   },
   {

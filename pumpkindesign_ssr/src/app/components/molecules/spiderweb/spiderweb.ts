@@ -74,7 +74,6 @@ function randomSignedImpulse(base: number, spread: number): number {
   imports: [CommonModule],
 })
 export class SpiderWebComponent implements OnDestroy {
-
   skills = input<Skill[]>();
 
   // The main skill whose info box is open. Only ever set by a click/tap on a main skill — never by
@@ -124,9 +123,7 @@ export class SpiderWebComponent implements OnDestroy {
   subReveal = signal<{ skill: Skill; delay: number }[]>([]);
 
   // The lit overlay segments' ids, used only to kick the physics threads/chains they belong to.
-  private readonly litPaths = computed(
-    () => new Set<string>(this.glowOverlay().map((s) => s.id)),
-  );
+  private readonly litPaths = computed(() => new Set<string>(this.glowOverlay().map((s) => s.id)));
 
   /* ============================== LIFECYCLE =============================== */
 
@@ -327,27 +324,43 @@ export class SpiderWebComponent implements OnDestroy {
 
   /* ============================= INTERACTION HANDLERS ============================= */
 
-  // Pointer enter / tap on a skill: rebuild the glow (rerolls the random route + restarts the crawl)
-  // and reveal its subskills. Never opens the info box — that's click-only. Setting glowOverlay also
-  // triggers the constructor effect, which kicks the lit strands.
+  // Pointer enter on a skill: light its glow + reveal subskills (pure-hover preview). Skipped while an
+  // info box is open, so hovering other skills doesn't disturb the pinned (clicked) selection.
   onHover(skill: Skill): void {
+    if (this.selectedSkill()) return;
+    this.showGlow(skill);
+  }
+
+  // Pointer leaves a skill: clear the glow + revealed subskills — but ONLY on pure hover. Once a skill
+  // is clicked/tapped (info box open) the glow is pinned, so the leave is ignored and both stay up.
+  onLeave(): void {
+    if (this.selectedSkill()) return;
+    this.clearGlow();
+  }
+
+  // Click / tap on a MAIN skill: toggle its info box AND light the glow, so a click always shows BOTH
+  // (and on touch, where there is no mouseenter, the tap still lights the web). Clicking the same skill
+  // again closes the box and clears the glow.
+  onSelect(skill: Skill): void {
+    if (this.selectedSkill() === skill) {
+      this.selectedSkill.set(null);
+      this.clearGlow();
+    } else {
+      this.selectedSkill.set(skill);
+      this.showGlow(skill);
+    }
+  }
+
+  // Build + publish the glow route and subskill reveals for a skill (drives the crawling overlay).
+  private showGlow(skill: Skill): void {
     const glow = this.buildGlow(skill);
     this.glowOverlay.set(glow.overlay);
     this.subReveal.set(glow.reveals);
   }
 
-  // Pointer leaves a skill: clear the glow and the revealed subskills. The info box is click-
-  // controlled, so it stays open until the skill is clicked again or another main skill is clicked.
-  onLeave(): void {
+  // Tear down the glow overlay and revealed subskills, returning the web to its resting state.
+  private clearGlow(): void {
     this.glowOverlay.set([]);
     this.subReveal.set([]);
-  }
-
-  // Click / tap on a MAIN skill: toggle its info box. Also (re)triggers the glow, so on touch — where
-  // there is no mouseenter — a single tap both lights the web and opens the box (hover + click at
-  // once). On desktop the box only ever opens here, never on pure hover.
-  onSelect(skill: Skill): void {
-    this.selectedSkill.update((current) => (current === skill ? null : skill));
-    this.onHover(skill);
   }
 }
