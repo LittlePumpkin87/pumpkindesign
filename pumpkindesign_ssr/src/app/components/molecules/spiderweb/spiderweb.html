@@ -794,6 +794,26 @@
     </g>
   </svg>
 
+  <div class="skill-cards">
+    @for (skill of mainSkills(); track $index) {
+      <article class="skill-card">
+        <img class="skill-logo" [src]="skill.imgSrc" [alt]="skill.imgAlt" />
+        <h4 class="skill-name">{{ skill.name }}</h4>
+        <div class="skill-description" [innerHTML]="skill.description"></div>
+        @if (skill.subskills?.length) {
+          <ul class="subskill-logos">
+            @for (sub of skill.subskills; track $index) {
+              <li class="subskill">
+                <img [src]="sub.imgSrc" [alt]="sub.imgAlt" [attr.title]="sub.name" />
+                <span class="subskill-name">{{ sub.name }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </article>
+    }
+  </div>
+
   @if (selectedSkill()) {
     <div class="info-box">
       <h3>{{ selectedSkill()?.name }}</h3>

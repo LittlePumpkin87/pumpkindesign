@@ -16,6 +16,7 @@ import { ThreadFrame, GlowSegment, SkillReveal } from '../../../interfaces/spide
 export class SpiderWebComponent implements OnDestroy {
   skills = input<Skill[]>();
   selectedSkill = signal<Skill | null>(null);
+  mainSkills = computed(() => (this.skills() ?? []).filter((skill) => skill.isMainSkill));
 
   private readonly simulation = new SpiderWebSimulation(() => {
     this.threadFrames.set(this.simulation.threadFrames);

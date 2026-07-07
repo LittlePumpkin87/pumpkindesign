@@ -3,8 +3,8 @@
 .web-container {
   display: block;
   width: 100%;
-  margin: 10rem auto 0 auto;
   position: relative;
+  margin: 0 auto;
   &::before {
     content: '';
     position: absolute;
@@ -13,18 +13,79 @@
     background: url('../../../../assets/images/branches.svg') no-repeat top left;
     width: 130%;
     height: 100%;
-    display: block;
+    display: none;
     transform: translate(-12%, -9%);
+    @include tablet {
+      display: block;
+    }
+  }
+  @include small-desktop {
+    margin-top: 10rem;
   }
 }
 
 svg {
   position: relative;
-  display: block;
+  display: none;
   width: 100%;
   height: auto;
   overflow: visible;
   z-index: 10;
+  @include tablet {
+    display: block;
+  }
+}
+
+/* ===================== MOBILE CARD GRID ===================== */
+
+.skill-cards {
+  gap: 2rem;
+  padding: 2rem 1rem;
+  @include flex(column, flex-start, stretch);
+  @include tablet {
+    display: none;
+  }
+}
+
+.skill-card {
+  width: 100%;
+  padding: $spacing-05;
+  background-color: $accent-green;
+  filter: $shadow-subtle;
+  @include flex(column, flex-start, flex-start);
+  @include border-elipse($accent-orange);
+  .skill-logo {
+    height: 5rem;
+    width: auto;
+    margin-bottom: 1rem;
+  }
+  .skill-name {
+    margin: $spacing-03 0;
+  }
+  .skill-description {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.subskill-logos {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 1rem;
+  list-style: none;
+  @include flex(row, flex-start, flex-start, wrap);
+  .subskill {
+    gap: 0.4rem;
+    @include flex(column, flex-start, center);
+    img {
+      height: 2.5rem;
+      width: auto;
+    }
+    .subskill-name {
+      font-size: 0.75rem;
+      text-align: center;
+    }
+  }
 }
 
 path {
@@ -67,7 +128,9 @@ path {
     transform: scale(1.3);
   }
 }
+
 .info-box {
+  display: none;
   position: absolute;
   top: 0;
   right: 0;
@@ -77,8 +140,10 @@ path {
   min-height: 20rem;
   max-width: 30rem;
   padding: 1rem;
-  transform: translate(0, 12rem);
   backdrop-filter: blur(0.4rem);
-  @include flex(row, flex-start, flex-start);
-  @include border-elipse($accent-orange);
+  transform: translate(2rem, 25rem);
+  @include border-elipse($accent-blue);
+  @include tablet {
+    @include flex(row, flex-start, flex-start);
+  }
 }
