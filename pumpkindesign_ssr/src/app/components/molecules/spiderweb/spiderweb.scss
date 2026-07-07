@@ -36,58 +36,6 @@ svg {
   }
 }
 
-/* ===================== MOBILE CARD GRID ===================== */
-
-.skill-cards {
-  gap: 2rem;
-  padding: 2rem 1rem;
-  @include flex(column, flex-start, stretch);
-  @include tablet {
-    display: none;
-  }
-}
-
-.skill-card {
-  width: 100%;
-  padding: $spacing-05;
-  background-color: $accent-green;
-  filter: $shadow-subtle;
-  @include flex(column, flex-start, flex-start);
-  @include border-elipse($accent-orange);
-  .skill-logo {
-    height: 5rem;
-    width: auto;
-    margin-bottom: 1rem;
-  }
-  .skill-name {
-    margin: $spacing-03 0;
-  }
-  .skill-description {
-    margin-bottom: 1.5rem;
-  }
-}
-
-.subskill-logos {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  gap: 1rem;
-  list-style: none;
-  @include flex(row, flex-start, flex-start, wrap);
-  .subskill {
-    gap: 0.4rem;
-    @include flex(column, flex-start, center);
-    img {
-      height: 2.5rem;
-      width: auto;
-    }
-    .subskill-name {
-      font-size: 0.75rem;
-      text-align: center;
-    }
-  }
-}
-
 path {
   position: static;
   transform: none;
@@ -144,6 +92,77 @@ path {
   transform: translate(2rem, 25rem);
   @include border-elipse($accent-blue);
   @include tablet {
-    @include flex(row, flex-start, flex-start);
+    display: block;
+  }
+  @include medium-desktop {
+    transform: translate(0rem, 15rem);
+  }
+  .inner-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    @include flex(column, flex-start, flex-start);
+    .close-icon {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      cursor: pointer;
+      @include transition(all, 0.3s, ease-in-out);
+      &:hover {
+        transform: rotate(45deg);
+      }
+    }
+  }
+}
+
+/* ===================== MOBILE CARD GRID ===================== */
+
+.skill-cards {
+  gap: 2rem;
+  padding: 2rem 1rem;
+  @include flex(column, flex-start, stretch);
+  @include tablet {
+    display: none;
+  }
+}
+
+.skill-card {
+  width: 100%;
+  padding: $spacing-05;
+  background-color: $accent-green;
+  filter: $shadow-subtle;
+  @include flex(column, flex-start, flex-start);
+  @include border-elipse($accent-orange);
+  .skill-logo {
+    height: 5rem;
+    width: auto;
+    margin-bottom: 1rem;
+  }
+  .skill-name {
+    margin: $spacing-03 0;
+  }
+  .skill-description {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.subskill-logos {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 1rem;
+  list-style: none;
+  @include flex(row, flex-start, flex-start, wrap);
+  .subskill {
+    gap: 0.4rem;
+    @include flex(column, flex-start, center);
+    img {
+      height: 2.5rem;
+      width: auto;
+    }
+    .subskill-name {
+      font-size: 0.75rem;
+      text-align: center;
+    }
   }
 }

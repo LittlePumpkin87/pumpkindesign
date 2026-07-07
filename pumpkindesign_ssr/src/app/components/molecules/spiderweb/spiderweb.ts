@@ -5,13 +5,14 @@ import { PATH_ANCHORS } from './spiderweb.config';
 import { SpiderWebSimulation } from './spiderweb.simulation';
 import { buildGlow } from './spiderweb.glow';
 import { ThreadFrame, GlowSegment, SkillReveal } from '../../../interfaces/spiderweb.interface';
+import { IconComponent } from "../../atoms/icon/icon.component";
 
 @Component({
   selector: 'lpd-spider-web',
   templateUrl: './spiderweb.html',
   styleUrl: './spiderweb.scss',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
 })
 export class SpiderWebComponent implements OnDestroy {
   skills = input<Skill[]>();
@@ -84,6 +85,11 @@ export class SpiderWebComponent implements OnDestroy {
       this.selectedSkill.set(skill);
       this.showGlow(skill);
     }
+  }
+
+  closeInfo(): void {
+    this.selectedSkill.set(null);
+    this.clearGlow();
   }
 
   private showGlow(skill: Skill): void {
