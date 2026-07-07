@@ -717,12 +717,12 @@
         [attr.d]="chainFrames()['right-1'].d"
       />
 
-      @for (seg of glowOverlay(); track seg.id) {
+      @for (segment of glowOverlay(); track segment.id) {
         <path
           class="glow-line"
           [attr.pathLength]="1"
-          [attr.d]="frameD(seg.id)"
-          [ngStyle]="glowVars(seg)"
+          [attr.d]="frameD(segment.id)"
+          [ngStyle]="glowVars(segment)"
         />
       }
 
@@ -772,17 +772,17 @@
         </g>
       }
 
-      @for (r of subReveal(); track r.skill.connectedPathIds) {
+      @for (reveal of subReveal(); track reveal.skill.connectedPathIds) {
         <g
           [attr.transform]="
-            'translate(' + nodePosition(r.skill).x + ',' + nodePosition(r.skill).y + ')'
+            'translate(' + nodePosition(reveal.skill).x + ',' + nodePosition(reveal.skill).y + ')'
           "
         >
           <image
             class="logo-icons sub-reveal"
-            [ngStyle]="{ '--reveal-delay': r.delay + 's' }"
-            [attr.href]="r.skill.imgSrc"
-            [attr.aria-label]="r.skill.imgAlt"
+            [ngStyle]="{ '--reveal-delay': reveal.delay + 's' }"
+            [attr.href]="reveal.skill.imgSrc"
+            [attr.aria-label]="reveal.skill.imgAlt"
             x="-12"
             y="-12"
             width="24"

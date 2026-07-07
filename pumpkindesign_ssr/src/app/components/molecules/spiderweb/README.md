@@ -1,187 +1,200 @@
-# 🕸️ Spiderweb-Komponente — Erklärung
+# 🕸️ Spiderweb Component — Explained
 
-Diese Doku erklärt, **was wo passiert** in der Spiderweb-Komponente, damit du sie verstehen und
-anpassen kannst. Der Code selbst ist zusätzlich englisch kommentiert — hier ist der zusammenhängende
-Überblick + ein Nachschlagewerk.
-
----
-
-## 1. Was ist das?
-
-Ein interaktives **SVG-Spinnennetz**, in dem Tech-Skills als Icons hängen. Fährst du mit der Maus über
-einen **Haupt-Skill**, „kriecht" eine leuchtende Linie (Glow) **am Netz entlang** zu seinen
-**Subskills**, die sich dabei nacheinander einblenden. Gleichzeitig **wackeln** die Netzstränge leicht,
-als würde man an ihnen zupfen. Alles ohne externe Animations-Library — nur eine kleine Physik-Schleife,
-eine Graphensuche und CSS.
-
-Im Ruhezustand hängen **nur die Haupt-Skills** im Netz (aufgeräumt); die Subskills erscheinen erst beim
-Hover.
+This doc explains **what happens where** in the spiderweb component, so you can understand and adapt
+it. The code itself has short inline comments — this is the connected overview + a reference.
 
 ---
 
-## 2. Dateien im Überblick
+## 1. What is it?
 
-| Datei | Rolle |
+An interactive **SVG spider web** with tech skills hanging in it as icons. When you hover a
+**main skill**, a glowing line (the "glow") **crawls along the web** to its **subskills**, which fade
+in one after another as it arrives. At the same time the strands **wobble** slightly, as if plucked.
+All without an external animation library — just a small physics loop, a graph search, and CSS.
+
+At rest **only the main skills** hang in the web (kept tidy); the subskills appear on hover.
+
+---
+
+## 2. Files at a glance
+
+| File | Role |
 |---|---|
-| [`spiderweb.ts`](./spiderweb.ts) | **Component**: Signals/State, requestAnimationFrame-Loop, Hover → Glow-Berechnung, Reveal der Subskills. |
-| [`spiderweb.html`](./spiderweb.html) | Das **handgezeichnete SVG**: Basis-Netz-Pfade, Glow-Overlay-Layer, Skill-Knoten, Reveal-Loop, Infobox. |
-| [`spiderweb.scss`](./spiderweb.scss) | Styling: blasses Netz, `.glow`, `.glow-line` (Crawl-Keyframe), `.sub-reveal` (Fade-In). |
-| [`spiderweb.config.ts`](./spiderweb.config.ts) | **Reine Geometrie-Daten**: `WOBBLE_THREAD_GEOMETRY`, `CHAIN_GROUPS` (+`sim`), `ROCK_GROUPS`, `PATH_ANCHORS`. |
-| [`spiderweb.routing.ts`](./spiderweb.routing.ts) | **Graph + Dijkstra** (`routeSegments`) — findet den Glow-Pfad durchs Netz. |
-| [`spiderweb.physics.ts`](./spiderweb.physics.ts) | **Feder-Simulation**: `ThreadPendulum`, `ThreadChain`, `RockingChain`, `PinnedChain` + Junction-Kopplung. |
-| [`../../../mapper/spiderweb.mapper.ts`](../../../mapper/spiderweb.mapper.ts) | Wandelt die Strapi-Antwort in `Skill[]` um. |
-| [`../../../interfaces/organism.interface.ts`](../../../interfaces/organism.interface.ts) | Das `Skill`-Interface. |
+| [`spiderweb.ts`](./spiderweb.ts) | **Component**: view & interaction only — signals, hover/click handlers, template helpers. Owns the simulation and calls `buildGlow`. |
+| [`spiderweb.html`](./spiderweb.html) | The **hand-drawn SVG**: base web paths, glow overlay layer, skill nodes, reveal loop, info box. |
+| [`spiderweb.scss`](./spiderweb.scss) | Styling: pale web, `.glow`, `.glow-line` (crawl keyframe), `.sub-reveal` (fade-in). |
+| [`spiderweb.simulation.ts`](./spiderweb.simulation.ts) | **`SpiderWebSimulation`** (Angular-free): physics bodies + requestAnimationFrame loop + kicks; reports frames via the `onFrame` callback. |
+| [`spiderweb.glow.ts`](./spiderweb.glow.ts) | **Glow route building** (pure function `buildGlow`): main → subskills over the graph, as timed `GlowSegment[]` + reveals. |
+| [`spiderweb.config.ts`](./spiderweb.config.ts) | **Pure geometry data**: `WOBBLE_THREAD_GEOMETRY`, `CHAIN_GROUPS` (+`simulationKind`), `ROCK_GROUPS`, `PATH_ANCHORS`. |
+| [`spiderweb.routing.ts`](./spiderweb.routing.ts) | **Graph + Dijkstra** (`routeSegments`) — finds the glow path through the web. |
+| [`spiderweb.physics.ts`](./spiderweb.physics.ts) | **Spring simulation**: `ThreadPendulum`, `RockingChain`, `PinnedChain` + junction coupling. |
+| [`../../../interfaces/spiderweb.interface.ts`](../../../interfaces/spiderweb.interface.ts) | Shared interfaces: `ThreadFrame`, `LinkChain`, `ChainGeometry`, `GlowSegment`, `WebEdge`, `RouteSegment`, … |
+| [`../../../mapper/spiderweb.mapper.ts`](../../../mapper/spiderweb.mapper.ts) | Turns the Strapi response into `Skill[]`. |
+| [`../../../interfaces/organism.interface.ts`](../../../interfaces/organism.interface.ts) | The `Skill` interface. |
 
-**Merksatz zur Trennung:** `config.ts` = *Daten*, `routing.ts` = *Wegfindung*, `physics.ts` = *Bewegung*,
-`spiderweb.ts` = *Orchestrierung*, `.html`/`.scss` = *Darstellung*.
+**Separation in a nutshell:** `config.ts` = *data*, `routing.ts` = *path-finding*, `physics.ts` =
+*motion*, `simulation.ts` = *physics orchestration + loop*, `glow.ts` = *glow routes*, `spiderweb.ts` =
+*view & interaction*, `.html`/`.scss` = *presentation*.
+
+**Simulation ↔ Component:** `SpiderWebSimulation` is Angular-free and owns the requestAnimationFrame
+loop. After each frame it builds **new** frame objects (`threadFrames`/`chainFrames`) and calls the
+`onFrame` callback; the component pushes those into its signals (new reference → change detection
+fires). The component calls `simulation.kick(litPaths)` (from the `effect`) and `simulation.stop()`
+(in `ngOnDestroy`).
 
 ---
 
-## 3. Datenfluss (von Strapi bis zum Icon)
+## 3. Data flow (from Strapi to the icon)
 
 ```
 Strapi                         Angular
 ┌─────────────────────────┐    ┌───────────────────────────────────────────┐
-│ skill-Collection         │    │ router.ts baut Auto-Populate               │
-│ spider_tech_web-Komp.    │──▶ │  /api/page-by-path?path=/                  │
-│  └─ skills[] (Relation)  │    │        │                                   │
+│ skill collection         │    │ router.ts builds auto-populate             │
+│ spider_tech_web comp.    │──▶ │  /api/page-by-path?path=/                  │
+│  └─ skills[] (relation)  │    │        │                                   │
 └─────────────────────────┘    │        ▼                                   │
                                │ mapSpiderwebData()  →  Skill[]             │
                                │        │                                   │
                                │        ▼                                   │
                                │ <lpd-spider-web [skills]="…">              │
-                               │   → rendert Knoten + Glow + Physik         │
+                               │   → renders nodes + glow + physics         │
                                └───────────────────────────────────────────┘
 ```
 
-- **Strapi**: Jeder Skill ist ein Eintrag der `skill`-Collection. Die Startseiten-Komponente
-  `spider_tech_web` hat eine `skills`-Relation — **diese Liste** bestimmt, welche Icons im Netz hängen.
-- **`router.ts`** (Strapi, `src/api/router/controllers/router.ts`) populiert automatisch tief genug,
-  inkl. `logo` und `subskills`.
-- **`mapSpiderwebData`** macht daraus flache `Skill`-Objekte (Position, `connectedPathIds`,
-  `glowPathIds`, verschachtelte `subskills`, Bild-URL).
-- **`SpiderWebComponent`** bekommt das als `skills`-Input und rendert.
+- **Strapi**: each skill is an entry in the `skill` collection. The home-page component
+  `spider_tech_web` has a `skills` relation — **that list** determines which icons hang in the web.
+- **`router.ts`** (Strapi, `src/api/router/controllers/router.ts`) auto-populates deep enough,
+  including `logo` and `subskills`.
+- **`mapSpiderwebData`** turns that into flat `Skill` objects (position, `connectedPathIds`, nested
+  `subskills`, image URL).
+- **`SpiderWebComponent`** receives this as its `skills` input and renders.
 
-> ⚠️ Wichtig: Gerendert wird **ein Knoten pro Top-Level-Skill** in `skills`. Verschachtelte Subskills
-> bekommen **keinen** eigenen Dauer-Knoten — sie erscheinen nur beim Hover ihres Mains (siehe §4c).
+> ⚠️ Important: **one node is rendered per top-level skill** in `skills`. Nested subskills get **no**
+> permanent node of their own — they appear only when their main is hovered (see §4c).
 
 ---
 
-## 4. Die drei Subsysteme
+## 4. The three subsystems
 
-### a) Physik — warum das Netz wackelt · [`spiderweb.physics.ts`](./spiderweb.physics.ts)
+### a) Physics — why the web wobbles · [`spiderweb.physics.ts`](./spiderweb.physics.ts)
 
-Alles basiert auf derselben **gedämpften Feder** (Hooke'sches Gesetz + Reibung), integriert mit
-**semi-impliziter Euler-Methode**:
+Everything is based on the same **damped spring** (Hooke's law + friction), integrated with the
+**semi-implicit Euler method**:
 
 ```
-beschleunigung = -steifigkeit * (x - ruhelage)  -  dämpfung * geschwindigkeit
-geschwindigkeit += beschleunigung * dt      // erst Geschwindigkeit …
-x               += geschwindigkeit * dt      // … dann Position bewegen
+acceleration = -stiffness * (x - rest)  -  damping * velocity
+velocity += acceleration * dt      // velocity first …
+x        += velocity * dt          // … then move the position
 ```
 
-Ein „Kick" gibt Geschwindigkeit rein, die Feder zieht zurück, die Dämpfung nimmt Energie raus → es
-schwingt kurz nach und beruhigt sich. `step()` meldet `false`, sobald die Bewegung unter eine Schwelle
-fällt — dann **schläft** die Animations-Schleife wieder.
+A "kick" injects velocity, the spring pulls back, damping bleeds off energy → it overshoots a little
+and settles. `step()` returns `false` once the motion falls below a threshold — then the animation
+loop **sleeps** again.
 
-**Vier Körper-Typen** (unterscheiden sich nur darin, *was* schwingt):
+**Three body types** (differing only in *what* oscillates):
 
-| Typ | Enden | Bewegung | Wofür |
+| Type | Ends | Motion | Used for |
 |---|---|---|---|
-| `ThreadPendulum` | 1 fix (oben) | Winkel pendelt | die hängenden Icon-Fäden |
-| `ThreadChain` | 1 fix | gekoppelte Glieder, Welle | (aktuell ungenutzt) |
-| `RockingChain` | **beide fix** | nur der Bogen wölbt sich | horizontale Bögen + Verbinder (`sim: 'rock'`) |
-| `PinnedChain` | **beide fix** | zusammenhängende Welle läuft durch | die Radial-Speichen (`sim: 'pinned'`) |
+| `ThreadPendulum` | 1 fixed (top) | angle swings | the hanging icon threads |
+| `RockingChain` | **both fixed** | only the bow bulges | horizontal arcs + connectors (`simulationKind: 'rock'`) |
+| `PinnedChain` | **both fixed** | a coherent wave travels through | the radial spokes (`simulationKind: 'pinned'`) |
 
-- Welcher Typ genutzt wird, entscheidet das **`sim`-Flag** in `CHAIN_GROUPS` (siehe `buildChain()` in
-  [`spiderweb.ts`](./spiderweb.ts)).
-- **`PinnedChain`** beschränkt die Welle auf den **beleuchteten Abschnitt** (die gekickten Segmente) und
-  hält beide Enden fest → die Speiche wackelt nur dort, wo der Glow verläuft, und peitscht nicht am
-  Ast-Ende.
-- **Junction-Kopplung**: Wenn eine `PinnedChain` einen gemeinsamen Knotenpunkt bewegt, folgen die dort
-  andockenden Bögen/Verbinder minimal mit (über `publishShifts` / `junctionShiftAt`), damit nichts
-  optisch abreißt.
-- Die Schleife (`tick`) läuft nur, solange sich etwas bewegt (Performance).
+- Which type is used is decided by the **`simulationKind` flag** in `CHAIN_GROUPS` (see `buildChain()`
+  in [`spiderweb.simulation.ts`](./spiderweb.simulation.ts)).
+- **`PinnedChain`** confines the wave to the **lit run** (the kicked segments) and holds both ends
+  fixed → the spoke wobbles only where the glow runs, and doesn't whip at the branch end.
+- **Junction coupling**: when a `PinnedChain` moves a shared junction point, the arcs/connectors
+  attached there follow it slightly (via `publishShifts` / `junctionShiftAt`), so nothing visually
+  detaches. Order per frame: first all `PinnedChain`s publish their shifts, then the other strands
+  build their frames on top.
+- **`restBow`**: many original paths are real Bézier curves. The resting curvature (`restBows` in
+  `config.ts`) is preserved so a strand looks unchanged at rest; the wave just rides on top.
+- The loop (`tick`, in `simulation.ts`) runs only while something moves (performance) and goes to
+  sleep once every body is below the threshold.
 
-### b) Glow-Routing — der Weg durchs Netz · [`spiderweb.routing.ts`](./spiderweb.routing.ts)
+### b) Glow routing — the path through the web · [`spiderweb.routing.ts`](./spiderweb.routing.ts)
 
-Das Netz wird in einen **Graphen** übersetzt: Kreuzungspunkte = Knoten, Segmente = gewichtete Kanten
-(Gewicht = Pixel-Länge). Knoten-Identität kommt vom **Bucketing** (Runden auf ein 5px-Raster), damit
-zwei Segment-Enden am selben Punkt zu einem Knoten verschmelzen. Thread-Anker werden zusätzlich auf den
-nächsten echten Knoten **gesnappt** (`SNAP_TOL`), falls sie knapp neben einer Rasterlinie liegen.
+The web is translated into a **graph**: crossing points = nodes, segments = weighted edges (weight =
+pixel length). Node identity comes from **bucketing** (rounding to a 5px grid), so two segment ends at
+the same point collapse into one node. Thread anchors are additionally **snapped** to the nearest real
+node (`SNAP_TOL`) in case they sit just next to a grid line.
 
-`routeSegments(main, sub)` läuft dann **Dijkstra** (kürzester Weg) zwischen den beiden Icons. Weil beide
-Icons *draußen* im Netz sitzen (nicht im Zentrum), führt der kürzeste Weg über einen horizontalen Bogen
-statt durchs Zentrum — deshalb trichtert der Glow nicht mehr in die Mitte. Ein kleiner **Zufalls-Jitter**
-(`ROUTE_JITTER`) sorgt dafür, dass fast gleich lange Wege pro Hover leicht variieren.
+`routeSegments(main, sub)` then runs **Dijkstra** (shortest path) between the two icons. Because both
+icons sit *out* in the web (not at the centre), the shortest path hops a horizontal arc instead of
+going through the centre — which is why the glow no longer funnels through the middle. A small
+**random jitter** (`ROUTE_JITTER`) makes near-equal routes vary slightly per hover.
 
-Jede Route liefert die Segmente **in Laufrichtung** mit einem `reversed`-Flag (aus welcher Richtung das
-Segment gezeichnet werden muss). In [`spiderweb.ts`](./spiderweb.ts) wird daraus die **Crawl-Animation**:
-pro Segment `delay` (= Summe der vorherigen Dauern → fließt nacheinander), `dur` (∝ Länge, konstante
-Geschwindigkeit via `GLOW_SPEED`) und `from` (Zeichenrichtung). Gerendert wird als **Overlay-Layer**
-über dem unveränderten Netz, damit das blasse Netz sichtbar bleibt.
+Each route yields its segments **in travel order** with a `reversed` flag (which end the segment must
+be drawn from). In [`spiderweb.glow.ts`](./spiderweb.glow.ts) this becomes the **crawl animation**:
+per segment `delay` (= sum of the preceding durations → flows one after another), `duration` (∝ length,
+constant speed via `GLOW_SPEED`) and `drawDirection`. It's rendered as an **overlay layer** on top of
+the unchanged web, so the pale web stays visible.
 
-### c) Hover-Reveal — Subskills einblenden · [`spiderweb.ts`](./spiderweb.ts) + `.html`/`.scss`
+### c) Hover reveal — showing subskills · [`spiderweb.ts`](./spiderweb.ts) + `.html`/`.scss`
 
-- Beim Hover eines Mains berechnet `buildGlow()` die Routen **und** merkt sich pro Subskill die
-  **Ankunftszeit** des Glows.
-- `onHover` setzt das Signal **`subReveal`** (Liste der Subskills + Delay); der zweite `@for`-Block in
-  [`spiderweb.html`](./spiderweb.html) rendert deren Icons an ihren `connectedPathIds`-Positionen.
-- Das CSS `.sub-reveal` (Keyframe `sub-fade-in`) blendet jedes Icon mit `--reveal-delay` = Ankunftszeit
-  ein → das Icon erscheint genau, wenn der Glow ankommt.
-- `onLeave` leert alles wieder. Die eingeblendeten Subskills sind **reine Anzeige** (kein eigenes
-  Hover); die Infobox zeigt den gehoverten Main.
-
----
-
-## 5. Strapi-Content-Modell — so fügst du Skills hinzu
-
-**Felder eines `skill`:** `name`, `uid` (aus `name`), `logo` (Bild), `position_x`/`position_y`,
-`connectedPathIds` (Hängepunkt), `glowPathIds` (optionaler manueller Glow-Override), Relationen
-`subskills` und `skills`.
-
-**Regeln, damit alles erscheint:**
-1. **Nur Haupt-Skills** in die `skills`-Liste der `spider_tech_web`-Komponente legen.
-2. Die übrigen Skills **nur** als **`subskills`-Relation** an ihren Main hängen — sie erscheinen
-   automatisch beim Hover.
-3. Jeder Skill (Main + Sub) braucht einen **eindeutigen `connectedPathIds`**. Fehlt er, landet der
-   Skill auf dem Default **(185, 183) = Zentrum** und stapelt sich dort mit anderen.
-4. Skills müssen **Published** sein (Drafts liefert die API nicht).
-
-**Verfügbare Hängepunkte (`connectedPathIds`):**
-- 6 hängende Threads für den „baumelnden" Look: `subskill-1` … `subskill-6`.
-- Alle weiteren: Chain-IDs aus `PATH_ANCHORS` (z. B. `top-middle-5`, `right-7`, `bottom-left-third-4`)
-  — diese Icons sitzen direkt auf den Netzlinien.
+- On hovering a main, `buildGlow()` computes the routes **and** records each subskill's **arrival
+  time** of the glow.
+- `onHover` sets the **`subReveal`** signal (list of subskills + delay); the second `@for` block in
+  [`spiderweb.html`](./spiderweb.html) renders their icons at their `connectedPathIds` positions.
+- The CSS `.sub-reveal` (keyframe `sub-fade-in`) fades each icon in with `--reveal-delay` = arrival
+  time → the icon appears exactly when the glow arrives.
+- `onLeave` clears everything again. The revealed subskills are **display only** (no hover of their
+  own); the info box shows the hovered main.
+- **Click/tap pins** (`onSelect`): a click on a main opens the info box **and** keeps the glow up —
+  while the box is open, `onHover`/`onLeave` ignore other skills so the selection isn't disturbed. On
+  touch (no `mouseenter`) the tap is what lights the web in the first place. Clicking the same main
+  again closes the box and clears the glow.
+- **Duplicate-icon guard** (`buildGlow`): if a subskill is itself a main (already hanging as a
+  permanent node in the web), its reveal is skipped — otherwise a second icon would sit on top. Its
+  glow route is still drawn.
 
 ---
 
-## 6. „Wo ändere ich X?" — Schnellreferenz
+## 5. Strapi content model — how to add skills
 
-| Was du willst | Wo | Konstante / Stelle |
+**Fields of a `skill`:** `name`, `uid` (from `name`), `logo` (image), `position_x`/`position_y`,
+`connectedPathIds` (attach point), relations `subskills` and `skills`.
+
+**Rules so everything shows up:**
+1. Put **only main skills** into the `skills` list of the `spider_tech_web` component.
+2. Attach the remaining skills **only** as a **`subskills` relation** on their main — they appear
+   automatically on hover.
+3. Every skill (main + sub) needs a **unique `connectedPathIds`**. If it's missing, the skill lands on
+   the default **(185, 183) = centre** and stacks up there with others.
+4. Skills must be **Published** (the API doesn't return drafts).
+
+**Available attach points (`connectedPathIds`):**
+- 6 hanging threads for the "dangling" look: `subskill-1` … `subskill-6`.
+- All others: chain IDs from `PATH_ANCHORS` (e.g. `top-middle-5`, `right-7`, `bottom-left-third-4`) —
+  these icons sit directly on the web lines.
+
+---
+
+## 6. "Where do I change X?" — quick reference
+
+| What you want | Where | Constant / spot |
 |---|---|---|
-| Radial-Speichen wackeln stärker/schwächer | `spiderweb.ts` | `kickImpulseFor()` (PinnedChain-Zweig) |
-| Wellen-Frequenz / Abklingen der Speichen | `spiderweb.physics.ts` | `STRING_TENSION` / `STRING_DAMPING` |
-| Glow-Kriechgeschwindigkeit | `spiderweb.ts` | `GLOW_SPEED` (px/s), `GLOW_MIN_DUR` |
-| Wie stark die Route zufällig variiert | `spiderweb.routing.ts` | `ROUTE_JITTER` |
-| Glow-Farbe / -Dicke / -Schein | `spiderweb.scss` | `.glow-line` |
-| Einblend-Dauer der Subskills | `spiderweb.scss` | `.sub-reveal` / `@keyframes sub-fade-in` |
-| Icon-Größe / „ins Feld einpassen" | `spiderweb.html` | `<image>` `width`/`height` + `preserveAspectRatio` |
-| Thread-Anker verbindet sich nicht ans Netz | `spiderweb.routing.ts` | `SNAP_TOL` (Snap-Radius) erhöhen |
-| Strang soll fixe Enden statt frei schwingen | `spiderweb.config.ts` | `sim: 'rock'` bzw. `'pinned'` an der Gruppe |
+| Radial spokes wobble more/less | `spiderweb.simulation.ts` | `kickImpulseFor()` (PinnedChain branch) |
+| Wave frequency / decay of the spokes | `spiderweb.physics.ts` | `STRING_TENSION` / `STRING_DAMPING` |
+| Glow crawl speed | `spiderweb.glow.ts` | `GLOW_SPEED` (px/s), `GLOW_MIN_DUR` |
+| How much the route varies randomly | `spiderweb.routing.ts` | `ROUTE_JITTER` |
+| Glow colour / thickness / halo | `spiderweb.scss` | `.glow-line` |
+| Subskill fade-in duration | `spiderweb.scss` | `.sub-reveal` / `@keyframes sub-fade-in` |
+| Icon size / "fit into the field" | `spiderweb.html` | `<image>` `width`/`height` + `preserveAspectRatio` |
+| Thread anchor doesn't connect to the web | `spiderweb.routing.ts` | increase `SNAP_TOL` (snap radius) |
+| Strand should have fixed ends instead of swinging freely | `spiderweb.config.ts` | `simulationKind: 'rock'` or `'pinned'` on the group |
 
 ---
 
-## 7. Glossar
+## 7. Glossary
 
-- **Dijkstra** — klassischer Algorithmus für den *kürzesten Weg* in einem gewichteten Graphen: nimmt
-  immer den nächstgelegenen unbesuchten Knoten und aktualisiert („relaxiert") die Distanzen seiner
-  Nachbarn, bis das Ziel feststeht.
-- **Bucketing** — Koordinaten auf ein Raster runden, damit nahezu gleiche Punkte denselben Schlüssel
-  (= denselben Knoten) bekommen.
-- **Semi-implizite Euler-Integration** — einfaches Zeitschritt-Verfahren: erst die Geschwindigkeit
-  aktualisieren, dann mit der *neuen* Geschwindigkeit die Position — stabiler als „normales" Euler.
-- **Quadratische Bézier** — SVG-Kurve `M sx sy Q cx cy ex ey`: von Start nach Ende, gebogen Richtung
-  eines Kontrollpunkts.
-- **`preserveAspectRatio`** — `meet` = ganzes Bild einpassen (nichts abschneiden, `object-fit: contain`);
-  `slice` = formatfüllend, Überstand abschneiden (`object-fit: cover`).
-```
+- **Dijkstra** — the classic *shortest-path* algorithm on a weighted graph: it always takes the
+  nearest unvisited node and updates ("relaxes") its neighbours' distances, until the goal is settled.
+- **Bucketing** — rounding coordinates onto a grid so that near-identical points get the same key
+  (= the same node).
+- **Semi-implicit Euler integration** — a simple time-step method: update the velocity first, then move
+  the position with the *new* velocity — more stable than "plain" Euler.
+- **Quadratic Bézier** — SVG curve `M sx sy Q cx cy ex ey`: from start to end, bent toward a control
+  point.
+- **`preserveAspectRatio`** — `meet` = fit the whole image (nothing cropped, `object-fit: contain`);
+  `slice` = fill the frame, crop the overflow (`object-fit: cover`).

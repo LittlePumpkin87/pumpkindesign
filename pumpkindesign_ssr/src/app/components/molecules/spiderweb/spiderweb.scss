@@ -55,10 +55,12 @@ path {
 
 .sub-reveal {
   pointer-events: none;
+  z-index: 11;
   animation: sub-fade-in 0.3s ease-out var(--reveal-delay, 0s) both;
 }
 
 .logo-icons {
+  z-index: 12;
   transition: all 300ms ease-in-out;
   &:hover {
     transition: all 300ms ease-in-out;
