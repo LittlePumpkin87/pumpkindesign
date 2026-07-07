@@ -95,7 +95,7 @@ function attachBucket(connectedPathId: string): string | undefined {
   return undefined;
 }
 
-const ROUTE_JITTER = 0.4;
+const ROUTE_JITTER = 2;
 
 export function routeSegments(
   fromId: string,

@@ -1,7 +1,7 @@
 # 🕸️ Spiderweb Component — Explained
 
 This doc explains **what happens where** in the spiderweb component, so you can understand and adapt
-it. The code itself has short inline comments — this is the connected overview + a reference.
+it.
 
 ---
 
