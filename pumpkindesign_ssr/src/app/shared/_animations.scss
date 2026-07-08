@@ -169,7 +169,7 @@
     stroke-dashoffset: var(--glow-from, 1);
   }
   to {
-    stroke-dashoffset: 0;
+    stroke-dashoffset: var(--glow-to, 0);
   }
 }
 

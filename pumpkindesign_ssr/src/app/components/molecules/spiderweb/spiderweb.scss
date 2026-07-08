@@ -2,9 +2,8 @@
 
 .web-container {
   display: block;
-  width: 100%;
+  width: 75%;
   position: relative;
-  margin: 0 auto;
   &::before {
     content: '';
     position: absolute;
@@ -18,9 +17,6 @@
     @include tablet {
       display: block;
     }
-  }
-  @include small-desktop {
-    margin-top: 10rem;
   }
 }
 
@@ -85,17 +81,21 @@ path {
   z-index: 15;
   width: 100%;
   height: fit-content;
-  min-height: 20rem;
-  max-width: 30rem;
+
   padding: 1rem;
+  min-height: 15rem;
+  max-width: 27rem;
   backdrop-filter: blur(0.4rem);
-  transform: translate(2rem, 25rem);
+  transform: translate(6rem, 18rem);
+
   @include border-elipse($accent-blue);
   @include tablet {
     display: block;
   }
   @include medium-desktop {
-    transform: translate(0rem, 15rem);
+    transform: translate(12rem, 20rem);
+    min-height: 20rem;
+    max-width: 30rem;
   }
   .inner-content {
     position: relative;

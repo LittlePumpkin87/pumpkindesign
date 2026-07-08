@@ -61,7 +61,8 @@ export class SpiderWebComponent implements OnDestroy {
     return {
       '--glow-delay': `${segment.delay}s`,
       '--glow-dur': `${segment.duration}s`,
-      '--glow-from': `${segment.drawDirection}`,
+      '--glow-from': '1',
+      '--glow-to': `${segment.drawDirection === -1 ? 2 : 0}`,
     };
   }
 
