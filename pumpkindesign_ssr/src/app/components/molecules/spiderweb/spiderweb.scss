@@ -2,7 +2,6 @@
 
 .web-container {
   display: block;
-  width: 75%;
   position: relative;
   &::before {
     content: '';
@@ -17,6 +16,9 @@
     @include tablet {
       display: block;
     }
+  }
+  @include tablet {
+    width: 75%;
   }
 }
 
