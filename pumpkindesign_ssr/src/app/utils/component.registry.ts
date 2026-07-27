@@ -4,6 +4,7 @@ import { CardsComponent } from '../components/molecules/cards/cards.component';
 import { TextImage } from '../components/organisms/text-image/text-image';
 import { Alertbanner } from '../components/organisms/alertbanner/alertbanner';
 import { SpiderWebComponent } from '../components/molecules/spiderweb/spiderweb';
+import { TimelineComponent } from '../components/organisms/timeline/timeline.component';
 
 interface ComponentConfig {
   tagName: string;
@@ -32,5 +33,9 @@ export const COMPONENT_REGISTRY: Record<string, ComponentConfig> = {
   'organisms.spider-tech-web': {
     tagName: 'lpd-spider-web',
     component: SpiderWebComponent,
+  },
+  'organisms.timeline': {
+    tagName: 'lpd-timeline',
+    component: TimelineComponent,
   },
 };

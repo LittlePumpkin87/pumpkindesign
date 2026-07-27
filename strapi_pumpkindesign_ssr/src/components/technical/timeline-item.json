@@ -8,6 +8,9 @@
     "headline": {
       "type": "string"
     },
+    "period": {
+      "type": "string"
+    },
     "short_description": {
       "type": "text"
     },

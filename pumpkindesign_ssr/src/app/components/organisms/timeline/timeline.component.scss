@@ -1,98 +1,92 @@
 @use '../../../shared/' as *;
 
+$rail-x: 0.6rem; // Mitte der Linie, gemessen vom linken Rand der Liste
+$marker-size: 1.4rem;
+
 .timeline {
-  @include flex(column, center);
-  text-align: center;
   position: relative;
-  &::after {
-    z-index: -1;
-    content: "";
-    @include border-open($accent-blue);
+  padding-left: $layout-01;
+
+  // durchgehende Linie
+  &::before {
+    content: '';
     position: absolute;
-    width: 0.5rem;
-    background-color: $accent-orange;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    margin-left: -0.2rem;
-  }
-  h2 {
-    margin: 0;
-  }
-  h1 {
-    position: relative;
+    left: $rail-x;
+    top: $spacing-02;
+    bottom: $spacing-02;
+    width: 2px;
+    background-color: $accent-green;
   }
 }
 
-.box {
-  -webkit-animation: slide-in 400ms both;
-  animation: slide-in 400ms both;
-  -webkit-filter: $shadow-subtle;
-  filter: $shadow-subtle;
-  width: 30%;
-  @include flex(row, center, flex-start);
+.timeline-item {
   position: relative;
-  &::after {
-    content: "";
-    position: absolute;
-    right: -1rem;
-    z-index: 2;
-    background-color: $accent-green;
-    height: 2rem;
-    width: 3rem;
-  }
-  &.left {
-    left: -17%;
-    &::after {
-      right: -3rem;
+  padding-bottom: $layout-01;
 
-      @include border-open-drop($accent-orange);
-    }
+  &:last-child {
+    padding-bottom: 0;
   }
-  &.right {
-    left: 17%;
-    &::after {
-      left: -3rem;
-      @include border-open-drop-right($accent-orange);
-    }
+
+  // Keimling auf der Linie, deckt sie mit dem Seitenhintergrund ab
+  &::before {
+    content: '\f4d8';
+    font-family: 'Font Awesome 7 Solid', sans-serif;
+    font-weight: 900;
+    position: absolute;
+    left: calc(#{$rail-x} - #{$marker-size} / 2 - #{$layout-01});
+    top: 0;
+    width: $marker-size;
+    color: $accent-green;
+    background-color: $background-grey;
+    text-align: center;
+    line-height: 1.4;
   }
 }
 
 .content {
-  cursor: pointer;
-  -webkit-animation: pop-up-down 400ms both;
-  animation: pop-up-down 400ms both;
-  &:hover {
-    -webkit-animation: pop-up-top 400ms both;
-    animation: pop-up-top 400ms both;
-  }
-  &.right {
-    background-color: $accent-green;
-    padding: 0.3rem;
-    width: 100%;
-    @include border-elipse($accent-orange);
-  }
-  &.left {
-    background-color: $accent-green;
-    padding: 0.3rem;
-    @include border-elipse-flip($accent-orange);
-    width: 100%;
-  }
+  @include flex(column, flex-start, stretch, nowrap);
+  gap: $spacing-02;
+}
+
+.period {
+  @include typography-xs;
+  color: $accent-orange;
+  font-family: 'Signika Negative SemiBold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.headline {
+  margin: 0;
+}
+
+.short-description {
+  @include typography-s;
+  margin: 0;
 }
 
 .details {
-  &.right {
-    padding: 1rem;
-    background-color: $accent-green;
-    border-radius: 1rem;
-    -webkit-animation: Grow 1000ms both;
-    animation: Grow 1000ms both;
+  @include typography-s;
+
+  p {
+    margin: 0 0 $spacing-03;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
-  &.left {
-    padding: 1rem;
-    background-color: $accent-green;
-    border-radius: 1rem;
-    -webkit-animation: GrowLeft 1000ms both;
-    animation: GrowLeft 1000ms both;
+
+  // Platz für die Listen-Icons, die global mit left: -2rem sitzen
+  ul,
+  ol {
+    padding-left: $spacing-05;
+  }
+}
+
+@include tablet {
+  .timeline {
+    padding-left: $layout-02;
+  }
+
+  .timeline-item::before {
+    left: calc(#{$rail-x} - #{$marker-size} / 2 - #{$layout-02});
   }
 }

@@ -26,6 +26,13 @@ export interface FooterItem {
   footnote: string;
 }
 
+export interface TimelineItem {
+  headline: string;
+  period?: string;
+  shortDescription?: string;
+  longDescriptionHtml: string;
+}
+
 export interface Skill {
   imgSrc?: string;
   imgAlt?: string;

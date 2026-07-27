@@ -304,6 +304,7 @@ export interface TechnicalTimelineItem extends Struct.ComponentSchema {
   attributes: {
     headline: Schema.Attribute.String;
     long_description: Schema.Attribute.Blocks;
+    period: Schema.Attribute.String;
     short_description: Schema.Attribute.Text;
   };
 }
