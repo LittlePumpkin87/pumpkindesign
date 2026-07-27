@@ -27,6 +27,8 @@ main {
       max-width: 90vw;
       @include small-desktop {
         max-width: 70vw;
+        gap: 6rem;
+        padding: 6rem 0;
       }
       @include huge-desktop {
         max-width: 120rem;
