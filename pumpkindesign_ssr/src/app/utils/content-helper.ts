@@ -220,19 +220,23 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
       break;
 
     case 'phone':
-      result = {
-        href: `tel:${rawLink.replaceAll(/\s/g, '')}`,
-        isInternal: false,
-        isExternal: false,
-      };
+      if (typeof rawLink === 'string' && rawLink.trim() !== '') {
+        result = {
+          href: `tel:${rawLink.replaceAll(/\s/g, '')}`,
+          isInternal: false,
+          isExternal: false,
+        };
+      }
       break;
 
     case 'email':
-      result = {
-        href: `mailto:${rawLink}`,
-        isInternal: false,
-        isExternal: false,
-      };
+      if (typeof rawLink === 'string' && rawLink.trim() !== '') {
+        result = {
+          href: `mailto:${rawLink.trim()}`,
+          isInternal: false,
+          isExternal: false,
+        };
+      }
       break;
   }
   return result;
@@ -260,7 +264,7 @@ const mapSingleLink = (item: any) => {
 
   if (!dataNode) return undefined;
 
-  const rawLink = dataNode.link || dataNode.url || dataNode.page || dataNode.path || dataNode;
+  const rawLink = dataNode.link || dataNode.url || dataNode.page || dataNode.path || dataNode.phone_number || dataNode.email || dataNode;
 
   if (!rawLink) return undefined;
 
