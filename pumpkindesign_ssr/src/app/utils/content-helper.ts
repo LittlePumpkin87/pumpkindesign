@@ -242,6 +242,17 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
   return result;
 };
 
+// Notnagel fuer Icon-Links ohne gepflegtes Label: Sie zeigen nur ein
+// dekoratives Icon, haetten also sonst gar keinen zugaenglichen Namen.
+const deriveLabelFromHref = (href?: string): string | undefined => {
+  if (!href) return undefined;
+  const hostname = getHostname(href);
+  if (hostname) {
+    return hostname.replace(/^www\./, '');
+  }
+  return href.replace(/^\//, '') || undefined;
+};
+
 // --- LINK MAPPING ---
 
 const mapSingleLink = (item: any) => {
@@ -284,7 +295,12 @@ const mapSingleLink = (item: any) => {
   }
 
   const finalMappedLink = {
-    label: targetData.label || dataNode.label || dataNode.linkText || item.title,
+    label:
+      targetData.label ||
+      dataNode.label ||
+      dataNode.linkText ||
+      item.title ||
+      deriveLabelFromHref(targetData.href),
     href: targetData.href,
     isExternal: targetData.isExternal,
     isInternal: targetData.isInternal,

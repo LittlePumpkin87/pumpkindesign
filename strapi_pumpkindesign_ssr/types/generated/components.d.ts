@@ -254,6 +254,7 @@ export interface TechnicalIconLink extends Struct.ComponentSchema {
   };
   attributes: {
     icon: Schema.Attribute.Component<'technical.icon', false>;
+    label: Schema.Attribute.String;
     link_style: Schema.Attribute.String & Schema.Attribute.DefaultTo<'icon'>;
     page: Schema.Attribute.Relation<'oneToOne', 'api::page.page'>;
     type: Schema.Attribute.Enumeration<['internal', 'external']>;

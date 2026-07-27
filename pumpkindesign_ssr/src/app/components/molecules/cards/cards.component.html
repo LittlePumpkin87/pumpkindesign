@@ -60,7 +60,7 @@
           <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
         }
         <span class="card-date">{{ card.date }}</span>
-        <h6 class="card-subline">{{ card.subline }}</h6>
+        <p class="card-subline">{{ card.subline }}</p>
         <h4 class="card-headline">{{ card.headline }}</h4>
         <div class="card-text" [innerHTML]="card.text"></div>
         @if (card.cta) {

@@ -7,6 +7,8 @@
     [routerLink]="item()?.href"
     [fragment]="item()?.fragment"
     [target]="'_self'"
+    [attr.aria-label]="item()?.link_style === 'icon' ? item()?.label : null"
+    [attr.title]="item()?.link_style === 'icon' ? item()?.label : null"
   >
     @if (item()?.icon?.name && item()?.icon_position === 'left' && item()?.link_style !== 'icon') {
       <lpd-icon
@@ -42,6 +44,9 @@
     ]"
     [attr.href]="item()?.href"
     [target]="'_blank'"
+    rel="noopener noreferrer"
+    [attr.aria-label]="item()?.link_style === 'icon' ? item()?.label : null"
+    [attr.title]="item()?.link_style === 'icon' ? item()?.label : null"
   >
     @if (item()?.icon?.name && item()?.icon_position === 'left' && item()?.link_style !== 'icon') {
       <lpd-icon

@@ -5,6 +5,9 @@
   },
   "options": {},
   "attributes": {
+    "label": {
+      "type": "string"
+    },
     "icon": {
       "type": "component",
       "component": "technical.icon",

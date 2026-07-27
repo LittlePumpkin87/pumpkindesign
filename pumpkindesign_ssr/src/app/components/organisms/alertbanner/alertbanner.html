@@ -8,9 +8,9 @@
   <div class="text">
     <h4 class="headline">{{ item()?.headline }}</h4>
     <div [innerHTML]="item()?.description"></div>
-    <lpd-link [item]="item()?.cta" ></lpd-link>
+    <lpd-link [item]="item()?.cta"></lpd-link>
   </div>
-  <button (click)="close()">
+  <button aria-label="Alertbanner schließen" (click)="close()">
     <lpd-icon
       class="icon"
       [iconName]="'xmark'"
