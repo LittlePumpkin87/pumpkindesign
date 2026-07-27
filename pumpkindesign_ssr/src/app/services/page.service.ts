@@ -73,7 +73,10 @@ export class PageService {
         }
         return page;
       }),
-      tap((mapped) => this.seoService.updateSeoTags(mapped)),
+      tap((mapped) => {
+        this.seoService.updateSeoTags(mapped);
+        this.seoService.setCanonicalUrl(path ? `/${path}` : '/');
+      }),
     );
   }
 }

@@ -16,6 +16,7 @@ const app = express();
 const allowedHosts = environment.ALLOWED_HOSTS;
 const angularApp = new AngularNodeAppEngine({
   allowedHosts: allowedHosts,
+  trustProxyHeaders: ['x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-for'],
 });
 app.use(
   express.static(browserDistFolder, {
