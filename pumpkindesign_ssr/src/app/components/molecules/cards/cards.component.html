@@ -16,6 +16,22 @@
         <div [innerHTML]="card.text"></div>
       </a>
     }
+    @if (card.variant === 'contact') {
+      @if (!card.icon_variant) {
+        <img class="card-image" [src]="card.imgSrc" [alt]="card.imgAlt" />
+      }
+      @if (card.icon_variant) {
+        <a class="card contact" [href]="card.cta?.href">
+          <h4 class="card-headline">{{ card.headline }}</h4>
+          <lpd-icon
+            [iconName]="card.icon?.name"
+            [color]="card.icon?.color"
+            [iconPrefix]="card.icon?.prefix || 'far'"
+          ></lpd-icon>
+          {{ card.cta?.label }}
+        </a>
+      }
+    }
     @if (card.variant === 'reference') {
       <div class="card reference">
         @if (!card.icon_variant) {
