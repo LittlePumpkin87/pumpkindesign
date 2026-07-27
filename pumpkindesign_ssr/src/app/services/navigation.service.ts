@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { shareReplay, map, filter, tap, catchError } from 'rxjs/operators';
 import { Router, Scroll } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { API_BASE } from '../utils/api-base.token';
 import { mapHeaderData, mapStrapiNavigation } from '../mapper/navigation.mapper';
 import { SeoService } from './seo.service';
 import { of } from 'rxjs';
@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 export class NavigationService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly API_URL = environment.API_URL;
+  private readonly API_URL = inject(API_BASE);
   private readonly seoService = inject(SeoService);
 
   private readonly _navLoaded = signal(false);

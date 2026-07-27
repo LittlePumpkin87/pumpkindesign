@@ -11,7 +11,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { API_BASE } from '../utils/api-base.token';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, UrlSegment } from '@angular/router';
 import { ContentService } from './content.service';
@@ -22,7 +22,7 @@ import { SeoService } from './seo.service';
 @Injectable({ providedIn: 'root' })
 export class PageService {
   private readonly http = inject(HttpClient);
-  private readonly API_URL = environment.API_URL;
+  private readonly API_URL = inject(API_BASE);
   private readonly router = inject(Router);
   private readonly contentService = inject(ContentService);
   private readonly seoService = inject(SeoService);

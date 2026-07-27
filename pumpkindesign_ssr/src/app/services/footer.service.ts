@@ -4,14 +4,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { shareReplay, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { environment } from '../../environments/environment';
+import { API_BASE } from '../utils/api-base.token';
 import { mapFooterData } from '../mapper/footer.mapper';
 import { FooterItem } from '../interfaces/organism.interface';
 
 @Injectable({ providedIn: 'root' })
 export class FooterService {
   private readonly http = inject(HttpClient);
-  private readonly API_URL = environment.API_URL;
+  private readonly API_URL = inject(API_BASE);
 
   private readonly footerRequest$ = this.http.get<any>(`${this.API_URL}/foot`).pipe(
     map((data) => {
