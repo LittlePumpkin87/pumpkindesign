@@ -1,13 +1,11 @@
 @use '../../../shared/' as *;
 
-$rail-x: 0.6rem; // Mitte der Linie, gemessen vom linken Rand der Liste
+$rail-x: 0.6rem;
 $marker-size: 1.4rem;
 
 .timeline {
   position: relative;
   padding-left: $layout-01;
-
-  // durchgehende Linie
   &::before {
     content: '';
     position: absolute;
@@ -27,7 +25,6 @@ $marker-size: 1.4rem;
     padding-bottom: 0;
   }
 
-  // Keimling auf der Linie, deckt sie mit dem Seitenhintergrund ab
   &::before {
     content: '\f4d8';
     font-family: 'Font Awesome 7 Solid', sans-serif;
@@ -59,13 +56,13 @@ $marker-size: 1.4rem;
 }
 
 .short-description {
-  @include typography-s;
+  @include typography-xs;
   margin: 0;
+  color: rgba($text-white, 0.75);
 }
 
 .details {
   @include typography-s;
-
   p {
     margin: 0 0 $spacing-03;
 
@@ -74,7 +71,6 @@ $marker-size: 1.4rem;
     }
   }
 
-  // Platz für die Listen-Icons, die global mit left: -2rem sitzen
   ul,
   ol {
     padding-left: $spacing-05;
