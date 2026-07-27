@@ -83,6 +83,20 @@ ul,
 ol {
   list-style: none;
   margin: 0;
+  li {
+    position: relative;
+    margin-bottom: 0.25rem;
+    &::before {
+      font-family: 'Font Awesome 7 Solid';
+      content: '\f4d8';
+      font-weight: 900;
+      position: absolute;
+      top: 0.25em;
+      color: $accent-green;
+      left: -2rem;
+      background-repeat: no-repeat;
+    }
+  }
 }
 
 // Typography Standards
