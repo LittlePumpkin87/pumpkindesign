@@ -25,6 +25,8 @@ export interface NavigationItem {
 export interface HeaderData {
   logo: string | undefined;
   logoAlt: string;
+  logoWidth?: number;
+  logoHeight?: number;
   favicon: string | undefined;
   seo_title?: string;
   seo_description?: string;

@@ -1,5 +1,5 @@
 import { HeaderData, NavigationItem } from '../interfaces/atom.interface';
-import { getImageUrl } from '../utils/content-helper';
+import { getImageDimensions, getImageUrl } from '../utils/content-helper';
 
 export function mapStrapiNavigation(rawData: any[]): NavigationItem[] {
   if (!rawData || !Array.isArray(rawData)) return [];
@@ -46,6 +46,8 @@ export function mapHeaderData(rawData: any): { item: HeaderData } | undefined {
     item: {
       logo: getImageUrl(data.logo),
       logoAlt: data.logo.alternativeText,
+      logoWidth: getImageDimensions(data.logo).width,
+      logoHeight: getImageDimensions(data.logo).height,
       favicon: getImageUrl(data.favicon),
       meta_robots: data.meta_robots,
       seo_image: getImageUrl(data.seo_image),

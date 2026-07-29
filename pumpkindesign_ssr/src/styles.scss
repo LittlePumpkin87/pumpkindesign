@@ -173,6 +173,16 @@ li {
   }
 }
 
+.logo-loader-inline {
+  position: fixed;
+  inset: 0;
+  background-color: $background-grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 998;
+}
+
 .animated-logo {
   width: 120px;
   height: auto;

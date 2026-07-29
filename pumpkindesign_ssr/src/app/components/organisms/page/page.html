@@ -4,23 +4,29 @@
   </header>
 }
 
+@if (page()?.alertbanner) {
+  <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
+}
+<main>
+  <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
+
+  @if (page()?.main_text) {
+    <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
+  }
+
+  <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
+</main>
+
 @if (pageService.isLoading()) {
   <div class="logo-loader-inline" id="logo-loader-overlay">
-    <img src="logo.png" alt="loading page content..." class="animated-logo" />
+    <img
+      src="logo.png"
+      alt="loading page content..."
+      class="animated-logo"
+      width="490"
+      height="490"
+    />
   </div>
-} @else {
-  @if (page()?.alertbanner) {
-    <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
-  }
-  <main>
-    <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
-
-    @if (page()?.main_text) {
-      <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
-    }
-
-    <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
-  </main>
 }
 @if (footerData()) {
   <footer>

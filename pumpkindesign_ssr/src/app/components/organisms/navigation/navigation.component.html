@@ -1,7 +1,12 @@
 <nav id="MobileNav">
   @if (logoData()?.item?.logo) {
     <a class="logo" href="/" aria-label="zurück zur Startseite">
-      <img [src]="logoData()?.item?.logo" [alt]="logoData()?.item?.logoAlt" />
+      <img
+        [src]="logoData()?.item?.logo"
+        [alt]="logoData()?.item?.logoAlt"
+        [attr.width]="logoData()?.item?.logoWidth"
+        [attr.height]="logoData()?.item?.logoHeight"
+      />
     </a>
   }
   <span id="close"></span>
