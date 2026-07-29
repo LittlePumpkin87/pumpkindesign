@@ -33,6 +33,11 @@ jobs:
           docker build -t ghcr.io/littlepumpkin87/pumpkin-strapi:latest -f ./strapi_pumpkindesign_ssr/Dockerfile.prod ./strapi_pumpkindesign_ssr
           docker push ghcr.io/littlepumpkin87/pumpkin-strapi:latest
 
+      - name: Build and Push Pumpkin API
+        run: |
+          docker build -t ghcr.io/littlepumpkin87/pumpkin-api:latest -f ./pumpkin_api/Dockerfile.prod ./pumpkin_api
+          docker push ghcr.io/littlepumpkin87/pumpkin-api:latest
+
   deploy-nas:
     name: Deploy to Synology NAS
     needs: build-images
@@ -69,6 +74,7 @@ jobs:
           JWT_SECRET: ${{secrets.JWT_SECRET}}
           IMAGE_PATH: ${{secrets.IMAGE_PATH}}
           BACKUP_PATH: ${{secrets.BACKUP_PATH}}
+          STRAPI_WEBHOOK_SECRET: ${{secrets.STRAPI_WEBHOOK_SECRET}}
         run: |
           docker compose -f docker-compose.yml pull
           docker compose -f docker-compose.yml up -d
