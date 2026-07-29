@@ -13,7 +13,13 @@
     </div>
 
     @if (data.imgSrc) {
-      <img class="image" [src]="data.imgSrc" [alt]="data.imgAlt || ''" />
+      <img
+        class="image"
+        [src]="data.imgSrc"
+        [alt]="data.imgAlt || ''"
+        [attr.width]="data.imgWidth"
+        [attr.height]="data.imgHeight"
+      />
     }
 
     <div class="column left">

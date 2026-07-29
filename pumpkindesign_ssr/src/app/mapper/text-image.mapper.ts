@@ -1,5 +1,10 @@
 import { TextImageItem } from '../interfaces/organism.interface';
-import { getImageUrl, mapCtaArray, serializeRichText } from '../utils/content-helper';
+import {
+  getImageDimensions,
+  getImageUrl,
+  mapCtaArray,
+  serializeRichText,
+} from '../utils/content-helper';
 
 export const mapTextImageData = (rawData: any): { item: TextImageItem } | undefined | null => {
   if (!rawData) {
@@ -16,6 +21,8 @@ export const mapTextImageData = (rawData: any): { item: TextImageItem } | undefi
       cta: mapCtaArray(rawData.cta),
       imgSrc: getImageUrl(rawData?.image),
       imgAlt: rawData?.image?.alternativeText || '',
+      imgWidth: getImageDimensions(rawData?.image).width,
+      imgHeight: getImageDimensions(rawData?.image).height,
     },
   };
 };

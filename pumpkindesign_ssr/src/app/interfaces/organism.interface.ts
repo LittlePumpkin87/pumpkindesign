@@ -3,6 +3,9 @@ import { CTA, Icon } from './atom.interface';
 export interface TextImageItem {
   imgSrc?: string;
   imgAlt?: string;
+  /** Intrinsic pixel size, rendered as width/height so the browser can reserve space. */
+  imgWidth?: number;
+  imgHeight?: number;
   cta: CTA[];
   text: string;
   headline: string;
@@ -23,6 +26,8 @@ export interface FooterItem {
   socialCta: CTA[];
   imgSrc?: string;
   imgAlt?: string;
+  imgWidth?: number;
+  imgHeight?: number;
   footnote: string;
 }
 

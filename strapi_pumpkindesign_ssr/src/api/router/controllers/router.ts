@@ -81,6 +81,8 @@ function cleanData(data: any, isRoot = true): any {
         alternativeText: data.alternativeText || "",
         ext: data.ext,
         size: data.size,
+        width: data.width,
+        height: data.height,
       };
     }
     if (!isRoot && data.path && data.documentId && data.seo_title !== undefined) {

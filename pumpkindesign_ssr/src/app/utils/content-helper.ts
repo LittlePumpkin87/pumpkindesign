@@ -18,6 +18,15 @@ export const getImageUrl = (imageData: any): string | undefined => {
   return `http://localhost:6466${url}`;
 };
 
+export const getImageDimensions = (
+  imageData: any,
+): { width?: number; height?: number } => {
+  if (typeof imageData?.width !== 'number' || typeof imageData?.height !== 'number') {
+    return {};
+  }
+  return { width: imageData.width, height: imageData.height };
+};
+
 export const getIconData = (iconData: any): Icon | undefined => {
   if (!iconData?.name) {
     return undefined;
@@ -242,8 +251,6 @@ const resolveLinkTarget = (linktype: string, rawLink: any) => {
   return result;
 };
 
-// Notnagel fuer Icon-Links ohne gepflegtes Label: Sie zeigen nur ein
-// dekoratives Icon, haetten also sonst gar keinen zugaenglichen Namen.
 const deriveLabelFromHref = (href?: string): string | undefined => {
   if (!href) return undefined;
   const hostname = getHostname(href);

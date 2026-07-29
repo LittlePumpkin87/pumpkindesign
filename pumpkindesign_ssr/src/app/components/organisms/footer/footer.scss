@@ -18,6 +18,8 @@
   grid-column: 1/4;
   grid-row: 3;
   object-fit: contain;
+  height: auto;
+  max-width: 100%;
   @include mobile-medium {
     grid-row: 1;
     grid-column: 2;
