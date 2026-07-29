@@ -17,7 +17,34 @@ services:
       - NODE_ENV=development
       - PORT=4200
       - WATCHPACK_POLLING=true
+      # Overrides BASE_PATH_STRAPI from .env so the SSR proxy goes through the
+      # cache service. Set to http://strapi:6466 to bypass it.
+      - BASE_PATH_STRAPI=http://pumpkin_api:3000
     command: npm run start
+    networks:
+      - strapi_net
+    depends_on:
+      - pumpkin_api
+
+  # --- PUMPKIN API (DEV) ---
+  pumpkin_api:
+    container_name: pumpkin_api_dev
+    build:
+      context: ./pumpkin_api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./pumpkin_api:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - BASE_PATH_STRAPI=http://strapi:6466
+    # Published in dev so the endpoints can be curled directly.
+    ports:
+      - "3000:3000"
     networks:
       - strapi_net
     depends_on:
