@@ -1,0 +1,9 @@
+{
+  // Use the TypeScript version from node_modules (5.9.x), not the newer one
+  // bundled with VS Code. Without this the editor reports deprecations from a
+  // TypeScript 6/7 preview and suggests `"ignoreDeprecations": "6.0"` — a value
+  // that 5.9 rejects with `error TS5103`, which breaks the Docker build.
+  // After changing this: "TypeScript: Select TypeScript Version" -> "Use Workspace Version".
+  "typescript.tsdk": "pumpkin_api/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
