@@ -5,8 +5,47 @@ on:
     branches: ["main"]
 
 jobs:
+  changes:
+    name: Detect changed projects
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      strapi: ${{ steps.filter.outputs.strapi }}
+      api: ${{ steps.filter.outputs.api }}
+      compose: ${{ steps.filter.outputs.compose }}
+      nginx: ${{ steps.filter.outputs.nginx }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Filter changed paths
+        uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'pumpkindesign_ssr/**'
+            strapi:
+              - 'strapi_pumpkindesign_ssr/**'
+            api:
+              - 'pumpkin_api/**'
+            compose:
+              - 'docker-compose.yml'
+            nginx:
+              - 'nginx.conf'
+
   build-images:
     name: Build on GitHub Cloud
+    needs: changes
+    if: >-
+      needs.changes.outputs.frontend == 'true' ||
+      needs.changes.outputs.strapi == 'true' ||
+      needs.changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,30 +63,39 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and Push Angular
+        if: needs.changes.outputs.frontend == 'true'
         run: |
           docker build -t ghcr.io/littlepumpkin87/pumpkin-frontend:latest -f ./pumpkindesign_ssr/Dockerfile.prod ./pumpkindesign_ssr
           docker push ghcr.io/littlepumpkin87/pumpkin-frontend:latest
 
       - name: Build and Push Strapi
+        if: needs.changes.outputs.strapi == 'true'
         run: |
           docker build -t ghcr.io/littlepumpkin87/pumpkin-strapi:latest -f ./strapi_pumpkindesign_ssr/Dockerfile.prod ./strapi_pumpkindesign_ssr
           docker push ghcr.io/littlepumpkin87/pumpkin-strapi:latest
 
       - name: Build and Push Pumpkin API
+        if: needs.changes.outputs.api == 'true'
         run: |
           docker build -t ghcr.io/littlepumpkin87/pumpkin-api:latest -f ./pumpkin_api/Dockerfile.prod ./pumpkin_api
           docker push ghcr.io/littlepumpkin87/pumpkin-api:latest
 
   deploy-nas:
     name: Deploy to Synology NAS
-    needs: build-images
+    needs: [changes, build-images]
+    if: >-
+      !cancelled() && needs.build-images.result != 'failure' &&
+      (needs.changes.outputs.frontend == 'true' ||
+       needs.changes.outputs.strapi == 'true' ||
+       needs.changes.outputs.api == 'true' ||
+       needs.changes.outputs.compose == 'true' ||
+       needs.changes.outputs.nginx == 'true')
     runs-on: self-hosted
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # NEU: Der offizielle und sichere Docker-Login für deine Synology NAS
       - name: Log in to the Container registry on NAS
         uses: docker/login-action@v3
         with:
@@ -57,6 +105,11 @@ jobs:
 
       - name: Pull and Deploy via Docker Compose
         env:
+          FRONTEND_CHANGED: ${{ needs.changes.outputs.frontend }}
+          STRAPI_CHANGED: ${{ needs.changes.outputs.strapi }}
+          API_CHANGED: ${{ needs.changes.outputs.api }}
+          COMPOSE_CHANGED: ${{ needs.changes.outputs.compose }}
+          NGINX_CHANGED: ${{ needs.changes.outputs.nginx }}
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
@@ -76,6 +129,49 @@ jobs:
           BACKUP_PATH: ${{secrets.BACKUP_PATH}}
           STRAPI_WEBHOOK_SECRET: ${{secrets.STRAPI_WEBHOOK_SECRET}}
         run: |
-          docker compose -f docker-compose.yml pull
-          docker compose -f docker-compose.yml up -d
+          # --- nginx.conf abgleichen ---------------------------------------
+          # Dieser Runner laeuft selbst in einem Container und mountet nur
+          # /var/run/docker.sock. Sein Checkout-Verzeichnis existiert damit
+          # ausschliesslich im Runner-Container -- der Docker-Daemon auf dem
+          # Host sieht es nicht. Ein relativer Bind-Mount wuerde deshalb
+          # kommentarlos ein leeres Verzeichnis anlegen und nginx lahmlegen.
+          # Die Datei wird daher per stdin in einen Helfer-Container gereicht,
+          # der den echten Host-Pfad ${CONFIG_PATH} gemountet hat.
+          if [ "$NGINX_CHANGED" = "true" ]; then
+            echo "nginx.conf geaendert -> pruefen, uebertragen, neu laden"
+
+            # Erst im laufenden nginx gegenpruefen (dort liegen die Zertifikate),
+            # damit eine fehlerhafte Config den Proxy gar nicht erst erreicht.
+            docker exec -i nginx_proxy sh -c 'cat > /tmp/nginx.new.conf' < nginx.conf
+            docker exec nginx_proxy nginx -t -c /tmp/nginx.new.conf
+
+            docker run --rm -i --entrypoint sh \
+              -v "$CONFIG_PATH":/nginx.conf nginx:alpine -c 'cat > /nginx.conf' < nginx.conf
+
+            # reload statt restart: nginx uebernimmt die Config ohne Ausfall.
+            docker exec nginx_proxy nginx -s reload
+          fi
+
+          SERVICES=""
+          if [ "$FRONTEND_CHANGED" = "true" ]; then SERVICES="$SERVICES angular_frontend"; fi
+          if [ "$STRAPI_CHANGED" = "true" ]; then SERVICES="$SERVICES strapi"; fi
+          if [ "$API_CHANGED" = "true" ]; then SERVICES="$SERVICES pumpkin_api"; fi
+
+          if [ "$COMPOSE_CHANGED" = "true" ]; then
+            # Compose-Datei selbst geaendert -> ganzer Stack, damit auch reine
+            # Config-Aenderungen (Env, Volumes, Ports) uebernommen werden.
+            echo "docker-compose.yml geaendert -> vollstaendiges Deployment"
+            docker compose -f docker-compose.yml pull
+            docker compose -f docker-compose.yml up -d
+          elif [ -n "$SERVICES" ]; then
+            # Nur die geaenderten Services anfassen. --no-deps verhindert, dass
+            # compose die depends_on-Kette mitzieht; alle Services haben
+            # restart: unless-stopped und laufen ohnehin.
+            echo "Deployment fuer:$SERVICES"
+            docker compose -f docker-compose.yml pull $SERVICES
+            docker compose -f docker-compose.yml up -d --no-deps $SERVICES
+          else
+            echo "Nichts zu deployen."
+          fi
+
           docker image prune -f
