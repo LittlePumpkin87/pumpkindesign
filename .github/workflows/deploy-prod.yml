@@ -129,26 +129,15 @@ jobs:
           BACKUP_PATH: ${{secrets.BACKUP_PATH}}
           STRAPI_WEBHOOK_SECRET: ${{secrets.STRAPI_WEBHOOK_SECRET}}
         run: |
-          # --- nginx.conf abgleichen ---------------------------------------
-          # Dieser Runner laeuft selbst in einem Container und mountet nur
-          # /var/run/docker.sock. Sein Checkout-Verzeichnis existiert damit
-          # ausschliesslich im Runner-Container -- der Docker-Daemon auf dem
-          # Host sieht es nicht. Ein relativer Bind-Mount wuerde deshalb
-          # kommentarlos ein leeres Verzeichnis anlegen und nginx lahmlegen.
-          # Die Datei wird daher per stdin in einen Helfer-Container gereicht,
-          # der den echten Host-Pfad ${CONFIG_PATH} gemountet hat.
           if [ "$NGINX_CHANGED" = "true" ]; then
             echo "nginx.conf geaendert -> pruefen, uebertragen, neu laden"
 
-            # Erst im laufenden nginx gegenpruefen (dort liegen die Zertifikate),
-            # damit eine fehlerhafte Config den Proxy gar nicht erst erreicht.
             docker exec -i nginx_proxy sh -c 'cat > /tmp/nginx.new.conf' < nginx.conf
             docker exec nginx_proxy nginx -t -c /tmp/nginx.new.conf
 
             docker run --rm -i --entrypoint sh \
               -v "$CONFIG_PATH":/nginx.conf nginx:alpine -c 'cat > /nginx.conf' < nginx.conf
 
-            # reload statt restart: nginx uebernimmt die Config ohne Ausfall.
             docker exec nginx_proxy nginx -s reload
           fi
 
@@ -158,15 +147,10 @@ jobs:
           if [ "$API_CHANGED" = "true" ]; then SERVICES="$SERVICES pumpkin_api"; fi
 
           if [ "$COMPOSE_CHANGED" = "true" ]; then
-            # Compose-Datei selbst geaendert -> ganzer Stack, damit auch reine
-            # Config-Aenderungen (Env, Volumes, Ports) uebernommen werden.
             echo "docker-compose.yml geaendert -> vollstaendiges Deployment"
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
           elif [ -n "$SERVICES" ]; then
-            # Nur die geaenderten Services anfassen. --no-deps verhindert, dass
-            # compose die depends_on-Kette mitzieht; alle Services haben
-            # restart: unless-stopped und laufen ohnehin.
             echo "Deployment fuer:$SERVICES"
             docker compose -f docker-compose.yml pull $SERVICES
             docker compose -f docker-compose.yml up -d --no-deps $SERVICES

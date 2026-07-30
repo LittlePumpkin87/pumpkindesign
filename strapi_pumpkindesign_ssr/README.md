@@ -1,4 +1,28 @@
-# 🚀 Getting started with Strapi
+# 🚀 Strapi CMS — littlepumpkindesign.de
+
+Strapi 5 headless CMS behind [littlepumpkindesign.de](https://littlepumpkindesign.de).
+It is not consumed directly by the frontend — every content request goes through the
+[NestJS content cache](../pumpkin_api/) first.
+
+## What is specific to this project
+
+* **Custom router controller** (`src/api/router/controllers/router.ts`) backs the endpoints the
+  frontend actually calls: `page-by-path`, `head` and `foot`. `getAutoPopulate()` resolves relations
+  recursively up to depth 8, so a page arrives with its whole dynamic zone in one response, and
+  `cleanData()` strips the payload down to the fields the frontend needs.
+* **That depth is why the cache exists.** The populate query is expensive enough that running it on
+  every page view was the original performance problem — see
+  [`pumpkin_api/docs/ARCHITEKTUR.md`](../pumpkin_api/docs/ARCHITEKTUR.md).
+* **Cache invalidation webhook.** Under **Settings → Webhooks** one webhook points at
+  `http://pumpkin_api:3000/api/cache/invalidate` with the header `X-Webhook-Secret`, subscribed to
+  `entry.publish`, `entry.unpublish`, `entry.update` and `entry.delete`. Without it the cache still
+  self-heals via TTL, just up to an hour later.
+* **Plugins in use:** navigation (main menu tree), populate-deep, config-sync, seo.
+
+> ⚠️ The navigation plugin does not reliably emit `entry.*` events, so the navigation tree is not
+> covered by the webhook and falls back to a shorter TTL in the cache service.
+
+## Strapi CLI
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
 

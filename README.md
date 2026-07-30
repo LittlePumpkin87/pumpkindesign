@@ -1,23 +1,27 @@
 # 🎃 Little Pumpkin Design – Fullstack Portfolio
 
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![Strapi](https://img.shields.io/badge/Strapi-2E7EEA?style=for-the-badge&logo=strapi&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![Strapi](https://img.shields.io/badge/Strapi-4945FF?style=for-the-badge&logo=strapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 
 🌐 **Live Demo:** [littlepumpkindesign.de](https://littlepumpkindesign.de)
 
-> **Welcome to the source code of my personal portfolio!** > This repository showcases a modern, next-gen fullstack architecture, combining a highly scalable frontend with a headless CMS, entirely containerized and self-hosted.
+> **Welcome to the source code of my personal portfolio!**
+>
+> This repository showcases a modern, next-gen fullstack architecture, combining a highly scalable frontend with a headless CMS and a dedicated content-delivery layer — entirely containerized and self-hosted.
 
 ## ✨ Key Features & Technical Highlights
 
 This project is built to reflect enterprise-level standards in web development:
 
-* **Server-Side Rendering (SSR):** Optimized for flawless SEO and lightning-fast Initial Page Loads using the latest Angular features.
+* **Server-Side Rendering (SSR):** Optimized for flawless SEO and lightning-fast Initial Page Loads using the latest Angular features, with full client hydration and a server-to-client transfer cache that avoids refetching content in the browser.
 * **Atomic Design Architecture:** Frontend components are strictly separated into Atoms, Molecules, and Organisms for maximum reusability.
-* **Headless CMS Integration:** Dynamic content management via Strapi v4 (REST API).
-* **Automated CI/CD:** Fully automated build and deployment pipelines using **GitHub Actions** (Push to GitHub Container Registry).
+* **Headless CMS Integration:** Dynamic content management via Strapi 5 (REST API), rendered through a dynamic-zone component registry.
+* **Resilient Content Delivery:** A dedicated **NestJS** service caches the CMS responses, collapses concurrent requests, and keeps serving stale content while Strapi restarts — so a backend deployment is invisible to visitors.
+* **Selective CI/CD:** **GitHub Actions** builds and redeploys only the sub-project a commit actually touched, so a backend change never restarts the frontend (or vice versa).
 * **Enterprise Security:** Strict Content Security Policies (CSP) with dynamic nonces against XSS attacks, backed by a custom Nginx reverse proxy featuring rigorous file-extension whitelisting.
 ---
 
@@ -30,21 +34,27 @@ graph LR
     %% Hinwege (Requests)
     User([User]) -->|HTTPS Request| Proxy[Nginx Reverse Proxy]
     Proxy -->|SSR Route| Frontend[Angular SSR Node]
-    Proxy -->|Image/API Request| Backend[Strapi CMS]
-    Frontend -->|Fetch Content| Backend
+    Proxy -->|Image Request| Backend[Strapi CMS]
+    Frontend -->|Fetch Content| Cache[NestJS Content Cache]
+    Cache -->|only on miss| Backend
     Backend -->|Query| DB[(PostgreSQL)]
 
     %% Rückwege (Responses) - gestrichelt
     DB -.->|Raw Data| Backend
-    Backend -.->|JSON| Frontend
+    Backend -.->|JSON| Cache
+    Cache -.->|JSON + X-Cache| Frontend
     Backend -.->|Images| Proxy
     Frontend -.->|Rendered HTML| Proxy
     Proxy -.->|Website| User
+
+    %% Push-Invalidierung
+    Backend ==>|publish webhook| Cache
 ```
 
 * **Infrastructure:** Hosted on a local **Synology NAS** server environment.
 * **Orchestration:** Multi-container deployment managed via **Docker Compose**.
-* **Routing:** Served via an **Nginx Reverse Proxy** handling routing and SSL/TLS termination.
+* **Routing:** Served via an **Nginx Reverse Proxy** handling routing and SSL/TLS termination. Its [`nginx.conf`](nginx.conf) is versioned in this repository and hot-reloaded by the pipeline whenever it changes.
+* **Content path:** The frontend never talks to Strapi directly. Every content request goes through the NestJS cache, which is a drop-in replacement mirroring Strapi's own routes.
 
 ---
 
@@ -62,9 +72,8 @@ Make sure you have the following installed on your machine:
 **1. Clone the repository:**
 
 ```bash
-git clone [https://github.com/LittlePumpkin87/pumpkindesign.git](https://github.com/LittlePumpkin87/pumpkindesign.git)
+git clone https://github.com/LittlePumpkin87/pumpkindesign.git
 cd pumpkindesign
-
 ```
 
 **2. Setup Environment Variables:**
@@ -95,7 +104,21 @@ npm run docker down
 
 ---
 
-## 📁 Project Structure (Frontend Focus)
+## 📁 Project Structure
+
+The repository holds three independently deployable services plus the proxy configuration:
+
+```text
+pumpkindesign/
+├── pumpkindesign_ssr/          # Angular 21 SSR frontend (Express + Node)
+├── pumpkin_api/                # NestJS content cache & delivery layer
+├── strapi_pumpkindesign_ssr/   # Strapi 5 headless CMS
+├── nginx.conf                  # Reverse proxy: TLS, routing, bot blocklists
+├── docker-compose.yml          # Production stack
+└── docker-compose.dev.yml      # Local development stack
+```
+
+### Frontend detail
 
 The Angular frontend follows a highly scalable architecture:
 
@@ -117,12 +140,48 @@ pumpkindesign_ssr/
 
 ```
 
-### REST API Endpoints (Strapi)
+### REST API Endpoints
+
+Served by the NestJS cache on the exact paths Strapi uses, so the frontend cannot tell the difference.
+Every response carries an `X-Cache` header (`HIT`, `MISS`, `STALE` or `BYPASS`), which makes the cache
+behaviour visible in devtools and in the access log.
 
 * `/api/head` - Fetches global Header Data (Favicon, Logo, Navigation).
 * `/api/page-by-path?path=/` - Fetches cleaned-up structural data for a specific page route.
 * `/api/foot` - Fetches global Footer Data.
 * `/api/navigation/render/main?type=TREE` - Fetches global Main navigation.
+* `/api/cache/invalidate` - Webhook target for Strapi; clears the cache on publish (secret-protected).
+* `/health`, `/health/strapi`, `/metrics` - Operational endpoints, deliberately outside the `/api` prefix.
+
+---
+
+## ⚡ Feature Spotlight: Content Cache & Outage Resilience
+
+Originally the SSR server proxied straight to Strapi — no timeout, no retry, no fallback. Every page
+view triggered a recursive deep-populate query, and every Strapi restart showed visitors an error page.
+[`pumpkin_api`](pumpkin_api/) is a small NestJS service that closes both gaps.
+
+**Three mechanisms**, all in [`content-cache.service.ts`](pumpkin_api/src/cache/content-cache.service.ts):
+
+1. **TTL cache** — responses are held in memory. The window is deliberately long (1 h), because
+   freshness comes from push invalidation rather than expiry.
+2. **stale-if-error** — when an entry has expired *and* Strapi is unreachable, the stale copy is served
+   anyway (up to 24 h). This is the outage buffer that keeps the site up during a CMS deployment.
+3. **Single-flight** — concurrent misses on the same key share one upstream request. Ten simultaneous
+   visitors on a cold page produce one deep-populate query, not ten.
+
+**Push invalidation.** Strapi calls `POST /api/cache/invalidate` on every publish, so an editorial fix
+is live immediately instead of waiting out a TTL. The endpoint is rate limited and guarded by a shared
+secret compared with `timingSafeEqual`.
+
+**The distinction everything rests on:** *did Strapi fail, or did Strapi answer?* A `404` is a real
+answer and is passed through untouched; a timeout or `5xx` is an outage and is the only case that may
+fall back to stale data. That is why
+[`StrapiUnavailableError`](pumpkin_api/src/strapi/strapi-unavailable.error.ts) exists as its own type —
+without it, a deleted page would keep being served from cache.
+
+> 📖 Every design decision, including the alternatives that were rejected and why, is documented in
+> [`pumpkin_api/docs/ARCHITEKTUR.md`](pumpkin_api/docs/ARCHITEKTUR.md).
 
 ---
 
@@ -140,8 +199,8 @@ graph search, and CSS.
    `ThreadPendulum` (hanging threads), `ThreadChain` (coupled links that whip like a rope), and
    `RockingChain` (pinned endpoints, only the curve bows). No DOM access — each body just turns its
    state into an SVG path string.
-2. **Routing** ([`spiderweb.config.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.config.ts))
-   — the web geometry is turned into a graph (junctions = nodes, segments = weighted edges).
+2. **Routing** ([`spiderweb.routing.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.routing.ts))
+   — the web geometry from `spiderweb.config.ts` is turned into a graph (junctions = nodes, segments = weighted edges).
    `routeSegments()` runs Dijkstra between two icons, so the glow travels *along* the web (hopping
    horizontal arcs) instead of funnelling through the centre. A small per-hover random jitter varies
    near-equal routes for an organic feel.
@@ -171,9 +230,13 @@ This project is under active development. Current focus areas:
 * [x] Create and migrate initial Startpage content.
 * [x] Fix Docker volume mapping for uploaded Strapi images in production.
 * [x] Integrate core backend components.
+* [x] Add the NestJS content cache with push invalidation and stale-if-error.
+* [x] Make SSR hydration reuse the server-rendered DOM instead of rebuilding it.
+* [x] Deploy only the sub-projects a commit actually changed.
 * [ ] **WIP:** Finalize interactive frontend components for all pages (e.g., Tech-Stack Spiderweb).
 * [ ] **WIP:** Build dynamic portfolio case study pages.
 * [ ] Populate Strapi with content.
+* [ ] Return a proper `404` for unknown routes instead of rendering the app shell with `200`.
 
 ---
 

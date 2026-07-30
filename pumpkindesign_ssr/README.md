@@ -1,6 +1,28 @@
 # PumpkindesignSsr
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+Angular 21 SSR frontend of [littlepumpkindesign.de](https://littlepumpkindesign.de).
+Generated with [Angular CLI](https://github.com/angular/angular-cli) 21.2.12.
+
+## What is specific to this project
+
+* **Server entry points.** [`src/main.server.ts`](src/main.server.ts) bootstraps the SSR app;
+  [`src/server.ts`](src/server.ts) is the Express host. Besides rendering it serves the static assets,
+  builds `/sitemap.xml` from the Strapi navigation tree, injects a per-request CSP nonce, and proxies
+  `/api` onward to the NestJS content cache (`BASE_PATH_STRAPI`).
+* **Every route is server-rendered.** [`src/app/app.routes.server.ts`](src/app/app.routes.server.ts)
+  maps `**` to `RenderMode.Server` — nothing is prerendered, because the routes only exist in Strapi.
+* **Dynamic zone rendering.** CMS content is rendered through a component registry:
+  [`utils/component.registry.ts`](src/app/utils/component.registry.ts) maps a Strapi `__component` key
+  to an Angular component, [`utils/mapper.registry.ts`](src/app/utils/mapper.registry.ts) maps the
+  payload to its inputs, and [`utils/dynamic-render.directive.ts`](src/app/utils/dynamic-render.directive.ts)
+  instantiates it via `ViewContainerRef`.
+* **Hydration and the transfer cache.** `provideClientHydration(withEventReplay())` is on. For the
+  HTTP transfer cache to actually hit, server and browser have to produce the *same* cache key — the
+  key contains the request URL. The browser therefore builds an absolute API URL from
+  `location.origin` ([`utils/api-base.token.ts`](src/app/utils/api-base.token.ts)), while the server
+  fetches via loopback and rewrites the origin through `HTTP_TRANSFER_CACHE_ORIGIN_MAP`
+  ([`app.config.server.ts`](src/app/app.config.server.ts)). Break that pairing and the browser silently
+  refetches every endpoint after hydration, which throws away the server-rendered DOM.
 
 ## Development server
 
@@ -10,7 +32,9 @@ To start a local development server, run:
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://172.0.0.1:4200/`. The application will automatically reload whenever you modify any of the source files.
+Once the server is running, open your browser and navigate to `http://127.0.0.1:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+For the full stack including Strapi and the cache service, use `docker compose -f ../docker-compose.dev.yml up` instead.
 
 ## Code scaffolding
 

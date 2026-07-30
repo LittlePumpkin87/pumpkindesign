@@ -554,15 +554,24 @@ Die Gründe dagegen:
    im Modul `ngx_cache_purge` — im Image `nginx:alpine` ist beides nicht enthalten.
    Ohne Purge bliebe nur die kurze TTL, also genau der Kompromiss, den der Entwurf
    vermeiden soll.
-2. **Die Konfiguration liegt außerhalb des Repos.** Die `nginx.conf` wird laut
-   `docker-compose.yml` von `${CONFIG_PATH}` auf der NAS eingebunden. Sie ist nicht
-   versioniert, nicht reviewbar und nicht testbar.
-3. **Keine Tests.** Für den NestJS-Service gibt es 47 automatisierte Tests. Für
-   nginx-Direktiven gäbe es Ausprobieren.
+2. ~~**Die Konfiguration liegt außerhalb des Repos.**~~ *(überholt)* Das stimmte
+   zum Zeitpunkt der Entscheidung: die `nginx.conf` lag nur unter `${CONFIG_PATH}`
+   auf der NAS. Inzwischen liegt sie versioniert im Repository, und die Pipeline
+   überträgt sie bei Änderungen auf die NAS und lädt nginx ohne Ausfall neu. Der
+   Mount zeigt weiterhin auf `${CONFIG_PATH}`, weil der Deploy-Runner selbst in
+   einem Container läuft und sein Checkout-Verzeichnis für den Docker-Daemon
+   nicht existiert.
+3. ~~**Keine Tests.**~~ *(überholt)* Auch das gilt nicht mehr: die Konfiguration
+   wird vor jeder Übertragung mit `nginx -t` gegen den laufenden Proxy geprüft,
+   und Routing wie Blocklisten lassen sich mit einem nginx-Container und
+   antwortenden Dummy-Backends automatisiert durchspielen.
 4. **Der Lernzweck.** Das Projekt sollte NestJS zeigen — ein legitimer Grund,
    solange er benannt wird.
 
-Ohne Punkt 1 hätte nginx für diesen Anwendungsfall ausgereicht.
+Ohne Punkt 1 hätte nginx für diesen Anwendungsfall ausgereicht — und nachdem die
+Punkte 2 und 3 weggefallen sind, trägt die Entscheidung inzwischen allein auf
+Punkt 1 und dem Lernzweck. Das ist ehrlicher als die ursprüngliche Aufzählung und
+ändert am Ergebnis nichts: ohne gezielte Invalidierung bliebe nur die kurze TTL.
 
 ### 8.3 Warum kein statisches Prerendering (SSG)?
 
