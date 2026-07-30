@@ -1,8 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { shareReplay, map, filter, tap, catchError } from 'rxjs/operators';
-import { Router, Scroll } from '@angular/router';
+import { shareReplay, map, tap, catchError } from 'rxjs/operators';
 import { API_BASE } from '../utils/api-base.token';
 import { mapHeaderData, mapStrapiNavigation } from '../mapper/navigation.mapper';
 import { SeoService } from './seo.service';
@@ -11,7 +10,6 @@ import { of } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
   private readonly API_URL = inject(API_BASE);
   private readonly seoService = inject(SeoService);
 
@@ -19,21 +17,6 @@ export class NavigationService {
   private readonly _headerLoaded = signal(false);
 
   readonly isReady = computed(() => this._navLoaded() && this._headerLoaded());
-
-  constructor() {
-    this.initAnchorScroll();
-  }
-
-  private initAnchorScroll(): void {
-    this.router.events.pipe(filter((e) => e instanceof Scroll)).subscribe((e) => {
-      const anchor = e.anchor;
-      if (!anchor) return;
-      setTimeout(() => {
-        const el = document.getElementById(anchor);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    });
-  }
 
   private readonly navigationRequest$ = this.http
     .get<any[]>(`${this.API_URL}/navigation/render/main?type=TREE`)

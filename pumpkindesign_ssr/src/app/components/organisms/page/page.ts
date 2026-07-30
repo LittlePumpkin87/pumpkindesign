@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, afterNextRender, inject, input, signal } from '@angular/core';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { PageItem } from '../../../interfaces/page.interface';
 import { NavigationService } from '../../../services/navigation.service';
@@ -23,4 +23,11 @@ export class Page {
   readonly header = this.navService.headerData;
   readonly page = this.pageService.currentPage;
   readonly footerData = this.footerService.footerData;
+  
+  private readonly _hydrated = signal(false);
+  readonly hydrated = this._hydrated.asReadonly();
+
+  constructor() {
+    afterNextRender(() => this._hydrated.set(true));
+  }
 }

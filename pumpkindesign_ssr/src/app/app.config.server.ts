@@ -1,4 +1,5 @@
-import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
+import { mergeApplicationConfig, ApplicationConfig, inject } from '@angular/core';
+import { PlatformLocation } from '@angular/common';
 import { provideServerRendering, withRoutes } from '@angular/ssr';
 import { HTTP_TRANSFER_CACHE_ORIGIN_MAP } from '@angular/common/http';
 import { appConfig } from './app.config';
@@ -7,9 +8,6 @@ import { API_BASE } from './utils/api-base.token';
 import { environment } from '../environments/environment';
 
 const serverOrigin = `http://127.0.0.1:${process.env['PORT'] ?? 4200}`;
-const clientOrigin = environment.BASE_URL.startsWith('http')
-  ? environment.BASE_URL
-  : `https://${environment.BASE_URL}`;
 
 const serverConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +18,9 @@ const serverConfig: ApplicationConfig = {
     },
     {
       provide: HTTP_TRANSFER_CACHE_ORIGIN_MAP,
-      useValue: { [serverOrigin]: clientOrigin },
+      useFactory: () => ({
+        [serverOrigin]: new URL(inject(PlatformLocation).href).origin,
+      }),
     },
   ],
 };

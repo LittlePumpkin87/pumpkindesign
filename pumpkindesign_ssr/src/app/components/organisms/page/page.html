@@ -17,7 +17,7 @@
   <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
 </main>
 
-@if (pageService.isLoading()) {
+@if (hydrated() && pageService.isLoading()) {
   <div class="logo-loader-inline" id="logo-loader-overlay">
     <img
       src="logo.png"
