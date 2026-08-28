@@ -302,11 +302,17 @@ Ohne diese Trennung würde eine gelöschte Seite weiterhin aus dem Cache
 ausgeliefert — ein 404 wäre durch alte Daten überdeckt. Das ist der Punkt, an dem
 die meisten selbstgebauten Caches falsch liegen.
 
-**Die Folgeentscheidung:** `/health` prüft Strapi *nicht*. Täte es das, würde ein
-Strapi-Ausfall den Container als unhealthy markieren, Docker startet ihn neu — und
-der Neustart löscht den In-Memory-Cache, also genau die veralteten Einträge, die
-den Ausfall gerade überbrücken sollten. Die Abhängigkeitsprüfung liegt separat auf
-`/health/strapi` und darf ruhig 503 liefern; sie ist Information, kein Auslöser.
+**Die Folgeentscheidung:** Der `/health` **dieses Services** prüft Strapi *nicht*.
+Täte er das, würde ein Strapi-Ausfall den pumpkin-api-Container als unhealthy
+markieren, Docker startet ihn neu — und der Neustart löscht den In-Memory-Cache,
+also genau die veralteten Einträge, die den Ausfall gerade überbrücken sollten.
+Die Abhängigkeitsprüfung liegt separat auf `/health/strapi` und darf ruhig 503
+liefern; sie ist Information, kein Auslöser.
+
+Nicht zu verwechseln mit Strapis eigenem `/_health`: den ruft zum einen Strapis
+Docker-`HEALTHCHECK` alle 30 Sekunden auf (daher die regelmäßigen `204` in Strapis
+Log), zum anderen `StrapiService.ping()` — also genau das, worauf sich
+`/health/strapi` stützt.
 
 Das ist der Unterschied zwischen **Liveness** („läuft der Prozess?") und
 **Readiness** („kann er seine Abhängigkeiten erreichen?"). Beides in einen
@@ -321,7 +327,7 @@ Redakteurinnen auf ihre eigenen Änderungen warten.
 **Der Weg hier** dreht die Richtung um: Strapi ruft bei jeder Änderung
 `POST /api/cache/invalidate` auf. Dadurch darf die TTL lang sein, ohne dass
 Inhalte veralten — sie ist nur noch das Sicherheitsnetz, falls ein Webhook
-verlorengeht.
+verloren geht.
 
 Konfiguriert wird das im Strapi-Admin unter *Settings → Webhooks*, ohne eine Zeile
 Code in Strapi. Die Konfiguration liegt in der Datenbank, nicht im Repository —
@@ -357,9 +363,58 @@ Fremdbibliothek herum.
 | **DTO** | beschreibt die erwartete Eingabe als Klasse mit Dekoratoren | [`page-by-path.dto.ts`](../src/content/dto/page-by-path.dto.ts) |
 | **Interceptor** | umschließt den Handler, sieht Ein- und Ausgang | [`logging.interceptor.ts`](../src/common/logging.interceptor.ts) |
 
-Nicht verwendet: Middleware und Exception Filter. Es gab keinen Anlass, und ein
-Werkzeug einzusetzen, nur weil das Framework es anbietet, macht den Code nicht
-besser.
+Nicht verwendet: **Middleware** und **Exception Filter**. Das ist keine Bequemlichkeit,
+sondern hat je einen konkreten Grund — und im zweiten Fall auch eine bekannte Grenze.
+
+#### Warum keine Middleware
+
+Middleware läuft ganz am Anfang der Kette, noch vor den Guards, und arbeitet direkt auf
+den Express-Objekten `req`/`res`. Die typischen Aufgaben decken hier andere ab: Body-Parsing
+bringt Nest mit, die Sicherheits-Header und TLS-Terminierung macht nginx, und CORS ist kein
+Thema, weil der einzige Client der SSR-Container im selben Docker-Netz ist — der Browser
+spricht nie direkt mit diesem Service.
+
+Bleibt der eine Kandidat, bei dem Middleware naheliegt: das Request-Logging. Dass es
+stattdessen ein Interceptor ist, ist eine bewusste Entscheidung. Die Logzeile enthält
+`cache=HIT|MISS|STALE`, und diesen Header setzt erst der Controller. Middleware läuft
+*vor* dem Handler; sie müsste sich also in `res.on('finish')` einhängen, um den Header
+überhaupt zu sehen — außerhalb von Nests Ausführungskontext, mit manuellem Zeitstoppen.
+Ein Interceptor umschließt den Handler, sieht Ein- und Ausgang und bekommt Dauer wie
+Cache-Status ohne Umweg.
+
+> Die allgemeine Regel dahinter: Middleware ist richtig, solange es nur um den *eingehenden*
+> Request geht. Sobald das Ergebnis des Handlers eine Rolle spielt, ist der Interceptor die
+> passende Ebene.
+
+#### Warum kein Exception Filter
+
+Nest hat bereits einen globalen Exception Filter eingebaut, und der macht genau das
+Richtige — vorausgesetzt, man wirft die passenden Fehler. Genau darauf ist der Code
+ausgelegt: `StrapiService` wirft bei einem 4xx bewusst eine `HttpException` mit Strapis
+Statuscode, sodass der eingebaute Filter ihn unverändert durchreicht. Ein eigener Filter
+würde nur nachbauen, was ohnehin funktioniert. Dasselbe gilt für die `ValidationPipe`
+(400) und die Guards (401, 403, 405).
+
+**Die Ausnahme, die noch offen ist.** `StrapiUnavailableError` ist eine schlichte
+`Error`-Klasse und wird nirgends in einen Status übersetzt. Ist Strapi nicht erreichbar
+*und* liegt kein Eintrag im Stale-Fenster, greift der eingebaute Filter und antwortet mit
+**500 Internal Server Error**. Semantisch richtig wäre **503 Service Unavailable**: Der
+Dienst selbst funktioniert einwandfrei, nur seine Abhängigkeit nicht. Ein Monitoring kann
+so nicht zwischen „eigener Fehler" und „Upstream weg" unterscheiden, und in den Tests ist
+der Fall nicht abgedeckt.
+
+Das ist die eine Stelle, an der ein Exception Filter tatsächlich etwas beitragen würde:
+
+```ts
+@Catch(StrapiUnavailableError)
+export class StrapiUnavailableFilter implements ExceptionFilter { /* → 503 */ }
+```
+
+Der Filter ist dem naheliegenderen Weg vorzuziehen, den Fehler schon im Service als
+`ServiceUnavailableException` zu werfen. Das Wissen „diese Fehlerklasse bedeutet 503" ist
+eine Aussage über die HTTP-Schicht; `StrapiService` und `ContentCacheService` sollen von
+HTTP-Statuscodes nichts wissen müssen — sonst wären sie ohne HTTP-Kontext nicht mehr
+sinnvoll testbar.
 
 ### 6.2 Dependency Injection, konkret
 
