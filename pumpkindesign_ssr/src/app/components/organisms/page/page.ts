@@ -6,11 +6,13 @@ import { ContentRendererComponent } from '../content-renderer/content-renderer';
 import { PageService } from '../../../services/page.service';
 import { Alertbanner } from '../alertbanner/alertbanner';
 import { Footer } from '../footer/footer';
+import { Errorpage } from '../errorpage/errorpage';
 import { FooterService } from '../../../services/footer.service';
+
 
 @Component({
   selector: 'lpd-page',
-  imports: [NavigationComponent, ContentRendererComponent, Alertbanner, Footer],
+  imports: [NavigationComponent, ContentRendererComponent, Alertbanner, Footer, Errorpage],
   templateUrl: './page.html',
   styleUrl: './page.scss',
 })
@@ -23,7 +25,7 @@ export class Page {
   readonly header = this.navService.headerData;
   readonly page = this.pageService.currentPage;
   readonly footerData = this.footerService.footerData;
-  
+
   private readonly _hydrated = signal(false);
   readonly hydrated = this._hydrated.asReadonly();
 
