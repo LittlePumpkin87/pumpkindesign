@@ -7,17 +7,24 @@
 @if (page()?.alertbanner) {
 <lpd-alertbanner [item]="page()?.alertbanner"></lpd-alertbanner>
 }
+
+
 <main>
+  @if (page()?.main_headline_h1) {
   <h1 class="headline">{{ page()?.main_headline_h1 }}</h1>
+  }
 
   @if (page()?.main_text) {
   <div class="main-textblock" [innerHTML]="page()?.main_text"></div>
   }
+
+  @if (pageService.hasError()) {
+  <lpd-errorpage [error]="pageService.errorStatus()"></lpd-errorpage>
+  } @else {
   <lpd-content-renderer [content]="page()?.content"></lpd-content-renderer>
+  }
 </main>
-@if (hydrated() && pageService.hasError()) {
-<lpd-errorpage></lpd-errorpage>
-}
+
 @if (hydrated() && pageService.isLoading()) {
 <div class="logo-loader-inline" id="logo-loader-overlay">
   <img src="logo.png" alt="loading page content..." class="animated-logo" width="490" height="490" />

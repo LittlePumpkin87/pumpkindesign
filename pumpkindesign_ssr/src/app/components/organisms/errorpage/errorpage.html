@@ -1,1 +1,14 @@
-<p>errorpage works!</p>
+<div class="error">
+    <h1 class="headline--error">{{error()}}</h1>
+
+    @if(error() === 404) {
+    <div class="error-image error-image--404">
+        <img src="../ghost404.png"
+            alt="Zeichnung eines niedlichen Geistes im Comic Stil, der eine Laterne in der Hand hält">
+    </div>
+
+    <a class="button" href="/"><lpd-icon class="icon" [iconName]="'arrow-left'" [iconPrefix]="'fas'"></lpd-icon>Zurück
+        zur Startseite</a>
+    }
+
+</div>

@@ -29,8 +29,12 @@ export class PageService {
 
   private readonly _isLoading = signal(true);
   private readonly _isError = signal(false);
+  private readonly _errorStatus = signal<number | null>(null);
+
   readonly isLoading = this._isLoading.asReadonly();
   readonly hasError = this._isError.asReadonly();
+  readonly errorStatus = this._errorStatus.asReadonly();
+
   readonly currentPage = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -43,6 +47,8 @@ export class PageService {
       }),
       distinctUntilChanged(),
       tap(() => this._isLoading.set(true)),
+      tap(() => this._isError.set(false)),
+      tap(() => this._errorStatus.set(null)),
       switchMap((apiPath) =>
         this.getPageDetails(apiPath).pipe(
           tap(() => this._isLoading.set(false)),
@@ -50,6 +56,7 @@ export class PageService {
             console.error('[PageService] Critical error loading the page:', err);
             this._isLoading.set(false);
             this._isError.set(true);
+            this._errorStatus.set(err.status);
             return of(undefined);
           }),
         ),

@@ -10,7 +10,7 @@ export class LoadingStateService {
     const isNavReady = this.navService.isReady();
     const pageData = this.pageService.currentPage();
     const hasError = this.pageService.hasError();
-    const loadFinished = isNavReady && pageData !== undefined || hasError;
+    const loadFinished = isNavReady && (pageData !== undefined || hasError);
     return loadFinished;
   });
 }

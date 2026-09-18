@@ -236,15 +236,4 @@ This project is under active development. Current focus areas:
 * [ ] **WIP:** Finalize interactive frontend components for all pages (e.g., Tech-Stack Spiderweb).
 * [ ] **WIP:** Build dynamic portfolio case study pages.
 * [ ] Populate Strapi with content.
-* [ ] Return a proper `404` for unknown routes instead of rendering the app shell with `200`.
-
----
-
-## 👩‍💻 About the Developer
-
-I am a professional **Web Developer** currently working in an agency environment, specialized in modern frontend architectures and headless content management workflows.
-
-* **Current Focus:** Angular, TypeScript, Headless CMS integration (Strapi, Webflow, FirstSpirit), and DevOps (Docker, CI/CD Pipelines).
-* **Design Background:** With a strong background in Graphic Design, I focus heavily on pixel-perfect UI implementations and seamless UX/UI concepts.
-
-📫 **Get in touch:** Let's connect on [Xing](https://www.xing.com/profile/Jennifer_Roob/web_profiles?nwt_nav=profile) or check out my live portfolio at [littlepumpkindesign.de](https://littlepumpkindesign.de).
+* [x] Return a proper `404` for unknown routes instead of rendering the app shell with `200`.

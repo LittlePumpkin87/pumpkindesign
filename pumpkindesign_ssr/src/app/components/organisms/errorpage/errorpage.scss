@@ -1,0 +1,56 @@
+@use '../../../shared/' as *;
+
+.error {
+    @include flex(column, center, flex-start);
+    width: 100%;
+}
+
+
+.button {
+    gap: 0.5rem;
+    text-decoration: none;
+    width: fit-content;
+    @include flex(row, space-between, center);
+    @include typography-s;
+    transform: translateY(0);
+    filter: $shadow-subtle;
+    background-color: $accent-orange;
+    padding: 1rem 2rem;
+    @include border-elipse($accent-orange);
+    @include transition(all, 100ms, linear);
+    margin: 5rem auto;
+
+    &:hover {
+        transform: translateY(5px);
+        filter: none;
+    }
+
+
+    @include tablet {
+        margin: -5rem auto 5rem auto;
+    }
+}
+
+.error-image{
+    margin-top: 6rem;
+    @include tablet {
+        width: 65%;
+        margin: -8rem auto 0 auto;
+    }
+}
+
+.icon {
+    font-size: 2rem;
+}
+
+.headline--error {
+    animation: text-pop-up-top 200ms both;
+    filter: $shadow-header;
+    font-size: 10rem;
+    margin: 3rem;
+
+
+    @include tablet {
+        margin: 5rem;
+    }
+}
