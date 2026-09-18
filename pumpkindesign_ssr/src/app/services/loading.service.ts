@@ -9,7 +9,8 @@ export class LoadingStateService {
   readonly isAppReady = computed(() => {
     const isNavReady = this.navService.isReady();
     const pageData = this.pageService.currentPage();
-
-    return isNavReady && pageData !== undefined;
+    const hasError = this.pageService.hasError();
+    const loadFinished = isNavReady && pageData !== undefined || hasError;
+    return loadFinished;
   });
 }

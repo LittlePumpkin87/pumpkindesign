@@ -28,8 +28,9 @@ export class PageService {
   private readonly seoService = inject(SeoService);
 
   private readonly _isLoading = signal(true);
+  private readonly _isError = signal(false);
   readonly isLoading = this._isLoading.asReadonly();
-
+  readonly hasError = this._isError.asReadonly();
   readonly currentPage = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -48,6 +49,7 @@ export class PageService {
           catchError((err) => {
             console.error('[PageService] Critical error loading the page:', err);
             this._isLoading.set(false);
+            this._isError.set(true);
             return of(undefined);
           }),
         ),
