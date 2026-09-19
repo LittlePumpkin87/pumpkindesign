@@ -12,7 +12,7 @@ It is not consumed directly by the frontend — every content request goes throu
   `cleanData()` strips the payload down to the fields the frontend needs.
 * **That depth is why the cache exists.** The populate query is expensive enough that running it on
   every page view was the original performance problem — see
-  [`pumpkin_api/docs/ARCHITEKTUR.md`](../pumpkin_api/docs/ARCHITEKTUR.md).
+  [`pumpkin_api/docs/ARCHITECTURE.md`](../pumpkin_api/docs/ARCHITECTURE.md).
 * **Cache invalidation webhook.** Under **Settings → Webhooks** one webhook points at
   `http://pumpkin_api:3000/api/cache/invalidate` with the header `X-Webhook-Secret`, subscribed to
   `entry.publish`, `entry.unpublish`, `entry.update` and `entry.delete`. Without it the cache still

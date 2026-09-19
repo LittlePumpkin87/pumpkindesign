@@ -7,7 +7,7 @@ It sits between the Angular SSR server and Strapi and does three things the
 previous direct proxy could not: cache content, keep it correct through push
 invalidation, and keep the site up when Strapi is not.
 
-> **[docs/ARCHITEKTUR.md](docs/ARCHITEKTUR.md)** (in German) covers the same ground
+> **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** covers the same ground
 > in depth: how each mechanism works, which alternatives were rejected and why,
 > and where the limits of this design are.
 
