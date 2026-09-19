@@ -181,7 +181,7 @@ fall back to stale data. That is why
 without it, a deleted page would keep being served from cache.
 
 > 📖 Every design decision, including the alternatives that were rejected and why, is documented in
-> [`pumpkin_api/docs/ARCHITEKTUR.md`](pumpkin_api/docs/ARCHITEKTUR.md).
+> [`pumpkin_api/docs/ARCHITECTURE.md`](pumpkin_api/docs/ARCHITECTURE.md).
 
 ---
 
