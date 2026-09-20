@@ -31,8 +31,9 @@
     }
 }
 
-.error-image{
+.error-image {
     margin-top: 6rem;
+
     @include tablet {
         width: 65%;
         margin: -8rem auto 0 auto;
