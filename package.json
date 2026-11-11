@@ -4,7 +4,12 @@
   "scripts": {
     "docker-start": "docker compose --env-file .env -f docker-compose.dev.yml up -d",
     "docker-recreate": "docker compose --env-file .env -f docker-compose.dev.yml up -d --build --force-recreate",
-    "docker-down": "docker compose --env-file .env -f docker-compose.dev.yml down"
+    "docker-down": "docker compose --env-file .env -f docker-compose.dev.yml down",
+    "audit:all": "npm audit --prefix pumpkin_api; npm audit --prefix pumpkindesign_ssr; npm audit --prefix strapi_pumpkindesign_ssr",
+    "update:all": "npm update --prefix pumpkin_api && npm update --prefix pumpkindesign_ssr && npm update --prefix strapi_pumpkindesign_ssr",
+    "outdated:all": "npm outdated --prefix pumpkin_api; npm outdated --prefix pumpkindesign_ssr; npm outdated --prefix strapi_pumpkindesign_ssr",
+    "install-scripts:all": "npm install-scripts ls --prefix pumpkin_api; npm install-scripts ls --prefix pumpkindesign_ssr; npm install-scripts ls --prefix strapi_pumpkindesign_ssr"
+
   },
   "private": true,
   "devDependencies": {

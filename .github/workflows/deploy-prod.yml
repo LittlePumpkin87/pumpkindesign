@@ -39,6 +39,12 @@ jobs:
             nginx:
               - 'nginx.conf'
 
+  check:
+    name: Release Check
+    permissions:
+      contents: read
+    uses: ./.github/workflows/branch-check.yml
+      
   build-images:
     name: Build on GitHub Cloud
     needs: changes
@@ -85,6 +91,7 @@ jobs:
     needs: [changes, build-images]
     if: >-
       !cancelled() && needs.build-images.result != 'failure' &&
+      needs.build-images.result != 'failure' &&
       (needs.changes.outputs.frontend == 'true' ||
        needs.changes.outputs.strapi == 'true' ||
        needs.changes.outputs.api == 'true' ||
