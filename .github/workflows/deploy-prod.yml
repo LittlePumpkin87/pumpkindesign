@@ -47,7 +47,7 @@ jobs:
       
   build-images:
     name: Build on GitHub Cloud
-    needs: [changes, check]
+    needs: changes
     if: >-
       needs.changes.outputs.frontend == 'true' ||
       needs.changes.outputs.strapi == 'true' ||
@@ -88,9 +88,9 @@ jobs:
 
   deploy-nas:
     name: Deploy to Synology NAS
-    needs: [changes, check, build-images]
+    needs: [changes, build-images]
     if: >-
-      !cancelled() && needs.check.result == 'success' &&
+      !cancelled() && needs.build-images.result != 'failure' &&
       needs.build-images.result != 'failure' &&
       (needs.changes.outputs.frontend == 'true' ||
        needs.changes.outputs.strapi == 'true' ||
