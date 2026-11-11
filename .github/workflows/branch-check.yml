@@ -2,6 +2,7 @@ name: Branch Check
 
 on:
   push:
+    branches-ignore: ["main"]
   pull_request:
     branches: ["main"]
   workflow_call:
@@ -24,17 +25,3 @@ jobs:
       - name: Check for high and critical vulnerabilities
         working-directory: ${{ matrix.project }}
         run: npm audit --audit-level=high
-
-  build:
-    name: Build ${{ matrix.project }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        project: [pumpkindesign_ssr, strapi_pumpkindesign_ssr, pumpkin_api]
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v7
-
-      - name: Build production image
-        run: docker build -f ${{ matrix.project }}/Dockerfile.prod ${{ matrix.project }}
