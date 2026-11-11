@@ -2,7 +2,10 @@ name: Build and Deploy
 
 on:
   push:
+    branches-ignore: ["main"]
+  pull_request:
     branches: ["main"]
+  workflow_call:
 
 jobs:
   changes:
@@ -39,9 +42,15 @@ jobs:
             nginx:
               - 'nginx.conf'
 
+  check:
+    name: Release Check
+    permissions:
+      contents: read
+    uses: ./.github/workflows/branch-check.yml
+      
   build-images:
     name: Build on GitHub Cloud
-    needs: changes
+    needs: [changes, check]
     if: >-
       needs.changes.outputs.frontend == 'true' ||
       needs.changes.outputs.strapi == 'true' ||
@@ -82,9 +91,10 @@ jobs:
 
   deploy-nas:
     name: Deploy to Synology NAS
-    needs: [changes, build-images]
+    needs: [changes, check, build-images]
     if: >-
-      !cancelled() && needs.build-images.result != 'failure' &&
+      !cancelled() && needs.check.result == 'success' &&
+      needs.build-images.result != 'failure' &&
       (needs.changes.outputs.frontend == 'true' ||
        needs.changes.outputs.strapi == 'true' ||
        needs.changes.outputs.api == 'true' ||
