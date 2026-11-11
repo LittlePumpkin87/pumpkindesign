@@ -2,10 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches-ignore: ["main"]
-  pull_request:
     branches: ["main"]
-  workflow_call:
 
 jobs:
   changes:
