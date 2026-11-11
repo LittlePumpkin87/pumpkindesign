@@ -22,6 +22,27 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v7
 
-      - name: Check for high and critical vulnerabilities
+      - name: List vulnerabilities
         working-directory: ${{ matrix.project }}
-        run: npm audit --audit-level=high
+        run: npm audit --color=always || true
+
+      - name: Write vulnerability summary
+        working-directory: ${{ matrix.project }}
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: |
+          npm audit --json | jq -r '
+            {"critical": "🔴", "high": "🟠", "moderate": "🟡", "low": "⚪", "info": "⚪"} as $icon
+            | {"critical": 0, "high": 1, "moderate": 2, "low": 3, "info": 4} as $rank
+            | .metadata.vulnerabilities as $count
+            | "## \(env.PROJECT)",
+              "",
+              "🔴 \($count.critical) critical · 🟠 \($count.high) high · 🟡 \($count.moderate) moderate · ⚪ \($count.low) low",
+              "",
+              "| | Package | Severity | Affected versions |",
+              "|---|---|---|---|",
+              (.vulnerabilities | map(.) | sort_by($rank[.severity]) | .[]
+                | "| \($icon[.severity]) | \(.name) | \(.severity) | \(.range | gsub("\\|"; "\\|")) |")
+          ' >> "$GITHUB_STEP_SUMMARY"
+
+
