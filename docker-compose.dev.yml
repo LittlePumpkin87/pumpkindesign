@@ -82,7 +82,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USERNAME}
       PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
     ports:
-      - "8080:80"
+      - "8081:80"
     networks:
       - strapi_net
     depends_on:

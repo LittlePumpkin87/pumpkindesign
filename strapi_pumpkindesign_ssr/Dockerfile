@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:24.22.2-alpine
 RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev bash vips-dev git
 ARG NODE_ENV=development
 ENV NODE_ENV=${NODE_ENV}
