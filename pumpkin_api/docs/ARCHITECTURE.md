@@ -625,7 +625,7 @@ A cache is essentially prerendering that invalidates itself.
 
 ### 8.4 Why not a CDN?
 
-nginx already serves static assets with a `max-age` of one year. The API responses are the
+The SSR Express server already serves static assets with a `max-age` of one year. The API responses are the
 actual problem, and a CDN caches those with the same invalidation questions — only outside
 one's own control. For a site with a German audience on a NAS in Germany, geography is not
 the bottleneck.

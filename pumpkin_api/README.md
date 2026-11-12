@@ -98,6 +98,9 @@ start on an invalid configuration rather than failing on the first request.
 
 ## Development
 
+Outside Docker the service reads `pumpkin_api/.env` (not the root `.env`), so create one with the
+variables above first.
+
 ```bash
 npm install
 npm run start:dev
