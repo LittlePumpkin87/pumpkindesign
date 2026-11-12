@@ -17,7 +17,7 @@ It is not consumed directly by the frontend — every content request goes throu
   `http://pumpkin_api:3000/api/cache/invalidate` with the header `X-Webhook-Secret`, subscribed to
   `entry.publish`, `entry.unpublish`, `entry.update` and `entry.delete`. Without it the cache still
   self-heals via TTL, just up to an hour later.
-* **Plugins in use:** navigation (main menu tree), populate-deep, config-sync, seo.
+* **Plugins in use:** navigation (main menu tree), populate-deep, config-sync, seo, color-picker (icon colours).
 
 > ⚠️ The navigation plugin does not reliably emit `entry.*` events, so the navigation tree is not
 > covered by the webhook and falls back to a shorter TTL in the cache service.

@@ -21,7 +21,8 @@ This project is built to reflect enterprise-level standards in web development:
 * **Atomic Design Architecture:** Frontend components are strictly separated into Atoms, Molecules, and Organisms for maximum reusability.
 * **Headless CMS Integration:** Dynamic content management via Strapi 5 (REST API), rendered through a dynamic-zone component registry.
 * **Resilient Content Delivery:** A dedicated **NestJS** service caches the CMS responses, collapses concurrent requests, and keeps serving stale content while Strapi restarts — so a backend deployment is invisible to visitors.
-* **Selective CI/CD:** **GitHub Actions** builds and redeploys only the sub-project a commit actually touched, so a backend change never restarts the frontend (or vice versa).
+* **Selective CI/CD:** **GitHub Actions** builds and redeploys only the sub-project a commit actually touched, so a backend change never restarts the frontend (or vice versa). Every branch push gets a dependency audit with a vulnerability summary.
+* **Custom error page:** Unknown routes and server errors render an error page in place, under the requested URL.
 * **Enterprise Security:** Strict Content Security Policies (CSP) with dynamic nonces against XSS attacks, backed by a custom Nginx reverse proxy featuring rigorous file-extension whitelisting.
 ---
 
@@ -65,7 +66,7 @@ graph LR
 Make sure you have the following installed on your machine:
 
 * [Docker](https://www.docker.com/) & Docker Compose
-* Node.js (for local frontend development)
+* Node.js 24 (for local development; the Docker images use `node:24.22.2-alpine`)
 
 ### Installation
 
@@ -94,13 +95,36 @@ docker compose --env-file .env -f docker-compose.dev.yml up -d --build --force-r
 or use npm commands for quicker start/build/shutdown containers
 
 ```bash
-npm run docker start
-npm run docker recreate
-npm run docker down
+npm run docker-start
+npm run docker-recreate
+npm run docker-down
 
 ```
 
-*(For the production environment, replace `docker-compose.dev.yml` with `docker-compose.yml`.)*
+The dev stack exposes these ports:
+
+| Service | Port |
+|---|---|
+| Angular SSR frontend | 4200 |
+| NestJS content cache | 3000 |
+| Strapi CMS | 6466 |
+| pgAdmin | 8081 |
+
+*(For the production environment, replace `docker-compose.dev.yml` with `docker-compose.yml`. It additionally needs `CONFIG_PATH`, `SSL_CERT_PATH`, `SSL_KEY_PATH`, `NAS_HTTP_PORT`, `NAS_HTTPS_PORT`, `IMAGE_PATH`, `BACKUP_PATH` and the external Docker network `pumpkindesign_default`.)*
+
+**4. Maintain dependencies across all three projects:**
+
+```bash
+npm run audit:all             # npm audit in every sub-project
+npm run outdated:all          # list outdated packages
+npm run update:all            # npm update in every sub-project
+npm run install-scripts:all   # list packages with install scripts
+```
+
+### CI/CD
+
+* **Branch Check** ([`branch-check.yml`](.github/workflows/branch-check.yml)) runs `npm audit` for all three sub-projects on every push to a non-`main` branch and on pull requests to `main`. It never fails the run; it writes a vulnerability table to the job summary instead.
+* **Deploy** ([`deploy-prod.yml`](.github/workflows/deploy-prod.yml)) runs on `main`. It detects which sub-projects changed, builds and pushes only those images to GHCR, and redeploys them on the NAS. The Branch Check runs alongside as a "Release Check" but does not block the deploy.
 
 ---
 
@@ -124,7 +148,7 @@ The Angular frontend follows a highly scalable architecture:
 
 ```text
 pumpkindesign_ssr/
-├── public/                 # Static assets
+├── public/                 # Static files served as-is
 └── src/
     ├── app/
     │   ├── components/     # Atomic Design Architecture
@@ -134,7 +158,10 @@ pumpkindesign_ssr/
     │   ├── interfaces/     # TypeScript interfaces and type definitions
     │   ├── mapper/         # Data mappers (API payload to frontend models)
     │   ├── services/       # Core business logic and API communication
-    │   └── shared/         # Shared modules and global components
+    │   ├── shared/         # Global SCSS partials, fonts and Font Awesome
+    │   └── utils/          # Component & mapper registries, API base token
+    ├── assets/             # Images bundled with the app
+    ├── environments/       # Build-time environment config
     ├── main.server.ts      # SSR entry point
     └── server.ts           # Express Node server setup (incl. CSP & Proxy)
 
@@ -196,7 +223,7 @@ graph search, and CSS.
 
 1. **Physics** ([`spiderweb.physics.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.physics.ts))
    — a small damped-spring simulation (Hooke's law + damping, semi-implicit Euler). Three body types:
-   `ThreadPendulum` (hanging threads), `ThreadChain` (coupled links that whip like a rope), and
+   `ThreadPendulum` (hanging threads), `PinnedChain` (coupled links pinned at both ends), and
    `RockingChain` (pinned endpoints, only the curve bows). No DOM access — each body just turns its
    state into an SVG path string.
 2. **Routing** ([`spiderweb.routing.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.routing.ts))
@@ -206,13 +233,15 @@ graph search, and CSS.
    near-equal routes for an organic feel.
 3. **Crawl render** ([`spiderweb.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.ts) +
    `.scss`/`.html`) — the route is drawn as one continuous line via a sequenced `stroke-dashoffset`
-   animation on a separate overlay layer, so the faint base web stays fully visible underneath. A
-   `requestAnimationFrame` loop steps the physics and sleeps once everything settles.
+   animation on a separate overlay layer, so the faint base web stays fully visible underneath.
+   [`spiderweb.glow.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.glow.ts)
+   turns the route into timed segments.
+   [`spiderweb.simulation.ts`](pumpkindesign_ssr/src/app/components/molecules/spiderweb/spiderweb.simulation.ts)
+   runs the `requestAnimationFrame` loop that steps the physics and sleeps once everything settles.
 
 **Content model (Strapi `skill`):** editors only set **`connectedPathIds`** — the path id where an
 icon hangs (e.g. `subskill-3`). Subskill relations define which skill connects to which, and the glow
-route is computed automatically. **`glowPathIds`** is an optional manual override for hand-picked
-segments. The path ids are a shared namespace across the SVG template, the config data, and Strapi.
+route is computed automatically. The path ids are a shared namespace across the SVG template, the config data, and Strapi.
 
 > 💡 **What is Dijkstra?** A classic shortest-path algorithm (Edsger W. Dijkstra, 1959). Given a graph
 > of nodes connected by weighted edges, it finds the cheapest route between two nodes by always
@@ -236,4 +265,5 @@ This project is under active development. Current focus areas:
 * [ ] **WIP:** Finalize interactive frontend components for all pages (e.g., Tech-Stack Spiderweb).
 * [ ] **WIP:** Build dynamic portfolio case study pages.
 * [ ] Populate Strapi with content.
-* [x] Return a proper `404` for unknown routes instead of rendering the app shell with `200`.
+* [x] Render the error page for unknown routes.
+* [ ] Send HTTP status `404` for unknown routes (the error page is currently delivered with `200`).
