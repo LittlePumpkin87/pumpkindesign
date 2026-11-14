@@ -963,6 +963,9 @@ export interface PluginContentReleasesRelease
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    failureReason: Schema.Attribute.Enumeration<
+      ['missed_schedule', 'failed_before_upgrade']
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -971,13 +974,21 @@ export interface PluginContentReleasesRelease
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    releaseCondition: Schema.Attribute.Enumeration<
+      ['all_or_nothing', 'allow_partial']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'all_or_nothing'>;
     releasedAt: Schema.Attribute.DateTime;
     scheduledAt: Schema.Attribute.DateTime;
     status: Schema.Attribute.Enumeration<
-      ['ready', 'blocked', 'failed', 'done', 'empty']
+      ['ready', 'blocked', 'failed', 'done', 'partial', 'empty']
     > &
       Schema.Attribute.Required;
     timezone: Schema.Attribute.String;
+    totalPublishedEntries: Schema.Attribute.Integer;
+    totalSkippedEntries: Schema.Attribute.Integer;
+    totalUnpublishedEntries: Schema.Attribute.Integer;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1016,7 +1027,19 @@ export interface PluginContentReleasesReleaseAction
       'plugin::content-releases.release-action'
     > &
       Schema.Attribute.Private;
+    outcome: Schema.Attribute.Enumeration<
+      [
+        'published',
+        'unpublished',
+        'skipped_invalid',
+        'skipped_not_approved',
+        'skipped_error',
+        'skipped_held',
+        'skipped_missed',
+      ]
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    reason: Schema.Attribute.JSON;
     release: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::content-releases.release'
