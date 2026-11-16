@@ -6,13 +6,11 @@
     </div>
 
     @if(error() === 404) {
-
     <a class="button" href="/"><lpd-icon class="icon" [iconName]="'arrow-left'" [iconPrefix]="'fas'"></lpd-icon>Zurück
         zur Startseite</a>
     } @else {
-    <a class="button" href="window.location.reload()"><lpd-icon class="icon" [iconName]="'rotate'"
+    <button class="button" onclick="window.location.reload()"><lpd-icon class="icon" [iconName]="'rotate'"
             [iconPrefix]="'fas'"></lpd-icon>Nochmal
-        versuchen</a>
+        versuchen</button>
     }
-
 </div>
