@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Content delivery service with caching, push invalidation and stale-if-error resilience in front of Strapi",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-only",
   "packageManager": "npm@11.13.0",
   "engines": {
     "node": ">=22"

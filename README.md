@@ -267,3 +267,11 @@ This project is under active development. Current focus areas:
 * [ ] Populate Strapi with content.
 * [x] Render the error page for unknown routes.
 * [ ] Send HTTP status `404` for unknown routes (the error page is currently delivered with `200`).
+
+---
+
+## 📄 License
+
+The **source code** is licensed under [AGPL-3.0](LICENSE).
+
+Artwork, logo, branding, illustrations and all site content are **© Jennifer Roob – all rights reserved** and are not covered by the AGPL. See [NOTICE.md](NOTICE.md) for details and third-party assets.
